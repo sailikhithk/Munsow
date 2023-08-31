@@ -9,6 +9,7 @@ from datetime import timedelta
 
 # Registering the blueprints after initializing the app
 from routes.user import user as user_router
+from routes.institution import institution as institution_router
 # from routes.case_master import case_master as case_master_router
 from flask_jwt_extended import JWTManager
 
@@ -31,9 +32,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Registering the blueprints
-# app.register_blueprint(user_router, url_prefix="/auth")
+# app.register_blueprint(auth, url_prefix="/auth")
 # app.register_blueprint(case_master_router, url_prefix="/case_master")
 app.register_blueprint(user_router, url_prefix="/user")
+app.register_blueprint(institution_router, url_prefix="/institution")
 
 @app.before_request
 def before_request():
