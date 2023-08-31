@@ -8,8 +8,8 @@ from datetime import timedelta
 
 
 # Registering the blueprints after initializing the app
-from routes.user import user as user_router
-from routes.institution import institution as institution_router
+from routes.user import user_router
+from routes.institution import institution_router
 # from routes.case_master import case_master as case_master_router
 from flask_jwt_extended import JWTManager
 
@@ -75,10 +75,13 @@ def after_request(response):
     return response
 
 if __name__ == "__main__":
-    # from models.role import Role
+    from models.branch import Branch
+    from models.country import Country
+    from models.department import Department
+    from models.institution_master import InstitutionMaster
+    from models.role import Role
     from models.user_master import UserMaster
-    # from models.case_master import CaseMaster
-
+    
     Base.metadata.create_all(engine)
 
     # from create_db import (

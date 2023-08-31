@@ -1,18 +1,31 @@
-# from models.role import Role
+from models.role import Role
 from models.user_master import UserMaster
+from models.country import Country
 from database import session
 from sqlalchemy import func
+from meta_data import COUNTRIES, ROLES
+def create_dummy_roles():
+    
+    query_result = (
+        session.query(func.count(Role.id)).filter(Role.name.in_(ROLES)).scalar()
+    )
+    if query_result != 3:
+        for role_name in ROLES:
+            role = Role(name=role_name)
+            session.add(role)
+        session.commit()
 
-# def create_dummy_roles():
-#     roles_data = ["Admin", "Teacher", "Student"]
-#     query_result = (
-#         session.query(func.count(Role.id)).filter(Role.name.in_(roles_data)).scalar()
-#     )
-#     if query_result != 3:
-#         for role_name in roles_data:
-#             role = Role(name=role_name)
-#             session.add(role)
-#         session.commit()
+def create_countries():
+    query_result = (
+        session.query(func.count(Country.id)).filter(Country.name.in_(COUNTRIES)).scalar()
+    )
+    if query_result != len(COUNTRIES):
+        for country_name in COUNTRIES:
+            country = Country(name=country_name)
+            session.add(country)
+        session.commit()
+
+
 
 
 # def create_dummy_users():
