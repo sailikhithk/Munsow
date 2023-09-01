@@ -80,8 +80,18 @@ def list():
     try:
         institution_id = request.args.get('institution_id')
         mode = request.args.get('mode')
-        users = user_service_obj.list_users(institution_id, mode)
+        users = user_service_obj.list_users(institution_id, mode) # need to add pagaination thing
         return jsonify(users)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@user_router.route("/management", methods=["GET"])
+def management():
+    try:
+        institution_id = request.args.get('institution_id')
+        records = user_service_obj.management(institution_id)
+        return jsonify(records)
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500

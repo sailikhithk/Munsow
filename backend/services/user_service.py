@@ -1,9 +1,14 @@
 import traceback
+import pandas as pd
+
 from flask_jwt_extended import create_access_token
 
 from models.user_master import UserMaster
 from models.institution_master import InstitutionMaster
 from models.role import Role  
+from models.branch import Branch
+from models.department import Department
+
 from utils import encrypt, decrypt, obj_to_dict, obj_to_list
 from database import session
 
@@ -121,9 +126,95 @@ class UserService:
         else:
             return False
         
-    def upload_users(self, institution_id, mode): 
-        return
+    def management(self, institution_id):
+        students_obj = session.query(UserMaster).join(Role).filter(UserMaster.institution_id == institution_id).filter(Role.name == 'Student').all()
+        teachers_obj = session.query(UserMaster).join(Role).filter(UserMaster.institution_id == institution_id).filter(Role.name == 'Teacher').all()
+
+        students = obj_to_list(students_obj)
+        teachers = obj_to_list(teachers_obj)
+        students_df = pd.DataFrame(students)
+        teachers_df = pd.DataFrame(teachers)
+        unique_student_departments = students_df["department_id"].nunique()
+        unique_teacher_departments = teachers_df["department_id"].nunique()
+        
+        unique_student_branchs = students_df["branch_id"].nunique()
+        unique_teacher_branchs = teachers_df["branch_id"].nunique()
+        
+        response = {
+            "students": {
+                "number_of_students": len(students),
+                "number_of_departments": unique_student_departments,
+                "number_of_branches": unique_student_branchs
+
+            },
+            "teachers": {
+                "number_of_teachers": len(teachers),
+                "number_of_departments": unique_teacher_departments,
+                "number_of_branches": unique_teacher_branchs
+            }
+        }
+
+        return response
+
+    def convert_name_to_id(self, session, model_class, name_col, name_value):
+        entity = session.query(model_class).filter_by(name=name_value).first()
+        if entity:
+            return entity.id
+        return None
+    
+    def upload_users(self, excel_file, institution_id, mode): 
+        data = pd.read_excel(excel_file)
+        for index, row in data.iterrows():
+            branch_id = self.convert_name_to_id(session, Branch, 'name', row['branch'])
+            department_id = self.convert_name_to_id(session, Department, 'name', row['department'])
+            role_id = self.convert_name_to_id(session, Role, 'name', mode)
+
+            user = UserMaster(
+                first_name=row['first_name'],
+                last_name=row['last_name'],
+                phone_number=row['phone_number'],
+                email=row['email'],
+                branch_id=branch_id,
+                department_id=department_id,
+                institution_id=institution_id,
+                role_id=role_id,
+                preference=row['preference'],
+                is_ug=row['is_ug'],
+            )
+            session.add(user)
+
+        session.commit()
+        session.close()
+        return True
     
     def download_users(self, institution_id, mode): 
-        return
+        role_id = session.query(Role).filter_by(name=mode).first().id
+        institution_name = session.query(InstitutionMaster).filter_by(id=institution_id).first().institution_name
+            
+        users = session.query(UserMaster).filter_by(role_id=role_id).filter_by(institution_id=institution_id).all()
+
+        user_data = []
+        for user in users:
+            branch_name = session.query(Branch).filter_by(id=user.branch_id).first().name
+            department_name = session.query(Department).filter_by(id=user.department_id).first().name
+            
+            user_data.append({
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'phone_number': user.phone_number,
+                'email': user.email,
+                'branch': branch_name,
+                'department': department_name,
+                'institution': institution_name,
+                'role': mode,
+                'preference': user.preference,
+                'is_ug': user.is_ug
+            })
+
+        output_file = "" # need to look
+        df = pd.DataFrame(user_data)
+        df.to_excel(output_file, index=False)
+
+        session.close()
+        return output_file
     
