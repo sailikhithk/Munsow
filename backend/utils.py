@@ -19,12 +19,16 @@ def decrypt(data):
 def obj_to_list(data):
     list_dicts = []
     for obj in data:
-        list_dicts.append(obj_to_dict(obj))        
+        temp_dic = obj_to_dict(obj)
+        temp_dic.pop("password_hash", None)
+        list_dicts.append(temp_dic)        
     return list_dicts
 
 
 def obj_to_dict(data):
     response = {}
+    if data is None:
+        return {}
     for c in data.__table__.columns:
         if c.name not in ["created_date", "updated_date", "password_modified_date", "last_login_date"]:
             response[c.name] = getattr(data, c.name)

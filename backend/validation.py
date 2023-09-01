@@ -13,9 +13,9 @@ INSTITUTION_REGISTER_SCHEMA = {
         "domains": {"type": "string"},
         "preference_days": {"type": "string"},
         "preference_time": {"type": "string"},
-        "password_hash": {"type": "string"},
+        "password": {"type": "string"},
     },
-    "required": ["institution_name", "contact_name", "email", "phone_number", "country_id", "city", "desiganation", "number_of_students", "number_of_departments", "domains", "preference_days", "preference_time", "password_hash"]
+    "required": ["institution_name", "contact_name", "email", "phone_number", "country_id", "city", "desiganation", "number_of_students", "number_of_departments", "domains", "preference_days", "preference_time", "password"]
 }
 INSTITUTION_UPDATE_SCHEMA = {
     "type": "object",
@@ -32,7 +32,7 @@ INSTITUTION_UPDATE_SCHEMA = {
         "domains": {"type": "string"},
         "preference_days": {"type": "string"},
         "preference_time": {"type": "string"},
-        "password_hash": {"type": "string"},
+        "password": {"type": "string"},
     }
 }
 
@@ -69,10 +69,10 @@ USER_REGISTER_SCHEMA = {
         
         "preference": {"type": "string"},
         "is_ug": {"type": "integer"},
-        "password_hash": {"type": "string"},
+        "password": {"type": "string"},
         "role_id": {"type": "string"},
     },
-    "required": ["first_name", "last_name", "email", "phone_number", "branch_id", "department_id", "institution_id", "preference", "is_ug", "password_hash", "role_id"]
+    "required": ["first_name", "last_name", "email", "phone_number", "branch_id", "department_id", "institution_id", "preference", "is_ug", "password", "role_id"]
 }
     
 USER_UPDATE_SCHEMA = {
@@ -88,7 +88,7 @@ USER_UPDATE_SCHEMA = {
         
         "preference": {"type": "string"},
         "is_ug": {"type": "integer"},
-        "password_hash": {"type": "string"},
+        "password": {"type": "string"},
         "role_id": {"type": "string"},
     }
 }

@@ -84,9 +84,10 @@ if __name__ == "__main__":
     
     Base.metadata.create_all(engine)
 
-    # from create_db import (
-    #     create_dummy_roles,
-    # )
+    from create_db import (
+        create_dummy_roles,create_countries
+    )
 
-    # create_dummy_roles()
+    create_dummy_roles()
+    create_countries()
     app.run(debug=True)

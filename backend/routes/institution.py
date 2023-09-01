@@ -15,29 +15,18 @@ def register():
     try:
         data = request.get_json()
         validate(data, INSTITUTION_REGISTER_SCHEMA)    
-        institution = institution_service_obj.register_institution(data)
-        if institution:
-            response = {"status": True, "message": "Institution Created", "data":institution} 
-        else:
-            response = {"status": False, "message": "Institution not created"} 
-        return jsonify(response)
+        return jsonify(institution_service_obj.register_institution(data))
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     
-
 @institution_router.route("/update", methods=["POST"])
 def update():
     try:
         institution_id = request.args.get('institution_id')
         data = request.get_json()
         validate(data, INSTITUTION_UPDATE_SCHEMA)    
-        institution = institution_service_obj.update_institution(institution_id, data)
-        if institution:
-            response = {"status": True, "message": "Institution Updated", "data":institution} 
-        else:
-            response = {"status": False, "message": "Institution not updated"} 
-        return jsonify(response)
+        return jsonify(institution_service_obj.update_institution(institution_id, data))
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
@@ -55,13 +44,7 @@ def list():
 def delete():
     try:
         institution_id = request.args.get('institution_id')
-        status = institution_service_obj.delete_institution(institution_id)
-        if status:
-            response = {"status": True, "message": "Institution Deleted"} 
-        else:
-            response = {"status": False, "message": "Institution not deleted"} 
-
-        return jsonify(response)
+        return jsonify(institution_service_obj.delete_institution(institution_id))
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
