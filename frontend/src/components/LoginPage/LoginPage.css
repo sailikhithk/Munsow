@@ -36,7 +36,7 @@
     height: 100%;
   } 
 
- .card-position{
+ .card-position-flex{
     display: flex;
  }
 

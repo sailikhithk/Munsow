@@ -9,10 +9,19 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    const loginInputHandler = (e) => {
+        const { name = "", value = "" } = e.target;
+        if (name === "universityId") {
+          setUniversityId(value);
+        } else {
+          setPassword(value);
+        }
+      };
+
     return (
 
         <div className="p-4">
-            <div className="card-position">
+            <div className="card-position-flex">
                 <div className="p-4">
                     <div className="card-body">
                         <div>
@@ -36,7 +45,7 @@ const LoginPage = () => {
                                         name="universityId"
                                         placeholder="UNIV01UB"
                                         value={universityId}
-                                    //   onChange={loginInputHandler}
+                                      onChange={loginInputHandler}
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -53,7 +62,7 @@ const LoginPage = () => {
                                         name="password"
                                         placeholder="********"
                                         value={password}
-                                    //   onChange={loginInputHandler}
+                                      onChange={loginInputHandler}
                                     />
                                 </div>
                             </div>
