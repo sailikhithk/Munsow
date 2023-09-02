@@ -18,6 +18,10 @@ const LoginPage = () => {
         }
       };
 
+      const handleSubmit = async () => {
+       navigate("./dashboard");
+      };
+
     return (
 
         <div className="p-4">
@@ -70,7 +74,7 @@ const LoginPage = () => {
                                 <button
                                     type="button"
                                     className="btn btn-primary"
-                                // onClick={handleSubmit}
+                                onClick={handleSubmit}
                                 >
                                     Login
                                 </button>

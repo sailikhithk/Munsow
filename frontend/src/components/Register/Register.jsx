@@ -15,12 +15,13 @@ const Register = () => {
         contactPhoneNumber: "",
         numberOfStudents: "",
         institutionPOC: "",
+        designation:"",
         numberOfDepartments: "",
         country: "",
         city: "",
-        contactDesignation: "",
         registrationNumber: "",
         password: "",
+        re_password: "",
     });
 
     const handleChange = (e) => {
@@ -42,7 +43,7 @@ const Register = () => {
                     // width: `calc(100% - 270px)`,
                     ml: "270px",
                     boxShadow: "unset",
-                    backgroundColor:"#f8f9fa",
+                    backgroundColor: "#f8f9fa",
                     color: "#071437",
                 }}
             >
@@ -62,20 +63,6 @@ const Register = () => {
                 </Toolbar>
             </AppBar>
             <div className="register-page">
-
-                {/* <div className="heading-top p-2">
-                    <div className="card-body">
-                        <div>
-                            <h2 className="registration-header">Join Us Form</h2>
-                            <p className="registration-sub-header">
-                                Kick start your journey to get access to our expert
-                                insights about your students across departments, branches,
-                                and cities today!
-                            </p>
-                        </div>
-                    </div>
-                </div> */}
-
                 <div className="registration-form-container">
                     <div className="input_main_wrapper">
                         <div className="row-wrapper mt-3">
@@ -94,7 +81,7 @@ const Register = () => {
                                     id="institutionName"
                                     name="institutionName"
                                     placeholder="Enter your University's name as per any Govt Records"
-                                    value=""
+                                    value={formData.institutionName}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -117,7 +104,7 @@ const Register = () => {
                                     id="contactName"
                                     name="contactName"
                                     placeholder="Enterthe name of who needs to be contacted"
-                                    value=""
+                                    value={formData.contactName}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -141,7 +128,7 @@ const Register = () => {
                                         id="contactEmailAddress"
                                         name="contactEmailAddress"
                                         placeholder="Enter the Email of the person who needs to be contacted"
-                                        value=""
+                                        value={formData.contactEmailAddress}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -168,7 +155,7 @@ const Register = () => {
                                         id="contactPhoneNumber"
                                         name="contactPhoneNumber"
                                         placeholder="Enter the Phone Number"
-                                        value=""
+                                        value={formData.contactPhoneNumber}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -195,7 +182,7 @@ const Register = () => {
                                         id="country"
                                         name="country"
                                         placeholder="Enter Country"
-                                        value=""
+                                        value={formData.country}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -214,7 +201,7 @@ const Register = () => {
                                         id="city"
                                         name="city"
                                         placeholder="Enter City"
-                                        value=""
+                                        value={formData.city}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -223,7 +210,7 @@ const Register = () => {
                         <div className="row-wrapper mt-4">
                             <div className="labelWrapLeft">
                                 <label
-                                    htmlFor="poc"
+                                    htmlFor="institutionPOC"
                                     className="form-label registration-form-label"
                                 >
                                     Institution POC (point of contract)
@@ -233,10 +220,10 @@ const Register = () => {
                                 <input
                                     type="text"
                                     className="form-control registration-input-control"
-                                    id="poc"
-                                    name="poc"
+                                    id="institutionPOC"
+                                    name="institutionPOC"
                                     placeholder="Enter the Email of person who needs to be contacted"
-                                    value=""
+                                    value={formData.institutionPOC}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -259,7 +246,7 @@ const Register = () => {
                                     id="designation"
                                     name="designation"
                                     placeholder="Enter Designation"
-                                    value=""
+                                    value={formData.designation}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -270,7 +257,7 @@ const Register = () => {
                             <div className="row-wrapper mt-4">
                                 <div className="labelWrapLeft">
                                     <label
-                                        htmlFor="departments"
+                                        htmlFor="numberOfDepartments"
                                         className="form-label registration-form-label"
                                     >
                                         Number Of Departments
@@ -280,16 +267,16 @@ const Register = () => {
                                     <input
                                         type="text"
                                         className="form-control registration-input-control"
-                                        id="departments"
-                                        name="departments"
+                                        id="numberOfDepartments"
+                                        name="numberOfDepartments"
                                         placeholder="Number of Departments"
-                                        value=""
+                                        value={formData.numberOfDepartments}
                                         onChange={handleChange}
                                     />
                                 </div>
                                 <div className="labelBelowLeft2">
                                     <label
-                                        htmlFor="students"
+                                        htmlFor="numberOfStudents"
                                         className="form-label registration-form-label"
                                     >
                                         Number of Students
@@ -299,10 +286,10 @@ const Register = () => {
                                     <input
                                         type="text"
                                         className="form-control registration-input-control"
-                                        id="students"
-                                        name="students"
+                                        id="numberOfStudents"
+                                        name="numberOfStudents"
                                         placeholder="Number of Students"
-                                        value=""
+                                        value={formData.numberOfStudents}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -324,9 +311,55 @@ const Register = () => {
                                     id="registrationNumber"
                                     name="registrationNumber"
                                     placeholder="Enter Registration Number"
-                                    value=""
+                                    value={formData.registrationNumber}
                                     onChange={handleChange}
                                 />
+                            </div>
+
+
+                        </div>
+                        <div className="row-wrapper mt-4">
+                            <div className="labelWrapLeft">
+                                <label
+                                    htmlFor="password"
+                                    className="form-label registration-form-label"
+                                >
+                                    Password
+                                </label>
+                            </div>
+                            <div className="labelWrapRight">
+                                <input
+                                    type="password"
+                                    className="form-control registration-input-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Enter Password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+
+                        </div>
+                        <div className="row-wrapper mt-4">
+                            <div className="labelWrapLeft">
+                                <label
+                                    htmlFor="re_password"
+                                    className="form-label registration-form-label"
+                                >
+                                    Re-Enter Password
+                                </label>
+                            </div>
+                            <div className="labelWrapRight">
+                            <input
+                              type="password"
+                              className="form-control registration-input-control"
+                              id="re_password"
+                              name="re_password"
+                              placeholder="Re-Enter Password"
+                              value={formData.re_password}
+                              onChange={handleChange}
+                            />
                             </div>
 
 
