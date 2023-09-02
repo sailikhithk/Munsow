@@ -1,19 +1,19 @@
 // import UserManagementPageLayout from "../pages/UserManagementPageLayout";
 
-// import Dashboard from "../components/Dashboard";
+import Dashboard from "../components/Dashboard";
 
-// import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 
 const appRoutes = [
-  // {
-  //   path: "/dashboard",
-  //   element: <Dashboard />,
-  //   state: "dashboard",
-  //   sidebarProps: {
-  //     displayText: "Dashboard",
-  //     icon: <DashboardOutlinedIcon />,
-  //   },
-  // },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+    state: "dashboard",
+    sidebarProps: {
+      displayText: "Dashboard",
+      icon: <DashboardOutlinedIcon />,
+    },
+  },
   // {
   //   path: "/user",
   //   element: <UserManagementPageLayout />,

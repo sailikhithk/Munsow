@@ -1,5 +1,6 @@
 .registration-header {
   color: #1d1d1f;
+  padding-top:18px;
 }
 
 .registration-sub-header {
@@ -59,7 +60,8 @@
 }
 
 .register-page {
-  margin: 30px 20px 20px 30px;
+  margin: 0px 20px 20px 30px;
+  margin-top: 8.7rem !important;
 }
 
 .head-top {

@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-// import MainLayout from "./layout/MainLayout";
+import MainLayout from "./layout/MainLayout";
 import { routes } from "./routes";
 
 const loading = (
@@ -21,9 +21,9 @@ const App = () => {
             name="Registration Page"
             element={<Registration />}
           />
-            {/* <Route path="/" element={<MainLayout />}>
+            <Route path="/" element={<MainLayout />}>
             {routes}
-          </Route> */}
+          </Route>
         </Routes>
       </Suspense>
     </>
