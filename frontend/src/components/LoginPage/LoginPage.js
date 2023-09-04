@@ -2,25 +2,51 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginImage from "../../images/login.jpg";
 import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+
 import "./LoginPage.css";
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+
 const LoginPage = () => {
 
     const [universityId, setUniversityId] = useState("");
     const [password, setPassword] = useState("");
+    const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
 
     const loginInputHandler = (e) => {
         const { name = "", value = "" } = e.target;
         if (name === "universityId") {
-          setUniversityId(value);
+            setUniversityId(value);
         } else {
-          setPassword(value);
+            setPassword(value);
         }
-      };
+    };
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
-      const handleSubmit = async () => {
-       navigate("./dashboard");
-      };
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleSubmit = async () => {
+        navigate("./dashboard");
+    };
 
     return (
 
@@ -49,7 +75,7 @@ const LoginPage = () => {
                                         name="universityId"
                                         placeholder="UNIV01UB"
                                         value={universityId}
-                                      onChange={loginInputHandler}
+                                        onChange={loginInputHandler}
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -66,7 +92,7 @@ const LoginPage = () => {
                                         name="password"
                                         placeholder="********"
                                         value={password}
-                                      onChange={loginInputHandler}
+                                        onChange={loginInputHandler}
                                     />
                                 </div>
                             </div>
@@ -74,20 +100,52 @@ const LoginPage = () => {
                                 <button
                                     type="button"
                                     className="btn btn-primary"
-                                onClick={handleSubmit}
+                                    onClick={handleSubmit}
                                 >
                                     Login
                                 </button>
                             </div>
                             <div className="mt-3 text-center">
                                 <span className="login-footer-container link-set">
-                                    <Link
-                                        className="text-decoration-none"
-                                        // to={"/registration"}
+                                    <p
+                                        className="text-decoration-none forget-button"
+                                        onClick={handleClickOpen}
                                     >
                                         Forget Password?
-                                    </Link>
+                                    </p>
                                 </span>
+                            </div>
+                            <div>
+                                <Modal
+                                    open={open}
+                                    onClose={handleClickOpen}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                                            Forget Password?
+                                        </Typography>
+                                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                            Enter Your Email-Id
+                                        </Typography>
+                                        <TextField
+                                            autoFocus
+                                            margin="dense"
+                                            id="name"
+                                            label=" Email Address"
+                                            type="email"
+                                            fullWidth
+                                            variant="standard"
+                                            onChange={loginInputHandler}
+                                        />
+                                        <div className="mt-4 footer-buttons">
+                                            <Button onClick={handleClose}>Cancel</Button>
+                                            <Button onClick={handleClose}>Subscribe</Button>
+                                        </div>
+
+                                    </Box>
+                                </Modal>
                             </div>
                             <div className="mt-4 text-center">
                                 <span className="login-footer-container">
