@@ -66,7 +66,7 @@ const LoginPage = () => {
                                         htmlFor="universityId"
                                         className="form-label login-form-label"
                                     >
-                                        University ID
+                                        User ID
                                     </label>
                                     <input
                                         type="text"

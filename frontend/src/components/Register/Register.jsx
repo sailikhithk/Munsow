@@ -1,22 +1,24 @@
 import React, { useState } from "react";
-import "./Register.css";
+import { useDispatch, useSelector } from "react-redux";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Typography } from "@mui/material";
-const Register = () => {
+import { AppBar, Toolbar } from "@mui/material";
+import "./Register.css";
 
+const Register = (props) => {
+    let dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        institutionName: "",
-        contactName: "",
-        contactEmailAddress: "",
-        contactPhoneNumber: "",
-        numberOfStudents: "",
+        institution_name: "",
+        contact_name: "",
+        email: "",
+        phone_number: "",
+        number_of_students: "",
         institutionPOC: "",
-        designation:"",
-        numberOfDepartments: "",
+        designation: "",
+        number_of_departments: "",
         country: "",
         city: "",
         registrationNumber: "",
@@ -32,7 +34,23 @@ const Register = () => {
         });
     };
     const handleSubmit = async () => {
-        navigate("/dashboard");
+        var data = {
+            "institution_name": "INV Test-1",
+            "contact_name": "harnath",
+            "email": "harnath.a@gmail.com",
+            "phone_number": "9701185467",
+            "country_id": 1,
+            "city": "Ongole",
+            "desiganation": "SSE",
+            "number_of_students": 150,
+            "number_of_departments": 10,
+            "domains": "@gmail.com",
+            "preference_days": "Mon, Tue",
+            "preference_time": "10 AM to 6 PM",
+            "password": "1234"
+        }
+        // dispatch(institute_register(data));
+        // navigate("/dashboard");
     }
 
     return (
@@ -68,7 +86,7 @@ const Register = () => {
                         <div className="row-wrapper mt-3">
                             <div className="labelWrapLeft">
                                 <label
-                                    htmlFor="institutionName"
+                                    htmlFor="institution_name"
                                     className="form-label registration-form-label"
                                 >
                                     Institution Name
@@ -78,10 +96,10 @@ const Register = () => {
                                 <input
                                     type="text"
                                     className="form-control registration-input-control"
-                                    id="institutionName"
-                                    name="institutionName"
+                                    id="institution_name"
+                                    name="institution_name"
                                     placeholder="Enter your University's name as per any Govt Records"
-                                    value={formData.institutionName}
+                                    value={formData.institution_name}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -91,7 +109,7 @@ const Register = () => {
                         <div className="row-wrapper mt-4">
                             <div className="labelWrapLeft">
                                 <label
-                                    htmlFor="contactName"
+                                    htmlFor="contact_name"
                                     className="form-label registration-form-label"
                                 >
                                     Contact Name
@@ -101,10 +119,10 @@ const Register = () => {
                                 <input
                                     type="text"
                                     className="form-control registration-input-control"
-                                    id="contactName"
-                                    name="contactName"
+                                    id="contact_name"
+                                    name="contact_name"
                                     placeholder="Enterthe name of who needs to be contacted"
-                                    value={formData.contactName}
+                                    value={formData.contact_name}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -115,7 +133,7 @@ const Register = () => {
                             <div className="row-wrapper mt-4">
                                 <div className="labelWrapLeft">
                                     <label
-                                        htmlFor="contactEmailAddress"
+                                        htmlFor="email"
                                         className="form-label registration-form-label"
                                     >
                                         Contact Email Address
@@ -125,10 +143,10 @@ const Register = () => {
                                     <input
                                         type="text"
                                         className="form-control registration-input-control"
-                                        id="contactEmailAddress"
-                                        name="contactEmailAddress"
+                                        id="email"
+                                        name="email"
                                         placeholder="Enter the Email of the person who needs to be contacted"
-                                        value={formData.contactEmailAddress}
+                                        value={formData.email}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -142,7 +160,7 @@ const Register = () => {
                             <div className="row-wrapper mt-4">
                                 <div className="labelWrapLeft">
                                     <label
-                                        htmlFor="contactPhoneNumber"
+                                        htmlFor="phone_number"
                                         className="form-label registration-form-label"
                                     >
                                         Contact Phone Number
@@ -152,10 +170,10 @@ const Register = () => {
                                     <input
                                         type="text"
                                         className="form-control registration-input-control"
-                                        id="contactPhoneNumber"
-                                        name="contactPhoneNumber"
+                                        id="phone_number"
+                                        name="phone_number"
                                         placeholder="Enter the Phone Number"
-                                        value={formData.contactPhoneNumber}
+                                        value={formData.phone_number}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -257,7 +275,7 @@ const Register = () => {
                             <div className="row-wrapper mt-4">
                                 <div className="labelWrapLeft">
                                     <label
-                                        htmlFor="numberOfDepartments"
+                                        htmlFor="number_of_departments"
                                         className="form-label registration-form-label"
                                     >
                                         Number Of Departments
@@ -267,16 +285,16 @@ const Register = () => {
                                     <input
                                         type="text"
                                         className="form-control registration-input-control"
-                                        id="numberOfDepartments"
-                                        name="numberOfDepartments"
+                                        id="number_of_departments"
+                                        name="number_of_departments"
                                         placeholder="Number of Departments"
-                                        value={formData.numberOfDepartments}
+                                        value={formData.number_of_departments}
                                         onChange={handleChange}
                                     />
                                 </div>
                                 <div className="labelBelowLeft2">
                                     <label
-                                        htmlFor="numberOfStudents"
+                                        htmlFor="number_of_students"
                                         className="form-label registration-form-label"
                                     >
                                         Number of Students
@@ -286,10 +304,10 @@ const Register = () => {
                                     <input
                                         type="text"
                                         className="form-control registration-input-control"
-                                        id="numberOfStudents"
-                                        name="numberOfStudents"
+                                        id="number_of_students"
+                                        name="number_of_students"
                                         placeholder="Number of Students"
-                                        value={formData.numberOfStudents}
+                                        value={formData.number_of_students}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -351,15 +369,15 @@ const Register = () => {
                                 </label>
                             </div>
                             <div className="labelWrapRight">
-                            <input
-                              type="password"
-                              className="form-control registration-input-control"
-                              id="re_password"
-                              name="re_password"
-                              placeholder="Re-Enter Password"
-                              value={formData.re_password}
-                              onChange={handleChange}
-                            />
+                                <input
+                                    type="password"
+                                    className="form-control registration-input-control"
+                                    id="re_password"
+                                    name="re_password"
+                                    placeholder="Re-Enter Password"
+                                    value={formData.re_password}
+                                    onChange={handleChange}
+                                />
                             </div>
 
 
