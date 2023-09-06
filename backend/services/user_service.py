@@ -3,11 +3,7 @@ import pandas as pd
 
 from flask_jwt_extended import create_access_token
 
-from models.user_master import UserMaster
-from models.institution_master import InstitutionMaster
-from models.role import Role  
-from models.branch import Branch
-from models.department import Department
+from models import UserMaster, InstitutionMaster, Role, Branch, Department
 
 from utils import encrypt, decrypt, obj_to_dict, obj_to_list
 from database import session

@@ -41,19 +41,17 @@ LOGIN_SCHEMA = {
     "properties": {
         "email": {"type": "string"},
         "password": {"type": "string"},
-        "user_mode": {"type": "string"}
     },
-    "required": ["email", "password", "user_mode"]
+    "required": ["email", "password"]
 }
 
 RESET_PASSWORD_SCHEMA = {
     "type": "object",
     "properties": {
-        "id": {"type": "integer"},
-        "password": {"type": "string"},
-        "user_mode": {"type": "string"}
+        "email": {"type": "string"},
+        "new_password": {"type": "string"},
     },
-    "required": ["id", "password", "user_mode"]
+    "required": ["email", "new_password"]
 }
 
 USER_REGISTER_SCHEMA = {
