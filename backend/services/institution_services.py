@@ -1,8 +1,9 @@
 import traceback
 import uuid
-from models.institution_master import InstitutionMaster
+from models import InstitutionMaster, Country
 from database import session
 from utils import encrypt, decrypt, obj_to_dict, obj_to_list
+from flask_jwt_extended import create_access_token
 
 
 class InstitutionService:
@@ -14,6 +15,42 @@ class InstitutionService:
         
         return obj_to_dict(institution)
     
+    def get_user_by_email(self, email):
+        return session.query(InstitutionMaster).filter_by(email = email).first()
+    
+    def login_user(self, data):
+        email = data["email"]
+        password = data["password"]
+        user = self.get_user_by_email(email)
+        if not user:
+            return {"message": "Invalid username or password", "status": False}
+
+        hashpwd = user.password_hash
+        db_password = decrypt(hashpwd)
+        
+        if db_password == password:
+            user_data = obj_to_dict(user)
+            access_token = create_access_token(identity=user_data)
+            return {"message": "", "status": True, "access_token": access_token, "data": user_data}
+        else:
+            return {"message": "Invalid username or password", "status": False}
+    
+    def country_list(self):
+        countrys = session.query(Country).all()    
+        return obj_to_list(countrys)
+    
+    def reset_password(self, data):
+        password = data["new_password"]
+        email = data["email"]
+        hashed_password = encrypt(password)
+        
+        user = self.get_user_by_email(email)
+        if not user:
+            return {"message": "Invalid creds", "status": False}        
+        user.password_hash = hashed_password
+        session.commit()
+        return {"message": "Password updated, relogin again", "status": True}
+
     def register_institution(self, data):
         try:
             data["password_hash"] = encrypt(data["password"])
