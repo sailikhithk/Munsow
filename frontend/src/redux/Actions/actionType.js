@@ -1,0 +1,2 @@
+export const INSTITUTE_LIST = "INSTITUTE_LIST";
+export const COUNTRIES_LIST = "COUNTRIES_LIST";

@@ -9,7 +9,7 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 
 import "./LoginPage.css";
-
+console.log(process.env.BACKEND_API_URL);
 const style = {
     position: 'absolute',
     top: '50%',
@@ -23,7 +23,7 @@ const style = {
 };
 
 const LoginPage = () => {
-
+console.log(process.env.BACKEND_API_URL);
     const [universityId, setUniversityId] = useState("");
     const [password, setPassword] = useState("");
     const [open, setOpen] = React.useState(false);
@@ -141,7 +141,7 @@ const LoginPage = () => {
                                         />
                                         <div className="mt-4 footer-buttons">
                                             <Button onClick={handleClose}>Cancel</Button>
-                                            <Button onClick={handleClose}>Subscribe</Button>
+                                            <Button onClick={handleClose}>Submit</Button>
                                         </div>
 
                                     </Box>

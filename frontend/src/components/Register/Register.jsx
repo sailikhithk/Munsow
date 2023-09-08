@@ -1,29 +1,35 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Toolbar } from "@mui/material";
+import { registerInstitute } from '../../redux/Actions/action';
 import "./Register.css";
-
+import { post } from "../../http/http";
+import {getcountries} from '../../redux/Actions/action';
 const Register = (props) => {
+
+    // const { instituteData } = useSelector((state) => state.state);
     let dispatch = useDispatch();
     const navigate = useNavigate();
-
+    useEffect(() => {
+        dispatch(getcountries());
+      }, []);
     const [formData, setFormData] = useState({
         institution_name: "",
         contact_name: "",
         email: "",
         phone_number: "",
         number_of_students: "",
-        institutionPOC: "",
+        institution_poc: "",
         designation: "",
         number_of_departments: "",
         country: "",
         city: "",
         registrationNumber: "",
         password: "",
-        re_password: "",
+        // re_password: "",
     });
 
     const handleChange = (e) => {
@@ -33,23 +39,26 @@ const Register = (props) => {
             [name]: value,
         });
     };
-    const handleSubmit = async () => {
-        var data = {
-            "institution_name": "INV Test-1",
-            "contact_name": "harnath",
-            "email": "harnath.a@gmail.com",
-            "phone_number": "9701185467",
-            "country_id": 1,
-            "city": "Ongole",
-            "desiganation": "SSE",
-            "number_of_students": 150,
-            "number_of_departments": 10,
-            "domains": "@gmail.com",
-            "preference_days": "Mon, Tue",
-            "preference_time": "10 AM to 6 PM",
-            "password": "1234"
-        }
-        // dispatch(institute_register(data));
+    const handleSubmit = () => {
+
+            const payload =  {
+                "institution_name": formData.institution_name,
+                "contact_name": formData.contact_name,
+                "email": formData.email,
+                "phone_number": formData.phone_number,
+                "country_id": Number(formData.country_id),
+                "city": formData.city,
+                "desiganation": formData.desiganation,
+                "number_of_students": Number(formData.number_of_students),
+                "number_of_departments": Number(formData.number_of_departments),
+                "domains": formData.domains,
+                "preference_days": "Mon, Tue",
+                "preference_time": "10 AM to 6 PM",
+                "password": formData.password,
+            };
+        
+            
+        dispatch(registerInstitute(payload));
         // navigate("/dashboard");
     }
 
@@ -228,7 +237,7 @@ const Register = (props) => {
                         <div className="row-wrapper mt-4">
                             <div className="labelWrapLeft">
                                 <label
-                                    htmlFor="institutionPOC"
+                                    htmlFor="institution_poc"
                                     className="form-label registration-form-label"
                                 >
                                     Institution POC (point of contract)
@@ -238,10 +247,10 @@ const Register = (props) => {
                                 <input
                                     type="text"
                                     className="form-control registration-input-control"
-                                    id="institutionPOC"
-                                    name="institutionPOC"
+                                    id="institution_poc"
+                                    name="institution_poc"
                                     placeholder="Enter the Email of person who needs to be contacted"
-                                    value={formData.institutionPOC}
+                                    value={formData.institution_poc}
                                     onChange={handleChange}
                                 />
                             </div>
