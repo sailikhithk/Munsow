@@ -4,7 +4,7 @@ import traceback
 from flask import Blueprint, request, jsonify, send_file
 from jsonschema import validate
 from services import UserService
-from validation import LOGIN_SCHEMA, RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS
+from validation import LOGIN_SCHEMA, RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS, USER_UPDATE_PASSWORD_SCHEMA
 user_router = Blueprint("user", __name__)
 logger = logging.getLogger("user")
 
@@ -31,7 +31,6 @@ def logout():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-
 @user_router.route("/reset_password", methods=["POST"])
 def reset_password():
     try:
@@ -43,6 +42,17 @@ def reset_password():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     
+@user_router.route("/update_password", methods=["POST"])
+def update_password():
+    try:
+        data = request.get_json()
+        validate(data, USER_UPDATE_PASSWORD_SCHEMA)
+        response = user_service_obj.update_password(data)
+        return jsonify(response)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
 @user_router.route("/register", methods=["POST"])
 def register():
     try:
@@ -58,7 +68,6 @@ def register():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     
-
 @user_router.route("/update", methods=["POST"])
 def update():
     try:
@@ -111,6 +120,21 @@ def delete():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
+@user_router.route("/<int:user_id>/activate", methods=["DELETE"])
+def activate(user_id):
+    try:
+        return jsonify(user_service_obj.activate_user(user_id))
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@user_router.route("/<int:user_id>/deactivate", methods=["DELETE"])
+def activate(user_id):
+    try:
+        return jsonify(user_service_obj.activate_user(user_id))
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 @user_router.route("/upload", methods=["POST"])
 def upload():

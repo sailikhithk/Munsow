@@ -36,6 +36,24 @@ INSTITUTION_UPDATE_SCHEMA = {
     }
 }
 
+INSTITUTION_UPDATE_PASSWORD_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "new_password": {"type": "string"},
+        "institution_id": {"type": "integer"}
+    },
+    "required": ["new_password", "institution_id"]
+}
+
+USER_UPDATE_PASSWORD_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "new_password": {"type": "string"},
+        "user_id": {"type": "integer"}
+    },
+    "required": ["new_password", "institution_id"]
+}
+
 LOGIN_SCHEMA = {
     "type": "object",
     "properties": {

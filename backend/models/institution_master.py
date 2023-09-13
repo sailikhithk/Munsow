@@ -21,6 +21,7 @@ class InstitutionMaster(Base):
     preference_days = Column(String(255), default="mon")
     preference_time = Column(String(255))
     password_hash = Column(String(255))
+    is_active = Column(Boolean, default=True)
 
     created_date = Column(DateTime, default=func.now(), nullable=False)
     updated_date = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)

@@ -19,9 +19,10 @@ class UserMaster(Base):
     password_hash = Column(String(128))
     role_id = Column(Integer, ForeignKey("role.id"))
     number_of_interviews = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
     
     created_date = Column(DateTime, default=func.now(), nullable=False)
     updated_date = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
+    initial_password_reset = Column(Boolean, default=False)
     password_modified_date = Column(DateTime)
     last_login_date = Column(DateTime)
-    

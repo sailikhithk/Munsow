@@ -74,6 +74,18 @@ def after_request(response):
         print("Data:", response.get_data(as_text=True))    
     return response
 
+
+@app.cli.command('insert_dummy_data')
+def insert_dummy_data():
+    with app.app_context():
+        from create_db import (
+            create_dummy_roles,
+            create_countries
+        )
+    create_dummy_roles()
+    create_countries()
+        
+
 if __name__ == "__main__":
     from models.branch import Branch
     from models.country import Country

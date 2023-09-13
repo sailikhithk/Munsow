@@ -1,5 +1,6 @@
 import traceback
 import pandas as pd
+from datetime import datetime
 
 from flask_jwt_extended import create_access_token
 
@@ -21,13 +22,13 @@ class UserService:
     def get_institution_by_id(self, id):
         return session.query(InstitutionMaster).filter_by(id=id).first()
     
-    def get_user_by_username(self, email):
-        return session.query(InstitutionMaster).filter_by(email = email).first()
+    def get_user_by_email(self, email):
+        return session.query(UserMaster).filter_by(email = email).first()
     
     def login_user(self, data):
         email = data["email"]
         password = data["password"]
-        user = self.get_user_by_username(email)
+        user = self.get_user_by_email(email)
         if not user:
             return {"message": "Invalid username or password", "status": False}
 
@@ -52,12 +53,15 @@ class UserService:
             user = self.get_institution_by_id(user_id)
 
         user.password_hash = hashed_password
+        user.password_modified_date = datetime.now()
+        
         session.commit()
         return {"message": "Password updated, relogin again", "status": True}
 
     def register_user(self, data):
         data["password_hash"] = encrypt(data["password"])
         data.pop("password")
+        data["initial_password_reset"] = True
         user = UserMaster(**data)
         session.add(user)
         session.commit()
@@ -99,7 +103,6 @@ class UserService:
                 "previous_page": f"/users?mode={mode}&column_name={column_name}&order_by={order_by}&page_number={page_number - 1}&limit={limit}" if page_number > 1 else None
             }
 
-            
             response = {
                 "metadata": metadata,
                 "data": obj_to_list(users)
@@ -122,6 +125,26 @@ class UserService:
         else:
             return False
         
+    def active_user(self, user_id):
+        user = session.query(UserMaster).get(user_id)
+        
+        if user:
+            user.is_active = True
+            session.commit()
+            return {"status": True, "message": "User Activated"} 
+        else:
+            return {"status": False, "message": "User not Activated"}
+    
+    def deactive_user(self, user_id):
+        user = session.query(UserMaster).get(user_id)
+        
+        if user:
+            user.is_active = False
+            session.commit()
+            return {"status": True, "message": "User Activated"} 
+        else:
+            return {"status": False, "message": "User not Activated"}
+    
     def management(self, institution_id):
         students_obj = session.query(UserMaster).join(Role).filter(UserMaster.institution_id == institution_id).filter(Role.name == 'Student').all()
         teachers_obj = session.query(UserMaster).join(Role).filter(UserMaster.institution_id == institution_id).filter(Role.name == 'Teacher').all()

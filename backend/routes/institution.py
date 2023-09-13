@@ -4,7 +4,7 @@ import traceback
 from flask import Blueprint, request, jsonify
 from jsonschema import validate
 from services import InstitutionService
-from validation import INSTITUTION_REGISTER_SCHEMA, INSTITUTION_UPDATE_SCHEMA, LOGIN_SCHEMA, RESET_PASSWORD_SCHEMA
+from validation import INSTITUTION_REGISTER_SCHEMA, INSTITUTION_UPDATE_SCHEMA, LOGIN_SCHEMA, RESET_PASSWORD_SCHEMA, INSTITUTION_UPDATE_PASSWORD_SCHEMA
 institution_router = Blueprint("institution", __name__)
 logger = logging.getLogger("institution")
 
@@ -16,7 +16,7 @@ def login():
     try:
         data = request.get_json()
         validate(data, LOGIN_SCHEMA)    
-        response = institution_service_obj.login_user(data)
+        response = institution_service_obj.login_institution(data)
         return jsonify(response)
     
     except Exception as e:
@@ -44,9 +44,16 @@ def reset_password():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-
-
-
+@institution_router.route("/update_password", methods=["POST"])
+def update_password():
+    try:
+        data = request.get_json()
+        validate(data, INSTITUTION_UPDATE_PASSWORD_SCHEMA)
+        response = institution_service_obj.update_password(data)
+        return jsonify(response)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 @institution_router.route("/register", methods=["POST"])
 def register():
@@ -83,6 +90,23 @@ def delete():
     try:
         institution_id = request.args.get('institution_id')
         return jsonify(institution_service_obj.delete_institution(institution_id))
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@institution_router.route("/<int:institution_id>/activate", methods=["DELETE"])
+def activate(institution_id):
+    try:
+        return jsonify(institution_service_obj.activate_institution(institution_id))
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@institution_router.route("/<int:institution_id>/deactivate", methods=["DELETE"])
+def activate(institution_id):
+    try:
+        return jsonify(institution_service_obj.activate_institution(institution_id))
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500

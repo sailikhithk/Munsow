@@ -1,5 +1,6 @@
+import requests
+
 from models.role import Role
-from models.user_master import UserMaster
 from models.country import Country
 from database import session
 from sqlalchemy import func
@@ -25,21 +26,63 @@ def create_countries():
             session.add(country)
         session.commit()
 
+def create_dummy_institution():
+    url = "http://localhost:5000/institution/register"
+    institutions_data = [
+        {
+                "institution_name": "INV Test-1",
+                "contact_name": "harnath",
+                "email": "harnath@gmail.com",
+                "phone_number": "9701185467",
+                "country_id": 1,
+                "city": "Ongole",
+                "desiganation": "SSE",
+                "number_of_students": 150,
+                "number_of_departments": 10,
+                "domains": "@gmail.com",
+                "preference_days": "Mon, Tue",
+                "preference_time": "10 AM to 6 PM",
+                "password": "1234"
+            },
+            {
+                "institution_name": "INV Test-1",
+                "contact_name": "ramu",
+                "email": "ramu@gmail.com",
+                "phone_number": "9701185467",
+                "country_id": 1,
+                "city": "Ongole",
+                "desiganation": "SSE",
+                "number_of_students": 150,
+                "number_of_departments": 10,
+                "domains": "@gmail.com",
+                "preference_days": "Mon, Tue",
+                "preference_time": "10 AM to 6 PM",
+                "password": "1234"
+            },
+            {
+                "institution_name": "INV Test-1",
+                "contact_name": "sai",
+                "email": "sai@gmail.com",
+                "phone_number": "9701185467",
+                "country_id": 1,
+                "city": "Ongole",
+                "desiganation": "SSE",
+                "number_of_students": 150,
+                "number_of_departments": 10,
+                "domains": "@gmail.com",
+                "preference_days": "Mon, Tue",
+                "preference_time": "10 AM to 6 PM",
+                "password": "1234"
+            },
+            
+        ]
+    for i in institutions_data:
+        headers = {
+        'Content-Type': 'application/json'
+        }
+        response = requests.request("POST", url, headers=headers, data=json.dumps(i))
+        print(response.text)
 
+def create_dummy_users():
+    pass
 
-
-# def create_dummy_users():
-#     roles = session.query(Role).all()
-#     institutions = ["Institution 1", "Institution 2", "Institution 3"]
-#     for i, role in enumerate(roles):
-#         existing_user = session.query(User).filter_by(username=f"user{i+1}").first()
-#         if not existing_user:
-#             user = User(
-#                 username=f"user{i+1}",
-#                 password_hash=f"password{i+1}",
-#                 email=f"user{i+1}@example.com",
-#                 institution=institutions[i % len(institutions)],
-#                 role_id=role.id,
-#             )
-#             session.add(user)
-#     session.commit()
