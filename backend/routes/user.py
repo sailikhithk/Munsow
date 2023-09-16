@@ -2,13 +2,32 @@ import logging
 import traceback
 
 from flask import Blueprint, request, jsonify, send_file
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
+
 from jsonschema import validate
 from services import UserService
-from validation import LOGIN_SCHEMA, RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS, USER_UPDATE_PASSWORD_SCHEMA
+from validation import LOGIN_SCHEMA, USER_RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS, USER_UPDATE_PASSWORD_SCHEMA
+from decorators import requires_role
+
 user_router = Blueprint("user", __name__)
 logger = logging.getLogger("user")
 
 user_service_obj = UserService()
+
+@user_router.route("/register", methods=["POST"])
+def register():
+    try:
+        data = request.get_json()
+        validate(data, USER_REGISTER_SCHEMA)    
+        user = user_service_obj.register_user(data)
+        if user:
+            response = {"status": True, "message": "User Created", "data":user} 
+        else:
+            response = {"status": False, "message": "User not created"} 
+        return jsonify(response)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 @user_router.route("/login", methods=["POST"])
 def login():
@@ -35,7 +54,7 @@ def logout():
 def reset_password():
     try:
         data = request.get_json()
-        validate(data, RESET_PASSWORD_SCHEMA)
+        validate(data, USER_RESET_PASSWORD_SCHEMA)
         response = user_service_obj.reset_password(data)
         return jsonify(response)
     except Exception as e:
@@ -43,33 +62,21 @@ def reset_password():
         return jsonify({"error": str(e)}), 500
     
 @user_router.route("/update_password", methods=["POST"])
+@jwt_required()
 def update_password():
     try:
+        current_user = get_jwt_identity()
+        user_id = current_user["id"]      
         data = request.get_json()
         validate(data, USER_UPDATE_PASSWORD_SCHEMA)
-        response = user_service_obj.update_password(data)
-        return jsonify(response)
-    except Exception as e:
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
-
-@user_router.route("/register", methods=["POST"])
-def register():
-    try:
-        data = request.get_json()
-        validate(data, USER_REGISTER_SCHEMA)    
-        user = user_service_obj.register_user(data)
-        if user:
-            response = {"status": True, "message": "User Created", "data":user} 
-        else:
-            response = {"status": False, "message": "User not created"} 
+        response = user_service_obj.update_password(data, user_id)
         return jsonify(response)
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     
 @user_router.route("/update", methods=["POST"])
-def update():
+def update_user():
     try:
         user_id = request.args.get('user_id')
         data = request.get_json()
@@ -85,7 +92,7 @@ def update():
         return jsonify({"error": str(e)}), 500
     
 @user_router.route("/list", methods=["GET"])
-def list():
+def list_users():
     try:
         institution_id = request.args.get('institution_id')
         mode = request.args.get('mode')
@@ -95,18 +102,10 @@ def list():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-@user_router.route("/management", methods=["GET"])
-def management():
-    try:
-        institution_id = request.args.get('institution_id')
-        records = user_service_obj.management(institution_id)
-        return jsonify(records)
-    except Exception as e:
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
-
 @user_router.route("/delete", methods=["DELETE"])
-def delete():
+@jwt_required()
+@requires_role("admin")
+def delete_user():
     try:
         user_id = request.args.get('user_id')
         status = user_service_obj.delete_user(user_id)
@@ -121,7 +120,9 @@ def delete():
         return jsonify({"error": str(e)}), 500
 
 @user_router.route("/<int:user_id>/activate", methods=["DELETE"])
-def activate(user_id):
+@jwt_required()
+@requires_role("admin")
+def activate_user(user_id):
     try:
         return jsonify(user_service_obj.activate_user(user_id))
     except Exception as e:
@@ -129,15 +130,19 @@ def activate(user_id):
         return jsonify({"error": str(e)}), 500
 
 @user_router.route("/<int:user_id>/deactivate", methods=["DELETE"])
-def activate(user_id):
+@jwt_required()
+@requires_role("admin")
+def deactivate_user(user_id):
     try:
-        return jsonify(user_service_obj.activate_user(user_id))
+        return jsonify(user_service_obj.deactivate_user(user_id))
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 @user_router.route("/upload", methods=["POST"])
-def upload():
+@jwt_required()
+@requires_role("admin")
+def upload_users():
     try:
         institution_id = request.args.get('institution_id')
         mode = request.args.get('mode')
@@ -166,7 +171,9 @@ def upload():
         return jsonify({"error": str(e)}), 500
 
 @user_router.route('/download', methods=['GET'])
-def download():
+@jwt_required()
+@requires_role("admin")
+def download_users():
     try:
         institution_id = request.args.get('institution_id')
         mode = request.args.get('mode')

@@ -37,31 +37,51 @@ class UserService:
         
         if db_password == password:
             user_data = obj_to_dict(user)
+            role_id = user.role_id
+            role = session.query(Role).filter_by(id = role_id).first()
+            user_data["role_name"] = role.name
             access_token = create_access_token(identity=user_data)
             return {"message": "", "status": True, "access_token": access_token, "data": user_data}
         else:
             return {"message": "Invalid username or password", "status": False}
 
     def reset_password(self, data):
-        password = data["password"]
-        user_id = data["user_id"]
+        password = data["new_password"]
+        email = data["email"]
         hashed_password = encrypt(password)
         
-        if data['user_mode'] == 'user':
-            user = self.get_user_by_id(user_id)
-        else:
-            user = self.get_institution_by_id(user_id)
-
+        user = self.get_user_by_email(email)
+        if not user:
+            return {"message": "Invalid creds", "status": False}        
+        
         user.password_hash = hashed_password
         user.password_modified_date = datetime.now()
         
         session.commit()
         return {"message": "Password updated, relogin again", "status": True}
 
+    def update_password(self, data, user_id):
+        password = data["new_password"]
+        hashed_password = encrypt(password)
+        
+        user = self.get_user_by_id(user_id)
+        if not user:
+            return {"message": "Invalid creds", "status": False}        
+        user.password_hash = hashed_password
+        user.password_modified_date = datetime.now()
+        session.commit()
+        return {"message": "Password updated, relogin again", "status": True}
+    
+    
     def register_user(self, data):
         data["password_hash"] = encrypt(data["password"])
         data.pop("password")
         data["initial_password_reset"] = True
+        
+        if "role_id" not in data:
+            role = session.query(Role).filter_by(name = "Student").first()
+            data["role_id"] = role.id
+                
         user = UserMaster(**data)
         session.add(user)
         session.commit()
@@ -125,7 +145,7 @@ class UserService:
         else:
             return False
         
-    def active_user(self, user_id):
+    def activate_user(self, user_id):
         user = session.query(UserMaster).get(user_id)
         
         if user:
@@ -135,7 +155,7 @@ class UserService:
         else:
             return {"status": False, "message": "User not Activated"}
     
-    def deactive_user(self, user_id):
+    def deactivate_user(self, user_id):
         user = session.query(UserMaster).get(user_id)
         
         if user:

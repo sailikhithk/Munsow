@@ -1,16 +1,16 @@
 import requests
+import json
 
-from models.role import Role
-from models.country import Country
+from models import Role, Country, Branch, Department
 from database import session
 from sqlalchemy import func
-from meta_data import COUNTRIES, ROLES
+from meta_data import COUNTRIES, ROLES, BRANCHS, DEPARTMENTS
 def create_dummy_roles():
     
     query_result = (
         session.query(func.count(Role.id)).filter(Role.name.in_(ROLES)).scalar()
     )
-    if query_result != 3:
+    if query_result != len(ROLES):
         for role_name in ROLES:
             role = Role(name=role_name)
             session.add(role)
@@ -26,13 +26,33 @@ def create_countries():
             session.add(country)
         session.commit()
 
+def create_branches():
+    query_result = (
+        session.query(func.count(Branch.id)).filter(Branch.name.in_(BRANCHS)).scalar()
+    )
+    if query_result != len(BRANCHS):
+        for branch_name in BRANCHS:
+            branch = Branch(name=branch_name)
+            session.add(branch)
+        session.commit()
+
+def create_departments():
+    query_result = (
+        session.query(func.count(Department.id)).filter(Department.name.in_(DEPARTMENTS)).scalar()
+    )
+    if query_result != len(DEPARTMENTS):
+        for department_name in DEPARTMENTS:
+            department = Department(name=department_name)
+            session.add(department)
+        session.commit()
+
 def create_dummy_institution():
     url = "http://localhost:5000/institution/register"
     institutions_data = [
         {
-                "institution_name": "INV Test-1",
+                "institution_name": "INV Test-10",
                 "contact_name": "harnath",
-                "email": "harnath@gmail.com",
+                "email": "harnath-a@gmail.com",
                 "phone_number": "9701185467",
                 "country_id": 1,
                 "city": "Ongole",
@@ -45,9 +65,9 @@ def create_dummy_institution():
                 "password": "1234"
             },
             {
-                "institution_name": "INV Test-1",
+                "institution_name": "INV Test-11",
                 "contact_name": "ramu",
-                "email": "ramu@gmail.com",
+                "email": "ramu-a@gmail.com",
                 "phone_number": "9701185467",
                 "country_id": 1,
                 "city": "Ongole",
@@ -60,9 +80,9 @@ def create_dummy_institution():
                 "password": "1234"
             },
             {
-                "institution_name": "INV Test-1",
+                "institution_name": "INV Test-12",
                 "contact_name": "sai",
-                "email": "sai@gmail.com",
+                "email": "sai-a@gmail.com",
                 "phone_number": "9701185467",
                 "country_id": 1,
                 "city": "Ongole",

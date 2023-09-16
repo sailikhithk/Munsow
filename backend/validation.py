@@ -40,18 +40,25 @@ INSTITUTION_UPDATE_PASSWORD_SCHEMA = {
     "type": "object",
     "properties": {
         "new_password": {"type": "string"},
-        "institution_id": {"type": "integer"}
     },
-    "required": ["new_password", "institution_id"]
+    "required": ["new_password"]
+}
+
+USER_RESET_PASSWORD_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "new_password": {"type": "string"},
+        "user_id": {"type": "integer"}
+    },
+    "required": ["new_password", "user_id"]
 }
 
 USER_UPDATE_PASSWORD_SCHEMA = {
     "type": "object",
     "properties": {
         "new_password": {"type": "string"},
-        "user_id": {"type": "integer"}
     },
-    "required": ["new_password", "institution_id"]
+    "required": ["new_password"]
 }
 
 LOGIN_SCHEMA = {
@@ -72,6 +79,7 @@ RESET_PASSWORD_SCHEMA = {
     "required": ["email", "new_password"]
 }
 
+
 USER_REGISTER_SCHEMA = {
     "type": "object",
     "properties": {
@@ -88,7 +96,7 @@ USER_REGISTER_SCHEMA = {
         "password": {"type": "string"},
         "role_id": {"type": "string"},
     },
-    "required": ["first_name", "last_name", "email", "phone_number", "branch_id", "department_id", "institution_id", "preference", "is_ug", "password", "role_id"]
+    "required": ["first_name", "last_name", "email", "phone_number", "branch_id", "department_id", "institution_id", "is_ug", "password"]
 }
     
 USER_UPDATE_SCHEMA = {

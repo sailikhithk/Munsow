@@ -1,10 +1,11 @@
 import traceback
 import uuid
+import pandas as pd
 from datetime import datetime
 from sqlalchemy import asc, desc
 
 
-from models import InstitutionMaster, Country
+from models import InstitutionMaster, Country, Role, UserMaster, Branch, Department
 from database import session
 from utils import encrypt, decrypt, obj_to_dict, obj_to_list
 from flask_jwt_extended import create_access_token
@@ -31,6 +32,11 @@ class InstitutionService:
         
         if db_password == password:
             institution_data = obj_to_dict(institution)
+            role_name = "Admin"
+            role = session.query(Role).filter_by(name = role_name).first()
+            role_id = role.id
+            institution_data["role_id"] = role_id
+            institution_data["role_name"] = role_name
             access_token = create_access_token(identity=institution_data)
             return {"message": "", "status": True, "access_token": access_token, "data": institution_data}
         else:
@@ -40,6 +46,14 @@ class InstitutionService:
         countrys = session.query(Country).all()    
         return obj_to_list(countrys)
     
+    def branch_list(self):
+        branchs = session.query(Branch).all()    
+        return obj_to_list(branchs)
+    
+    def department_list(self):
+        departments = session.query(Department).all()    
+        return obj_to_list(departments)
+        
     def reset_password(self, data):
         password = data["new_password"]
         email = data["email"]
@@ -53,9 +67,8 @@ class InstitutionService:
         session.commit()
         return {"message": "Password updated, relogin again", "status": True}
     
-    def update_password(self, data):
-        password = data["password"]
-        institution_id = data["institution_id"]
+    def update_password(self, data, institution_id):
+        password = data["new_password"]
         hashed_password = encrypt(password)
         
         institution = self.get_institution_by_id(institution_id)
@@ -73,7 +86,7 @@ class InstitutionService:
             email = data["email"]
             existing_institution = self.get_institution_by_email(email)
             if existing_institution:
-                return {"status": False, "message": "Institution with this email exists"}
+                return {"status": False, "message": "Institution with same email exists"}
             
             institution = InstitutionMaster(**data)
             session.add(institution)
@@ -109,7 +122,7 @@ class InstitutionService:
             traceback.print_exc()
             return {"status": False, "message": "error", "error": str(e)}
 
-    def list_institutions(self, page=1, per_page=20, sort_by=None, sort_order='asc'):
+    def list_institutions(self, page=1, per_page=20, sort_by=None, sort_order='asc', ):
         try:
             sort_order = sort_order.lower()
             if sort_order not in ['asc', 'desc']:
@@ -171,7 +184,7 @@ class InstitutionService:
         else:
             return {"status": False, "message": "Institution not deleted"}
     
-    def active_institution(self, institution_id):
+    def activate_institution(self, institution_id):
         institution = session.query(InstitutionMaster).get(institution_id)
         
         if institution:
@@ -190,3 +203,50 @@ class InstitutionService:
             return {"status": True, "message": "Institution Deactivated"} 
         else:
             return {"status": False, "message": "Institution not Deactivated"}
+        
+    def management(self, institution_id):
+        try:
+            students_obj = session.query(UserMaster).join(Role).filter(UserMaster.institution_id == institution_id).filter(Role.name == 'Student').all()
+            teachers_obj = session.query(UserMaster).join(Role).filter(UserMaster.institution_id == institution_id).filter(Role.name == 'Teacher').all()
+
+            students = obj_to_list(students_obj)
+            teachers = obj_to_list(teachers_obj)
+            students_df = pd.DataFrame(students)
+            teachers_df = pd.DataFrame(teachers)
+            print("students_df", students_df)
+            print("teachers_df", teachers_df)
+            if len(students_df):
+                unique_student_departments = students_df["department_id"].nunique()
+                unique_student_branchs = students_df["branch_id"].nunique()
+            else:
+                unique_student_departments = 0
+                unique_student_branchs = 0
+            
+            
+            if len(teachers_df):
+                unique_teacher_departments = teachers_df["department_id"].nunique()            
+                unique_teacher_branchs = teachers_df["branch_id"].nunique()
+            else:
+                unique_teacher_departments = 0
+                unique_teacher_branchs = 0
+                        
+            response = {
+                "students": {
+                    "number_of_students": len(students),
+                    "number_of_departments": unique_student_departments,
+                    "number_of_branches": unique_student_branchs
+
+                },
+                "teachers": {
+                    "number_of_teachers": len(teachers),
+                    "number_of_departments": unique_teacher_departments,
+                    "number_of_branches": unique_teacher_branchs
+                }
+            }
+            return response
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"status": False, "message": "error", "error": str(e)}
+
+        

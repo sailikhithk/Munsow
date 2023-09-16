@@ -23,4 +23,8 @@ COUNTRIES = [
     "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ]
 
-ROLES = ["Admin", "Teacher", "Student"]
+ROLES = ["Admin", "Teacher", "Student", "Super Admin"]
+
+BRANCHS = ["Branch-1", "Branch-2", "Branch-3"]
+
+DEPARTMENTS = ["Department-1", "Department-2", "Department-3"]

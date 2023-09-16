@@ -2,7 +2,7 @@
 import os
 import logging
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import timedelta
 
@@ -10,8 +10,10 @@ from datetime import timedelta
 # Registering the blueprints after initializing the app
 from routes.user import user_router
 from routes.institution import institution_router
+from decorators import requires_role
+
 # from routes.case_master import case_master as case_master_router
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import decode_token, JWTManager, jwt_required, get_jwt_identity
 
 from database import Base, engine
 
@@ -55,6 +57,11 @@ def before_request():
                 print(f"{key}: {value}")    
     else:
         print("Body: No request body")
+    
+@jwt.unauthorized_loader
+def unauthorized_response(callback):
+    return jsonify({"message": "Access token is missing", "status": False}), 401
+
 @app.after_request
 def after_request(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -80,10 +87,17 @@ def insert_dummy_data():
     with app.app_context():
         from create_db import (
             create_dummy_roles,
-            create_countries
+            create_countries,
+            create_branches,
+            create_departments,
+            create_dummy_institution
+
         )
     create_dummy_roles()
     create_countries()
+    create_branches()
+    create_departments()
+    create_dummy_institution()
         
 
 if __name__ == "__main__":
@@ -96,10 +110,4 @@ if __name__ == "__main__":
     
     Base.metadata.create_all(engine)
 
-    from create_db import (
-        create_dummy_roles,create_countries
-    )
-
-    create_dummy_roles()
-    create_countries()
     app.run(debug=True)
