@@ -31,6 +31,7 @@ DEPARTMENTS = ["Department-1", "Department-2", "Department-3"]
 
 COURSES = ["UG", "PG"]
 
-UPLOAD_USER_FILE_STUDENT_HEADERS = ["first_name", "last_name", "phone_number", "email", "branch", "department", "programme", "course"]
+UPLOAD_USER_FILE_STUDENT_HEADERS = ["first_name", "last_name", "phone_number", "email", "branch", "department", "programme", "course", "password"]
 
-UPLOAD_USER_FILE_TEACHER_HEADERS = ["first_name", "phone_number", "email", "branch", "department", "address"]
+UPLOAD_USER_FILE_TEACHER_HEADERS = ["first_name", "phone_number", "email", "branch", "department", "address", "password"]
+

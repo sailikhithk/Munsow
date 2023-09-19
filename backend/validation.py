@@ -92,13 +92,42 @@ USER_REGISTER_SCHEMA = {
         "department_id": {"type": "integer"},
         "institution_id": {"type": "integer"},
         "address": {"type": "string"},        
-        "is_ug": {"type": "integer"},
+        "course": {"type": "string"},
         "password": {"type": "string"},
-        "role_id": {"type": "string"},
+        "role_id": {"type": "integer"},
     },
-    "required": ["first_name", "last_name", "email", "phone_number", "branch_id", "department_id", "institution_id", "is_ug", "password"]
+    "required": ["first_name", "last_name", "email", "phone_number", "branch_id", "department_id", "institution_id", "course", "password"]
 }
     
+STUDENT_CREATED_BY_ADMIN_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "first_name": {"type": "string"},
+        "last_name": {"type": "string"},
+        "email": {"type": "string"},
+        "phone_number": {"type": "string"},
+        "branch_id": {"type": "integer"},
+        "department_id": {"type": "integer"},
+        "address": {"type": "string"},        
+        "course_id": {"type": "integer"},
+        "password": {"type": "string"}
+    },
+    "required": ["first_name", "last_name", "email", "phone_number", "branch_id", "department_id", "address", "course_id", "password"]
+}
+
+TEACHER_CREATED_BY_ADMIN_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "first_name": {"type": "string"},
+        "phone_number": {"type": "string"},
+        "email": {"type": "string"},
+        "branch_id": {"type": "integer"},
+        "department_id": {"type": "integer"},
+        "institution_id": {"type": "integer"},
+        "address": {"type": "string"},
+    }
+}
+
 USER_UPDATE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -111,7 +140,7 @@ USER_UPDATE_SCHEMA = {
         "institution_id": {"type": "integer"},
         "address": {"type": "string"},
         
-        "is_ug": {"type": "integer"},
+        "course": {"type": "integer"},
         "password": {"type": "string"},
         "role_id": {"type": "string"},
     }

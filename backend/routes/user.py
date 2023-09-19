@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 
 from jsonschema import validate
 from services import UserService
-from validation import LOGIN_SCHEMA, USER_RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS, USER_UPDATE_PASSWORD_SCHEMA, UPLOAD_USER_ROLE_SCHEMA
+from validation import LOGIN_SCHEMA, USER_RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS, USER_UPDATE_PASSWORD_SCHEMA, UPLOAD_USER_ROLE_SCHEMA, STUDENT_CREATED_BY_ADMIN_SCHEMA, TEACHER_CREATED_BY_ADMIN_SCHEMA
 from decorators import requires_role
 
 user_router = Blueprint("user", __name__)
@@ -25,6 +25,41 @@ def register():
         else:
             response = {"status": False, "message": "User not created"} 
         return jsonify(response)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@user_router.route("/admin_create_user", methods=["POST"])
+@jwt_required()
+@requires_role("admin")
+def create_user():
+    try:
+        institution_id = request.args.get('institution_id')
+        mode = request.args.get('mode')
+        validate(mode, UPLOAD_USER_ROLE_SCHEMA)
+        data = request.get_json()
+
+        if mode == "student":
+            validate(data, STUDENT_CREATED_BY_ADMIN_SCHEMA)
+            data["institution_id"] = institution_id
+            user = user_service_obj.admin_create_student(data)
+            if user:
+                response = {"status": True, "message": "Student Created", "data":user} 
+            else:
+                response = {"status": False, "message": "Student not created"} 
+            return jsonify(response)    
+        elif mode == "teacher":
+            validate(data, TEACHER_CREATED_BY_ADMIN_SCHEMA)
+            data["institution_id"] = institution_id
+            user = user_service_obj.admin_create_teacher(data)
+            if user:
+                response = {"status": True, "message": "Teacher Created", "data":user} 
+            else:
+                response = {"status": False, "message": "Teacher not created"} 
+            return jsonify(response)
+        else:
+            return jsonify({"status": False, "message": "User not created"})
+                    
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
@@ -144,8 +179,9 @@ def deactivate_user(user_id):
 @requires_role("admin")
 def upload_users():
     try:
-        institution_id = request.args.get('institution_id')
-        mode = request.args.get('mode')
+        current_user = get_jwt_identity()
+        institution_id = current_user["id"]
+        mode = request.form.get('mode')
         validate(mode, UPLOAD_USER_ROLE_SCHEMA)
         
         if 'file' not in request.files:
@@ -160,12 +196,8 @@ def upload_users():
         if not '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
             return jsonify({"error": "Invalid file type"}), 400
         
-        status = user_service_obj.upload_users(institution_id, mode, file, filename)
-        if status:
-            response = {"status": True, "message": "User bulk upload successfully"} 
-        else:
-            response = {"status": False, "message": "User bulk upload failed"} 
-
+        response = user_service_obj.upload_users(file, institution_id, mode)
+        
         return jsonify(response)
     except Exception as e:
         traceback.print_exc()

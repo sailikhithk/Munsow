@@ -54,7 +54,8 @@ def before_request():
         elif request.content_type.startswith('multipart/form-data'):
             print("Form Data:")
             for key, value in request.form.items():
-                print(f"{key}: {value}")    
+                if key != "file":
+                    print(f"{key}: {value}")    
     else:
         print("Body: No request body")
     
@@ -90,14 +91,20 @@ def insert_dummy_data():
             create_countries,
             create_branches,
             create_departments,
-            create_dummy_institution
+            create_courses,
+            create_dummy_institution,
+            create_dummy_teachers,
+            create_dummy_students,
 
         )
     create_dummy_roles()
     create_countries()
     create_branches()
+    create_courses()
     create_departments()
     create_dummy_institution()
+    create_dummy_teachers()
+    create_dummy_students()
         
 
 if __name__ == "__main__":

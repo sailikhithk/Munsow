@@ -75,11 +75,16 @@ def course_list():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-
-
-
-
-
+@institution_router.route("/institution_list", methods=["GET"])
+def institution_list():
+    try:
+        response = institution_service_obj.institution_list()
+        print("response", response)
+        return jsonify(response)
+    
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 @institution_router.route("/reset_password", methods=["POST"])
 def reset_password():
@@ -135,7 +140,7 @@ def management():
 @requires_role("super admin")
 def list_institutions():
     try:
-        institutions = institution_service_obj.list_institutions()
+        institutions = institution_service_obj.list_institutions_with_filters()
         return jsonify(institutions)
     except Exception as e:
         traceback.print_exc()

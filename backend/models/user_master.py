@@ -16,7 +16,7 @@ class UserMaster(Base):
     institution_id = Column(Integer, ForeignKey("institution_master.id"))
     programme = Column(String(255))
     
-    course = Column(Integer)
+    course_id = Column(Integer)
     password_hash = Column(String(128))
     role_id = Column(Integer, ForeignKey("role.id"))
     number_of_interviews = Column(Integer, default=0)

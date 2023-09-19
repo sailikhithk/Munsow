@@ -58,6 +58,12 @@ class InstitutionService:
         course = session.query(Course).all()    
         return obj_to_list(course)
         
+    def institution_list(self):
+        institution = session.query(InstitutionMaster.id, InstitutionMaster.institution_name).all()    
+        list_dicts = [{"id": row.id, "institution_name": row.institution_name} for row in institution]
+
+        return list_dicts
+       
     def reset_password(self, data):
         password = data["new_password"]
         email = data["email"]
@@ -126,7 +132,7 @@ class InstitutionService:
             traceback.print_exc()
             return {"status": False, "message": "error", "error": str(e)}
 
-    def list_institutions(self, page=1, per_page=20, sort_by=None, sort_order='asc', ):
+    def list_institutions_with_filters(self, page=1, per_page=20, sort_by=None, sort_order='asc', ):
         try:
             sort_order = sort_order.lower()
             if sort_order not in ['asc', 'desc']:
