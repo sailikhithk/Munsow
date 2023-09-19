@@ -17,6 +17,7 @@ INSTITUTION_REGISTER_SCHEMA = {
     },
     "required": ["institution_name", "contact_name", "email", "phone_number", "country_id", "city", "desiganation", "number_of_students", "number_of_departments", "domains", "preference_days", "preference_time", "password"]
 }
+
 INSTITUTION_UPDATE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -90,8 +91,7 @@ USER_REGISTER_SCHEMA = {
         "branch_id": {"type": "integer"},
         "department_id": {"type": "integer"},
         "institution_id": {"type": "integer"},
-        
-        "preference": {"type": "string"},
+        "address": {"type": "string"},        
         "is_ug": {"type": "integer"},
         "password": {"type": "string"},
         "role_id": {"type": "string"},
@@ -109,12 +109,22 @@ USER_UPDATE_SCHEMA = {
         "branch_id": {"type": "integer"},
         "department_id": {"type": "integer"},
         "institution_id": {"type": "integer"},
+        "address": {"type": "string"},
         
-        "preference": {"type": "string"},
         "is_ug": {"type": "integer"},
         "password": {"type": "string"},
         "role_id": {"type": "string"},
     }
 }
-    
+
+ANALYSIS_MODE_SCHEMA = {
+    "type": "string",
+    "enum": ["behavioral_analysis", "ks_analysis", "practical_thinking_analysis", "emotion_sensing", "hard_skill_vs_soft_skills"]
+}
+
+UPLOAD_USER_ROLE_SCHEMA = {
+    "type": "string",
+    "enum": ["student", "teacher"]
+}
+
 ALLOWED_EXTENSIONS = {'xlsx'}

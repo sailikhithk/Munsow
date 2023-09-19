@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 
 from jsonschema import validate
 from services import UserService
-from validation import LOGIN_SCHEMA, USER_RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS, USER_UPDATE_PASSWORD_SCHEMA
+from validation import LOGIN_SCHEMA, USER_RESET_PASSWORD_SCHEMA, USER_REGISTER_SCHEMA, USER_UPDATE_SCHEMA, ALLOWED_EXTENSIONS, USER_UPDATE_PASSWORD_SCHEMA, UPLOAD_USER_ROLE_SCHEMA
 from decorators import requires_role
 
 user_router = Blueprint("user", __name__)
@@ -146,6 +146,7 @@ def upload_users():
     try:
         institution_id = request.args.get('institution_id')
         mode = request.args.get('mode')
+        validate(mode, UPLOAD_USER_ROLE_SCHEMA)
         
         if 'file' not in request.files:
             return jsonify({"error": "No file part"}), 400

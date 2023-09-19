@@ -107,6 +107,7 @@ if __name__ == "__main__":
     from models.institution_master import InstitutionMaster
     from models.role import Role
     from models.user_master import UserMaster
+    from models.course import Course
     
     Base.metadata.create_all(engine)
 

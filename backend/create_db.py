@@ -1,10 +1,10 @@
 import requests
 import json
 
-from models import Role, Country, Branch, Department
+from models import Role, Country, Branch, Department, Course
 from database import session
 from sqlalchemy import func
-from meta_data import COUNTRIES, ROLES, BRANCHS, DEPARTMENTS
+from meta_data import COUNTRIES, ROLES, BRANCHS, DEPARTMENTS, COURSES
 def create_dummy_roles():
     
     query_result = (
@@ -44,6 +44,16 @@ def create_departments():
         for department_name in DEPARTMENTS:
             department = Department(name=department_name)
             session.add(department)
+        session.commit()
+
+def create_courses():
+    query_result = (
+        session.query(func.count(Course.id)).filter(Course.name.in_(COURSES)).scalar()
+    )
+    if query_result != len(COURSES):
+        for course_name in COURSES:
+            course = course(name=course_name)
+            session.add(course)
         session.commit()
 
 def create_dummy_institution():
