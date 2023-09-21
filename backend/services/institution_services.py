@@ -21,26 +21,31 @@ class InstitutionService:
         return session.query(InstitutionMaster).filter_by(email = email).first()        
         
     def login_institution(self, data):
-        email = data["email"]
-        password = data["password"]
-        institution = self.get_institution_by_email(email)
-        if not institution:
-            return {"message": "Invalid username or password", "status": False}
+        try:
+            email = data["email"]
+            password = data["password"]
+            institution = self.get_institution_by_email(email)
+            if not institution:
+                return {"message": "Invalid username or password", "status": False}
 
-        hashpwd = institution.password_hash
-        db_password = decrypt(hashpwd)
+            hashpwd = institution.password_hash
+            db_password = decrypt(hashpwd)
 
-        if db_password == password:
-            institution_data = obj_to_dict(institution)
-            role_name = "Admin"
-            role = session.query(Role).filter_by(name = role_name).first()
-            role_id = role.id
-            institution_data["role_id"] = role_id
-            institution_data["role_name"] = role_name
-            access_token = create_access_token(identity=institution_data)
-            return {"message": "", "status": True, "access_token": access_token, "data": institution_data}
-        else:
-            return {"message": "Invalid username or password", "status": False}
+            if db_password == password:
+                institution_data = obj_to_dict(institution)
+                role_name = "Admin"
+                role = session.query(Role).filter_by(name = role_name).first()
+                role_id = role.id
+                institution_data["role_id"] = role_id
+                institution_data["role_name"] = role_name
+                access_token = create_access_token(identity=institution_data)
+                return {"message": "", "status": True, "access_token": access_token, "data": institution_data}
+            else:
+                return {"message": "Invalid username or password", "status": False}
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"error": str(e), "status": False}
     
     def country_list(self):
         countrys = session.query(Country).all()    
@@ -65,29 +70,39 @@ class InstitutionService:
         return list_dicts
        
     def reset_password(self, data):
-        password = data["new_password"]
-        email = data["email"]
-        hashed_password = encrypt(password)
-        
-        institution = self.get_institution_by_email(email)
-        if not institution:
-            return {"message": "Invalid creds", "status": False}        
-        institution.password_hash = hashed_password
-        institution.password_modified_date = datetime.now()
-        session.commit()
-        return {"message": "Password updated, relogin again", "status": True}
+        try:
+            password = data["new_password"]
+            email = data["email"]
+            hashed_password = encrypt(password)
+            
+            institution = self.get_institution_by_email(email)
+            if not institution:
+                return {"message": "Invalid creds", "status": False}        
+            institution.password_hash = hashed_password
+            institution.password_modified_date = datetime.now()
+            session.commit()
+            return {"message": "Password updated, relogin again", "status": True}
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"error": str(e), "status": False}
     
     def update_password(self, data, institution_id):
-        password = data["new_password"]
-        hashed_password = encrypt(password)
-        
-        institution = self.get_institution_by_id(institution_id)
-        if not institution:
-            return {"message": "Invalid creds", "status": False}        
-        institution.password_hash = hashed_password
-        institution.password_modified_date = datetime.now()
-        session.commit()
-        return {"message": "Password updated, relogin again", "status": True}
+        try:
+            password = data["new_password"]
+            hashed_password = encrypt(password)
+            
+            institution = self.get_institution_by_id(institution_id)
+            if not institution:
+                return {"message": "Invalid creds", "status": False}        
+            institution.password_hash = hashed_password
+            institution.password_modified_date = datetime.now()
+            session.commit()
+            return {"message": "Password updated, relogin again", "status": True}
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"error": str(e), "status": False}
 
     def register_institution(self, data):
         try:
@@ -185,34 +200,49 @@ class InstitutionService:
             return {"status": False, "message": "error", "error": str(e)}
 
     def delete_institution(self, institution_id):
-        institution = session.query(InstitutionMaster).get(institution_id)
+        try:
+            institution = session.query(InstitutionMaster).get(institution_id)
+            
+            if institution:
+                session.delete(institution)
+                session.commit()
+                return {"status": True, "message": "Institution Deleted"} 
+            else:
+                return {"status": False, "message": "Institution not deleted"}
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"error": str(e), "status": False}
         
-        if institution:
-            session.delete(institution)
-            session.commit()
-            return {"status": True, "message": "Institution Deleted"} 
-        else:
-            return {"status": False, "message": "Institution not deleted"}
-    
     def activate_institution(self, institution_id):
-        institution = session.query(InstitutionMaster).get(institution_id)
-        
-        if institution:
-            institution.is_active = True
-            session.commit()
-            return {"status": True, "message": "Institution Activated"} 
-        else:
-            return {"status": False, "message": "Institution not Activated"}
+        try:
+            institution = session.query(InstitutionMaster).get(institution_id)
+            
+            if institution:
+                institution.is_active = True
+                session.commit()
+                return {"status": True, "message": "Institution Activated"} 
+            else:
+                return {"status": False, "message": "Institution not Activated"}
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"error": str(e), "status": False}
     
     def deactive_institution(self, institution_id):
-        institution = session.query(InstitutionMaster).get(institution_id)
-        
-        if institution:
-            institution.is_active = False
-            session.commit()
-            return {"status": True, "message": "Institution Deactivated"} 
-        else:
-            return {"status": False, "message": "Institution not Deactivated"}
+        try:
+            institution = session.query(InstitutionMaster).get(institution_id)
+            
+            if institution:
+                institution.is_active = False
+                session.commit()
+                return {"status": True, "message": "Institution Deactivated"} 
+            else:
+                return {"status": False, "message": "Institution not Deactivated"}
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"error": str(e), "status": False}
         
     def management(self, institution_id):
         try:

@@ -42,23 +42,15 @@ def create_user():
         if mode == "student":
             validate(data, STUDENT_CREATED_BY_ADMIN_SCHEMA)
             data["institution_id"] = institution_id
-            user = user_service_obj.admin_create_student(data)
-            if user:
-                response = {"status": True, "message": "Student Created", "data":user} 
-            else:
-                response = {"status": False, "message": "Student not created"} 
+            response = user_service_obj.admin_create_student(data)
             return jsonify(response)    
         elif mode == "teacher":
             validate(data, TEACHER_CREATED_BY_ADMIN_SCHEMA)
             data["institution_id"] = institution_id
-            user = user_service_obj.admin_create_teacher(data)
-            if user:
-                response = {"status": True, "message": "Teacher Created", "data":user} 
-            else:
-                response = {"status": False, "message": "Teacher not created"} 
+            response = user_service_obj.admin_create_teacher(data)
             return jsonify(response)
         else:
-            return jsonify({"status": False, "message": "User not created"})
+            return jsonify({"status": False, "message": "User not created invalid request"})
                     
     except Exception as e:
         traceback.print_exc()
@@ -131,7 +123,11 @@ def list_users():
     try:
         institution_id = request.args.get('institution_id')
         mode = request.args.get('mode')
-        users = user_service_obj.list_users(institution_id, mode) # need to add pagaination thing
+        column_name = request.args.get('column_name', "created_date")
+        order_by = request.args.get('order_by', 'ASC')
+        page_number = request.args.get('page_number', 1)
+        limit = request.args.get('limit', 20)       
+        users = user_service_obj.list_users(mode, column_name, order_by, page_number, limit)
         return jsonify(users)
     except Exception as e:
         traceback.print_exc()

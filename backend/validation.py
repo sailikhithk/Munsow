@@ -14,8 +14,9 @@ INSTITUTION_REGISTER_SCHEMA = {
         "preference_days": {"type": "string"},
         "preference_time": {"type": "string"},
         "password": {"type": "string"},
+        "registration_number": {"type": "string"}
     },
-    "required": ["institution_name", "contact_name", "email", "phone_number", "country_id", "city", "desiganation", "number_of_students", "number_of_departments", "domains", "preference_days", "preference_time", "password"]
+    "required": ["institution_name", "contact_name", "email", "phone_number", "country_id", "city", "desiganation", "number_of_students", "number_of_departments", "domains", "preference_days", "preference_time", "password", "registration_number"]
 }
 
 INSTITUTION_UPDATE_SCHEMA = {
@@ -34,6 +35,7 @@ INSTITUTION_UPDATE_SCHEMA = {
         "preference_days": {"type": "string"},
         "preference_time": {"type": "string"},
         "password": {"type": "string"},
+        "registration_number": {"type": "string"}
     }
 }
 
@@ -125,6 +127,7 @@ TEACHER_CREATED_BY_ADMIN_SCHEMA = {
         "department_id": {"type": "integer"},
         "institution_id": {"type": "integer"},
         "address": {"type": "string"},
+        "password": {"type": "string"}
     }
 }
 
