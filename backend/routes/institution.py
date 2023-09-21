@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 from jsonschema import validate
 from services import InstitutionService
-from validation import INSTITUTION_REGISTER_SCHEMA, INSTITUTION_UPDATE_SCHEMA, LOGIN_SCHEMA, RESET_PASSWORD_SCHEMA, INSTITUTION_UPDATE_PASSWORD_SCHEMA
+from validation import INSTITUTION_REGISTER_SCHEMA, INSTITUTION_UPDATE_SCHEMA, LOGIN_SCHEMA, RESET_PASSWORD_SCHEMA, INSTITUTION_UPDATE_PASSWORD_SCHEMA, ANALYSIS_MODE_SCHEMA
 from decorators import requires_role
 institution_router = Blueprint("institution", __name__)
 logger = logging.getLogger("institution")
@@ -27,7 +27,7 @@ def register_institution():
 def login_institution():
     try:
         data = request.get_json()
-        validate(data, LOGIN_SCHEMA)    
+        validate(data, LOGIN_SCHEMA)
         response = institution_service_obj.login_institution(data)
         return jsonify(response)
     
@@ -65,6 +65,26 @@ def department_list():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
+@institution_router.route("/course_list", methods=["GET"])
+def course_list():
+    try:
+        response = institution_service_obj.course_list()
+        return jsonify(response)
+    
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@institution_router.route("/institution_list", methods=["GET"])
+def institution_list():
+    try:
+        response = institution_service_obj.institution_list()
+        print("response", response)
+        return jsonify(response)
+    
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 @institution_router.route("/reset_password", methods=["POST"])
 def reset_password():
@@ -120,7 +140,7 @@ def management():
 @requires_role("super admin")
 def list_institutions():
     try:
-        institutions = institution_service_obj.list_institutions()
+        institutions = institution_service_obj.list_institutions_with_filters()
         return jsonify(institutions)
     except Exception as e:
         traceback.print_exc()
@@ -151,9 +171,33 @@ def activate_institution(institution_id):
 @institution_router.route("/<int:institution_id>/deactivate", methods=["GET"])
 @jwt_required()
 @requires_role("super admin")
-def deactivate_institution(institution_id):
+def deactive_institution(institution_id):
     try:
-        return jsonify(institution_service_obj.deactivate_institution(institution_id))
+        return jsonify(institution_service_obj.deactive_institution(institution_id))
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@institution_router.route("/deep_analysis/<analysis_mode>", methods=["GET"])
+@jwt_required()
+@requires_role("admin")
+def deep_analysis(analysis_mode):
+    try:
+        validate(analysis_mode, ANALYSIS_MODE_SCHEMA)
+        return jsonify(institution_service_obj.deep_analysis(analysis_mode))
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@institution_router.route("/statistics", methods=["GET"])
+@jwt_required()
+@requires_role("admin")
+def institution_statistics():
+    try:
+        institution_id = request.args.get('institution_id')
+        return jsonify(institution_service_obj.institution_statistics(institution_id))
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500

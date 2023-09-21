@@ -1,10 +1,10 @@
 import requests
 import json
 
-from models import Role, Country, Branch, Department
+from models import Role, Country, Branch, Department, Course
 from database import session
 from sqlalchemy import func
-from meta_data import COUNTRIES, ROLES, BRANCHS, DEPARTMENTS
+from meta_data import COUNTRIES, ROLES, BRANCHS, DEPARTMENTS, COURSES
 def create_dummy_roles():
     
     query_result = (
@@ -46,13 +46,23 @@ def create_departments():
             session.add(department)
         session.commit()
 
+def create_courses():
+    query_result = (
+        session.query(func.count(Course.id)).filter(Course.name.in_(COURSES)).scalar()
+    )
+    if query_result != len(COURSES):
+        for course_name in COURSES:
+            course = Course(name=course_name)
+            session.add(course)
+        session.commit()
+
 def create_dummy_institution():
     url = "http://localhost:5000/institution/register"
     institutions_data = [
         {
                 "institution_name": "INV Test-10",
                 "contact_name": "harnath",
-                "email": "harnath-a@gmail.com",
+                "email": "harnath-institution@gmail.com",
                 "phone_number": "9701185467",
                 "country_id": 1,
                 "city": "Ongole",
@@ -67,7 +77,7 @@ def create_dummy_institution():
             {
                 "institution_name": "INV Test-11",
                 "contact_name": "ramu",
-                "email": "ramu-a@gmail.com",
+                "email": "ramu-institution@gmail.com",
                 "phone_number": "9701185467",
                 "country_id": 1,
                 "city": "Ongole",
@@ -82,7 +92,7 @@ def create_dummy_institution():
             {
                 "institution_name": "INV Test-12",
                 "contact_name": "sai",
-                "email": "sai-a@gmail.com",
+                "email": "sai-institution@gmail.com",
                 "phone_number": "9701185467",
                 "country_id": 1,
                 "city": "Ongole",
@@ -103,6 +113,111 @@ def create_dummy_institution():
         response = requests.request("POST", url, headers=headers, data=json.dumps(i))
         print(response.text)
 
-def create_dummy_users():
-    pass
+def create_dummy_students():
+    url = "http://localhost:5000/user/register"
+    students_data = [
+        {
+            "first_name": "Harnath",
+            "last_name": "Atmakuri-1",
+            "email": "harnath.student1@gmail.com",
+            "phone_number": "9701185466",
+            "branch_id": 1,
+            "department_id": 1,
+            "institution_id": 1,
+            "address": "test address",
+            "course": "UG",
+            "password": "1234",
+            "role_id": 3
+        },
+        {
+            "first_name": "Harnath",
+            "last_name": "Atmakuri-2",
+            "email": "harnath.student2@gmail.com",
+            "phone_number": "9701185466",
+            "branch_id": 1,
+            "department_id": 1,
+            "institution_id": 1,
+            "address": "test address",
+            "course": "UG",
+            "password": "1234",
+            "role_id": 3
+        },
+        {
+            "first_name": "Ram",
+            "last_name": "zzz 1",
+            "email": "ram.student1@gmail.com",
+            "phone_number": "9701185466",
+            "branch_id": 2,
+            "department_id": 2,
+            "institution_id": 2,
+            "address": "test address",
+            "course": "PG",
+            "password": "1234",
+            "role_id": 3
+        },
+        {
+            "first_name": "Ram",
+            "last_name": "zzz 2",
+            "email": "ram.student2@gmail.com",
+            "phone_number": "9701185466",
+            "branch_id": 2,
+            "department_id": 2,
+            "institution_id": 2,
+            "address": "test address",
+            "course": "UG",
+            "password": "1234",
+            "role_id": 3
+        },
+        {
+            "first_name": "Sai",
+            "last_name": "zzz 1",
+            "email": "sai.student1@gmail.com",
+            "phone_number": "9701185466",
+            "branch_id": 3,
+            "department_id": 3,
+            "institution_id": 3,
+            "address": "test address",
+            "course": "UG",
+            "password": "1234",
+            "role_id": 3
+        },
+        {
+            "first_name": "sai",
+            "last_name": "zzz 2",
+            "email": "sai.student2@gmail.com",
+            "phone_number": "9701185466",
+            "branch_id": 1,
+            "department_id": 1,
+            "institution_id": 1,
+            "address": "test address",
+            "course": "UG",
+            "password": "1234",
+            "role_id": 3
+        },
+    ]
 
+
+    for i in students_data:
+        headers = {
+        'Content-Type': 'application/json'
+        }
+        response = requests.request("POST", url, headers=headers, data=json.dumps(i))
+        print(response.text)
+
+def create_dummy_teachers():
+    url = "http://localhost:5000/institution/register"
+    teachers_data = [
+        {
+                "first_name": "Harnath",
+                "last_name": "harnath",
+                "email": "harnath-institution@gmail.com",
+                "phone_number": "9701185467",
+                "branch_id": 1,
+                "department_id": "Ongole",
+                "institution_id": "SSE",
+                "address": 150,
+                "course": 10,
+                "password": "@gmail.com",
+                "role_id": "Mon, Tue"
+            },
+    ]

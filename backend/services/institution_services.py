@@ -5,7 +5,7 @@ from datetime import datetime
 from sqlalchemy import asc, desc
 
 
-from models import InstitutionMaster, Country, Role, UserMaster, Branch, Department
+from models import InstitutionMaster, Country, Role, UserMaster, Branch, Department, Course
 from database import session
 from utils import encrypt, decrypt, obj_to_dict, obj_to_list
 from flask_jwt_extended import create_access_token
@@ -29,7 +29,7 @@ class InstitutionService:
 
         hashpwd = institution.password_hash
         db_password = decrypt(hashpwd)
-        
+
         if db_password == password:
             institution_data = obj_to_dict(institution)
             role_name = "Admin"
@@ -54,6 +54,16 @@ class InstitutionService:
         departments = session.query(Department).all()    
         return obj_to_list(departments)
         
+    def course_list(self):
+        course = session.query(Course).all()    
+        return obj_to_list(course)
+        
+    def institution_list(self):
+        institution = session.query(InstitutionMaster.id, InstitutionMaster.institution_name).all()    
+        list_dicts = [{"id": row.id, "institution_name": row.institution_name} for row in institution]
+
+        return list_dicts
+       
     def reset_password(self, data):
         password = data["new_password"]
         email = data["email"]
@@ -122,7 +132,7 @@ class InstitutionService:
             traceback.print_exc()
             return {"status": False, "message": "error", "error": str(e)}
 
-    def list_institutions(self, page=1, per_page=20, sort_by=None, sort_order='asc', ):
+    def list_institutions_with_filters(self, page=1, per_page=20, sort_by=None, sort_order='asc', ):
         try:
             sort_order = sort_order.lower()
             if sort_order not in ['asc', 'desc']:
@@ -249,4 +259,220 @@ class InstitutionService:
             traceback.print_exc()
             return {"status": False, "message": "error", "error": str(e)}
 
-        
+    
+    def institution_statistics(self, institution_id):
+        try:
+            
+            response = {
+                "cards": [],
+                "graphs": []
+            }
+
+            card_1 = {
+                "name": "Number of Students",
+                "value": 100,
+                "sub_values": {
+                    "active": 70,
+                    "in_active": 30
+                }
+            }
+            
+            card_2 = {
+                "name": "Number of Interviews Conducted",
+                "value": 76
+            }
+            
+            card_3 = {
+                "name": "improvement areas identified",
+                "value": 76
+            }
+
+            card_4 = {
+                "name": "Average Interview Score",
+                "value": 76
+            }
+            card_5 = {
+                "name": "Skill Gap rate",
+                "value": "23%"
+            }
+
+            response["cards"] = [card_1, card_2, card_3, card_4, card_5] 
+
+            # https://recharts.org/en-US/examples/MixBarChart
+            graph_1 = {
+                "name": "Department wise Participation",
+                "data": [
+                {
+                    "name": "Finance",
+                    "Participated": 40,
+                    "Not yet Participated": 24
+                },
+                {
+                    "name": "Marketing",
+                    "Participated": 30,
+                    "Not yet Participated": 30
+                },
+                {
+                    "name": "Operations",
+                    "Participated": 20,
+                    "Not yet Participated": 10
+                },
+                {
+                    "name": "Hr",
+                    "Participated": 10,
+                    "Not yet Participated": 20
+                }
+            ]
+
+            }
+            
+            # https://recharts.org/en-US/examples/LineChartWithXAxisPadding
+            graph_2 = {
+                "name": "DEPARTMENT WISE IMPROVEMENT RATE",
+                "data":             [
+                {
+                    "name": "Week 1",
+                    "Finance": 40,
+                    "Marketing": 24,
+                    "Operations": 26,
+                    "Hr": 10
+                },
+                {
+                    "name": "Week 2",
+                    "Finance": 30,
+                    "Marketing": 30,
+                    "Operations": 40,
+                    "Hr": 20
+                },
+                {
+                    "name": "Week 3",
+                    "Finance": 20,
+                    "Marketing": 10,
+                    "Operations": 40,
+                    "Hr": 30
+                },
+                {
+                    "name": "Week 4",
+                    "Finance": 10,
+                    "Marketing": 20,
+                    "Operations": 30,
+                    "Hr": 20
+                },
+                {
+                    "name": "Week 5",
+                    "Finance": 40,
+                    "Marketing": 30,
+                    "Operations": 40,
+                    "Hr": 20
+                }
+            ]
+
+            }
+            
+            graph_3 = {
+                "name": "CRITICAL IMPROVEMENT AREAS",
+                "data": [
+                { "name": 'Team Work', "value": 50 },
+                { "name": 'Excel', "value": 20 },
+                { "name": 'Communication', "value": 30 }
+            ]
+            }
+            
+            
+            response["graphs"] = [graph_1, graph_2, graph_3]
+            return {"status": True, "data": response}
+
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"status": False, "message": "error", "error": str(e)}
+
+    def deep_analysis(self, analysis_mode):
+        try:
+            dummy_graph_data = [
+                    {
+                        "name": "1",
+                        "Surprise": 40,
+                        "Disgust": 24,
+                        "Contempt": 26,
+                        "Happiness": 10,
+                        "Sadness": 10,
+                        "Anger": 30,
+                        "Fear": 50
+                    },
+                    {
+                        "name": "2",
+                        "Surprise": 30,
+                        "Disgust": 30,
+                        "Contempt": 40,
+                        "Happiness": 20,
+                        "Sadness": 10,
+                        "Anger": 30,
+                        "Fear": 50
+                    },
+                    {
+                        "name": "3",
+                        "Surprise": 20,
+                        "Disgust": 10,
+                        "Contempt": 40,
+                        "Happiness": 30,
+                        "Sadness": 10,
+                        "Anger": 30,
+                        "Fear": 50
+                    },
+                    {
+                        "name": "4",
+                        "Surprise": 10,
+                        "Disgust": 20,
+                        "Contempt": 30,
+                        "Happiness": 20,
+                        "Sadness": 10,
+                        "Anger": 30,
+                        "Fear": 50
+                    },
+                    {
+                        "name": "5",
+                        "Surprise": 40,
+                        "Disgust": 30,
+                        "Contempt": 40,
+                        "Happiness": 20,
+                        "Sadness": 10,
+                        "Anger": 30,
+                        "Fear": 50
+                    }
+                    ]
+            if analysis_mode == 'behavioral_analysis':
+                graph = {
+                "name": "Behavioral Analysis",
+                "data": dummy_graph_data
+                }
+                
+            elif analysis_mode == 'ks_analysis':
+                graph = {
+                "name": "KS Analysis",
+                "data": dummy_graph_data
+                }
+            elif analysis_mode == 'practical_thinking_analysis':
+                graph = {
+                "name": "Practical Thinking Analysis",
+                "data": dummy_graph_data
+                }
+            elif analysis_mode == 'emotion_sensing':
+                graph = {
+                "name": "Emotion Sensing",
+                "data": dummy_graph_data
+                }
+            elif analysis_mode == 'hard_skill_vs_soft_skills':
+                graph = {
+                "name": "Hard Skill vs Soft skills",
+                "data": dummy_graph_data
+                }
+            else:
+                graph = {}
+
+            return {"status": True, "data": graph}
+
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"status": False, "message": "error", "error": str(e)}

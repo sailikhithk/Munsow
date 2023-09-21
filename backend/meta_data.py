@@ -28,3 +28,10 @@ ROLES = ["Admin", "Teacher", "Student", "Super Admin"]
 BRANCHS = ["Branch-1", "Branch-2", "Branch-3"]
 
 DEPARTMENTS = ["Department-1", "Department-2", "Department-3"]
+
+COURSES = ["UG", "PG"]
+
+UPLOAD_USER_FILE_STUDENT_HEADERS = ["first_name", "last_name", "phone_number", "email", "branch", "department", "programme", "course", "password"]
+
+UPLOAD_USER_FILE_TEACHER_HEADERS = ["first_name", "phone_number", "email", "branch", "department", "address", "password"]
+

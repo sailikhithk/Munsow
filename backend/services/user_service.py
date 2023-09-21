@@ -4,8 +4,8 @@ from datetime import datetime
 
 from flask_jwt_extended import create_access_token
 
-from models import UserMaster, InstitutionMaster, Role, Branch, Department
-
+from models import UserMaster, InstitutionMaster, Role, Branch, Department, Course
+from meta_data import UPLOAD_USER_FILE_STUDENT_HEADERS, UPLOAD_USER_FILE_TEACHER_HEADERS 
 from utils import encrypt, decrypt, obj_to_dict, obj_to_list
 from database import session
 
@@ -81,13 +81,61 @@ class UserService:
         if "role_id" not in data:
             role = session.query(Role).filter_by(name = "Student").first()
             data["role_id"] = role.id
-                
+        
+        if "course" not in data:
+            course = session.query(Course).filter_by(name = data['course']).first()
+            if course is not None:
+                data["course_id"] = course.id
+            else:
+                course = session.query(Course).filter_by(name = "UG").first()
+                data["course_id"] = course.id
+        data.pop("course", None)
+            
+        if "course_id" not in data:
+            course = session.query(Course).filter_by(name = "UG").first()
+            data["course_id"] = course.id
+        
+        
         user = UserMaster(**data)
         session.add(user)
         session.commit()
         user_dic = obj_to_dict(user)
         return user_dic
 
+    def admin_create_student(self, data):
+        role_id = self.convert_name_to_id(session, Role, 'name', "Student")
+        data["role_id"] = role_id        
+        data["password_hash"] = encrypt(data["password"])
+        data.pop("password")
+        data["initial_password_reset"] = False
+ 
+        user = self.get_user_by_email(data['email'])
+        if user:
+            print(f"User(Student) with email {data['email']} already exists")
+        
+        user = UserMaster(**data)
+        session.add(user)
+        session.commit()
+        session.close()
+        return obj_to_dict(user)
+    
+    def admin_create_teacher(self, data):
+        role_id = self.convert_name_to_id(session, Role, 'name', "Teacher")
+        data["role_id"] = role_id
+        data["password_hash"] = encrypt(data["password"])
+        data.pop("password")
+        data["initial_password_reset"] = False
+
+        user = self.get_user_by_email(data['email'])
+        if user:
+            print(f"User(Teacher) with email {data['email']} already exists")
+        
+        user = UserMaster(**data)
+        session.add(user)
+        session.commit()
+        session.close()
+        return obj_to_dict(user)
+      
     def update_user(self, user_id, update_data):
         user = session.query(UserMaster).get(user_id)
         
@@ -202,30 +250,86 @@ class UserService:
         return None
     
     def upload_users(self, excel_file, institution_id, mode): 
-        data = pd.read_excel(excel_file)
-        for index, row in data.iterrows():
-            branch_id = self.convert_name_to_id(session, Branch, 'name', row['branch'])
-            department_id = self.convert_name_to_id(session, Department, 'name', row['department'])
-            role_id = self.convert_name_to_id(session, Role, 'name', mode)
-
-            user = UserMaster(
-                first_name=row['first_name'],
-                last_name=row['last_name'],
-                phone_number=row['phone_number'],
-                email=row['email'],
-                branch_id=branch_id,
-                department_id=department_id,
-                institution_id=institution_id,
-                role_id=role_id,
-                preference=row['preference'],
-                is_ug=row['is_ug'],
-            )
-            session.add(user)
-
-        session.commit()
-        session.close()
-        return True
-    
+        try:
+            data_df = pd.read_excel(excel_file)
+            df_columns = data_df.columns.tolist()
+            df_new_columns = {k:str(k).lower().strip().replace(" ", "_") for k in df_columns}
+            data_df.rename(columns=df_new_columns, inplace=True)
+            df_columns = data_df.columns.tolist()
+            
+            if mode == 'student':
+                # uploaded student file
+                for column in df_columns:
+                    if column not in UPLOAD_USER_FILE_STUDENT_HEADERS:
+                        print("Missing", column)
+                        return {"status": False, "message": "Invalid File"}    
+                for index, row in data_df.iterrows():
+                    user = self.get_user_by_email(row['email'])
+                    if user:
+                        print(f"User(Student) with email {row['email']} already exists")
+                        continue
+                    
+                    branch_id = self.convert_name_to_id(session, Branch, 'name', row['branch'])
+                    department_id = self.convert_name_to_id(session, Department, 'name', row['department'])
+                    course_id = self.convert_name_to_id(session, Course, 'name', row['course'])
+                    role_id = self.convert_name_to_id(session, Role, 'name', "Student")
+                    
+                    user = UserMaster(
+                        first_name=row['first_name'],
+                        last_name=row['last_name'],
+                        phone_number=row['phone_number'],
+                        email=row['email'],
+                        branch_id=branch_id,
+                        department_id=department_id,
+                        institution_id=institution_id,
+                        programme = row['programme'],
+                        address = row.get('address', ""),
+                        role_id=role_id,
+                        course_id=course_id,
+                    )
+                    session.add(user)
+                session.commit()
+                session.close()
+                return {"status": True, "message": "User uploaded"}
+            elif mode == 'teacher':
+                # uploaded teacher file
+                for column in df_columns:
+                    if column not in UPLOAD_USER_FILE_TEACHER_HEADERS:
+                        print("Missing", column)
+                        return {"status": False, "message": "Invalid File"}    
+            
+                for index, row in data_df.iterrows():
+                    user = self.get_user_by_email(row['email'])
+                    if user:
+                        print(f"User(Teacher) with email {row['email']} already exists")
+                        continue
+                    
+                    branch_id = self.convert_name_to_id(session, Branch, 'name', row['branch'])
+                    department_id = self.convert_name_to_id(session, Department, 'name', row['department'])
+                    role_id = self.convert_name_to_id(session, Role, 'name', 'Teacher')
+                    
+                    user = UserMaster(
+                        first_name=row['first_name'],
+                        phone_number=row['phone_number'],
+                        email=row['email'],
+                        branch_id=branch_id,
+                        department_id=department_id,
+                        institution_id=institution_id,
+                        role_id=role_id,
+                        address = row.get('address', "")
+                    )
+                    session.add(user)
+                session.commit()
+                session.close()
+                return {"status": True, "message": "Teachers uploaded"}
+            else:
+                return {"status": False, "message": "Invalid File"}
+        
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"error": str(e), "status": False}
+        
     def download_users(self, institution_id, mode): 
         role_id = session.query(Role).filter_by(name=mode).first().id
         institution_name = session.query(InstitutionMaster).filter_by(id=institution_id).first().institution_name

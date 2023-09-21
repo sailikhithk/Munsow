@@ -4,3 +4,4 @@ from .department import Department
 from .institution_master import InstitutionMaster
 from .role import Role
 from .user_master import UserMaster
+from .course import Course
