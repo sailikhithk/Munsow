@@ -25,8 +25,9 @@ import PropTypes from "prop-types";
 
 import GLOBAL_CONSTANTS from "../GlobalConstants";
 import { Collapse } from "@mui/material";
+import AppHeader from "./screens/Admin/AppHeader";
 
-const drawerWidth = 240;
+const drawerWidth = 270;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -103,7 +104,7 @@ export default function HeaderFooterLayout({ Component }) {
         {
           label: "Home",
           icon: <DashboardOutlinedIcon style={{ color: "white" }} />,
-          route: "/dashboard",
+          route: "/adminDashboard",
           subItems: [],
         },
         {
@@ -135,19 +136,19 @@ export default function HeaderFooterLayout({ Component }) {
         },{
           label: "User Management",
           icon: <RuleOutlinedIcon style={{ color: "white" }} />,
-          route: "/dashboard",
+          route: "/summary",
           subItems: [
             {
-              label: "Information",
-              route: "/dashboard",
+              label: "Summary",
+              route: "/summary",
             },
             {
               label: "Students",
-              route: "/dashboard",
+              route: "/studentList",
             },
             {
               label: "Teachers",
-              route: "/dashboard",
+              route: "/teachersList",
             }
           ],
         },
@@ -335,7 +336,10 @@ export default function HeaderFooterLayout({ Component }) {
           </ListItem>
         </DrawerFooter>
       </CustomDrawer>
-      <div className="py-4 overflow-y-hidden " style={{ flexGrow: 1, background: "#f5f5f5" }}>
+      
+      <AppHeader open={open}/>
+
+      <div className="pt-20 overflow-y-hidden " style={{ flexGrow: 1, background: "#f5f5f5" }}>
         {Component}
       </div>
     </Box>

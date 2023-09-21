@@ -44,7 +44,7 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async () => {
-    navigate("./dashboard");
+    navigate("./adminDashboard");
   };
 
   return (
