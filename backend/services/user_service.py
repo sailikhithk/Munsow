@@ -184,19 +184,45 @@ class UserService:
         
     def list_users(self, mode, column_name, order_by = 'ASC', page_number=1, limit=20):
         try:
-            users = session.query(UserMaster).join(Role).filter(Role.name == mode)
+            users = session.query(UserMaster, 
+                                Branch.name.label("branch_name"), 
+                                Department.name.label("department_name"),
+                                InstitutionMaster.institution_name.label("institution_name"), 
+                                Course.name.label("course_name")) \
+                .join(Role, UserMaster.role_id == Role.id) \
+                .join(Branch, UserMaster.branch_id == Branch.id) \
+                .join(Department, UserMaster.department_id == Department.id) \
+                .join(InstitutionMaster, UserMaster.institution_id == InstitutionMaster.id) \
+                .join(Course, UserMaster.course_id == Course.id) \
+                .filter(Role.name == mode)
             
             if order_by == 'DESC':
                 users = users.order_by(desc(getattr(UserMaster, column_name))).all()
             else:
                 users = users.order_by(asc(getattr(UserMaster, column_name))).all()
             
-            if users:
-                total_records = len(users)
+            users_list = [
+                {
+                    "id": user[0].id,
+                    "first_name": user[0].first_name,
+                    "last_name": user[0].last_name,
+                    "phone_number": user[0].phone_number,
+                    "address": user[0].address,
+                    "email": user[0].email,
+                    "branch_name": user.branch_name,
+                    "department_name": user.department_name,
+                    "institution_name": user.institution_name,
+                    "course_name": user.course_name,
+                    "created_date": str(user[0].created_date)
+                }
+                for user in users
+            ]
+            if users_list:
+                total_records = len(users_list)
                 total_pages = (total_records + limit - 1) // limit
                 start_index = (page_number - 1) * limit
                 end_index = start_index + limit
-                users = users[start_index:end_index]
+                users_list = users_list[start_index:end_index]
 
                 metadata = {
                     "total_records": total_records,
@@ -209,7 +235,7 @@ class UserService:
 
                 response = {
                     "metadata": metadata,
-                    "data": obj_to_list(users)
+                    "data": users_list
                 }
 
                 return response
@@ -334,6 +360,9 @@ class UserService:
                     course_id = self.convert_name_to_id(session, Course, 'name', row['course'])
                     role_id = self.convert_name_to_id(session, Role, 'name', "Student")
                     
+                    password = str(row["password"])
+                    hashed_password = encrypt(password)
+
                     user = UserMaster(
                         first_name=row['first_name'],
                         last_name=row['last_name'],
@@ -346,6 +375,7 @@ class UserService:
                         address = row.get('address', ""),
                         role_id=role_id,
                         course_id=course_id,
+                        password_hash = hashed_password
                     )
                     session.add(user)
                 session.commit()
@@ -367,7 +397,10 @@ class UserService:
                     branch_id = self.convert_name_to_id(session, Branch, 'name', row['branch'])
                     department_id = self.convert_name_to_id(session, Department, 'name', row['department'])
                     role_id = self.convert_name_to_id(session, Role, 'name', 'Teacher')
-                    
+
+                    password = str(row["password"])
+                    hashed_password = encrypt(password)
+
                     user = UserMaster(
                         first_name=row['first_name'],
                         phone_number=row['phone_number'],
@@ -376,7 +409,8 @@ class UserService:
                         department_id=department_id,
                         institution_id=institution_id,
                         role_id=role_id,
-                        address = row.get('address', "")
+                        address = row.get('address', ""),
+                        password_hash = hashed_password
                     )
                     session.add(user)
                 session.commit()

@@ -72,7 +72,8 @@ def create_dummy_institution():
                 "domains": "@gmail.com",
                 "preference_days": "Mon, Tue",
                 "preference_time": "10 AM to 6 PM",
-                "password": "1234"
+                "password": "1234",
+                "registration_number": "ABC"
             },
             {
                 "institution_name": "INV Test-11",
@@ -87,7 +88,8 @@ def create_dummy_institution():
                 "domains": "@gmail.com",
                 "preference_days": "Mon, Tue",
                 "preference_time": "10 AM to 6 PM",
-                "password": "1234"
+                "password": "1234",
+                "registration_number": "ABC"
             },
             {
                 "institution_name": "INV Test-12",
@@ -102,7 +104,8 @@ def create_dummy_institution():
                 "domains": "@gmail.com",
                 "preference_days": "Mon, Tue",
                 "preference_time": "10 AM to 6 PM",
-                "password": "1234"
+                "password": "1234",
+                "registration_number": "ABC"
             },
             
         ]
