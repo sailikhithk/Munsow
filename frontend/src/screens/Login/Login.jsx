@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import { useDispatch } from "react-redux";
+import { institution_login } from "../../redux/action";
 
 const style = {
   position: "absolute",
@@ -21,6 +23,7 @@ const style = {
 };
 
 const LoginPage = () => {
+  const dispatch = useDispatch()
   const [universityId, setUniversityId] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = React.useState(false);
@@ -44,7 +47,13 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async () => {
-    navigate("./adminDashboard");
+    const payload = {
+      email:universityId,
+      password:password
+    }
+    dispatch(institution_login(payload,()=>{
+      navigate("./adminDashboard");
+    }))
   };
 
   return (

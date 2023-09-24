@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import { user_login } from "../../redux/action";
+import { useDispatch } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -21,6 +23,8 @@ const style = {
 };
 
 const StudentLogin = () => {
+  const dispatch = useDispatch()
+
   const [universityId, setUniversityId] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = React.useState(false);
@@ -43,8 +47,15 @@ const StudentLogin = () => {
     setOpen(false);
   };
 
+  
   const handleSubmit = async () => {
-    navigate("./dashboard");
+    const payload = {
+      email:universityId,
+      password:password
+    }
+    dispatch(user_login(payload,()=>{
+      navigate("./dashboard");
+    }))
   };
 
   return (

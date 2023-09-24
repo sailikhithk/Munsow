@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -13,6 +13,8 @@ import {
   Bar,
   Cell,
   ResponsiveContainer,
+  Label,
+  LabelList,
 } from "recharts";
 
 // import "./Dashboard.css";
@@ -23,102 +25,105 @@ import CardContainer from "./CardContainer";
 import PersonIcon from "@mui/icons-material/Person";
 import GroupsIcon from '@mui/icons-material/Groups';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
+import { useDispatch, useSelector } from "react-redux";
+import { loadInstitutionStats } from "../../../redux/action";
 
-const cardLists = [
-  {
-    cardContent: "# of students enrolled",
-    cardValue: 600,
-    icon: <PersonIcon style={{ color: "white",fontSize: 40  }}/>, 
-  },
-  {
-    cardContent: "Interview Conducted",
-    cardValue: 2230,
-    icon: <GroupsIcon style={{ color: "white",fontSize: 40 }}/>, 
-  },
-  {
-    cardContent: "Improvement areas Identified",
-    cardValue: 5,
-    icon: <NorthEastIcon style={{ color: "white",fontSize: 40 }}/>, 
-  },
-];
-
-const _mockChartData=[
-  {
-    "name": "Page A",
-    "uv": 4000,
-    "pv": 2400,
-    "amt": 2400
-  },
-  {
-    "name": "Page B",
-    "uv": 3000,
-    "pv": 1398,
-    "amt": 2210
-  },
-  {
-    "name": "Page C",
-    "uv": 2000,
-    "pv": 9800,
-    "amt": 2290
-  },
-  {
-    "name": "Page D",
-    "uv": 2780,
-    "pv": 3908,
-    "amt": 2000
-  },
-  {
-    "name": "Page E",
-    "uv": 1890,
-    "pv": 4800,
-    "amt": 2181
-  },
-  {
-    "name": "Page F",
-    "uv": 2390,
-    "pv": 3800,
-    "amt": 2500
-  },
-  {
-    "name": "Page G",
-    "uv": 3490,
-    "pv": 4300,
-    "amt": 2100
-  }
-]
 
 
 const AdminDashboard = () => {
+
+  const [cardLists,setCardsList] = useState([
+    {
+      cardContent: "Number of students enrolled",
+      cardValue: 0,
+      icon: <PersonIcon style={{ color: "white",fontSize: 40  }}/>, 
+    },
+    {
+      cardContent: "Interview Conducted",
+      cardValue: 0,
+      icon: <GroupsIcon style={{ color: "white",fontSize: 40 }}/>, 
+    },
+    {
+      cardContent: "Improvement areas Identified",
+      cardValue: 0,
+      icon: <NorthEastIcon style={{ color: "white",fontSize: 40 }}/>, 
+    },
+    {
+      cardContent: "Average Interview Score",
+      cardValue: 0,
+      icon: <NorthEastIcon style={{ color: "white",fontSize: 40 }}/>, 
+    },
+    {
+      cardContent: "Skill Gap rate",
+      cardValue: 0,
+      icon: <NorthEastIcon style={{ color: "white",fontSize: 40 }}/>, 
+    },
+  ]);
+
+  const [barPlot,setbarPlot] = useState([]);
+  const [plot,setplot] = useState([]);
+  const [pie,setPie] = useState([]);
+
+  const dispatch = useDispatch();
+  const {institutionStats} = useSelector((state)=>state?.data)
+
+
+
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-  const averageInterviewScore = "74/100";
-  const skillGapRate = "23%";
+
+  useEffect(()=>{
+    dispatch(loadInstitutionStats());
+  },[dispatch])
+
+  useEffect(()=>{
+    console.log(institutionStats,"institutionStats")
+    if(institutionStats?.cards?.length)
+    {
+      setCardsList(()=>institutionStats?.cards?.map(o=>({
+        cardContent: o?.name,
+        cardValue: o?.value,
+        icon: <PersonIcon style={{ color: "white",fontSize: 40  }}/>, 
+        subValues:o?.sub_values
+      })))
+    }
+    if(institutionStats?.graphs)
+    {
+
+      institutionStats?.graphs?.map((o)=>{
+        switch(o?.name)
+        {
+          case "Department wise Participation": {
+            setbarPlot(()=>o?.data)
+            break
+          }
+          case "DEPARTMENT WISE IMPROVEMENT RATE" : {
+            setplot(()=>o?.data)
+            break
+          }
+          case "CRITICAL IMPROVEMENT AREAS" : {
+            setPie(()=>o?.data)
+            break
+          }
+
+          default : break
+        }
+
+      })
+
+    }
+  },[institutionStats])
+
+
 
   return (
-    <div className="bg-[#FDFAF5] min-h-screen p-4">
-      <div className="container mx-auto">
-        <div className="flex flex-wrap">
+    <div className="bg-[#FDFAF5] h-[100vh] p-4 pb-16 overflow-y-scroll ">
+      <div className="container ">
           {/* Card section */}
-          <div className="lg:w-9/12 lg:flex">
+          <div className="">
+        <div className=" grid grid-cols-3 gap-2 ">
             {cardLists.length ? (
               <CardContainer cardLists={cardLists} />
             ) : null}
-          </div>
-          {/* Average Interview Score and Skill Gap Rate Card */}
-          <div className="lg:w-3/12 pl-4 ">
-            <div className="bg-white shadow-md p-4 mb-4 rounded-lg">
-              <div className="mb-2">
-                <span className="text-lg font-normal">
-                  Average Interview Score :{" "}
-                </span>
-                <span className="text-lg font-semibold">
-                  {averageInterviewScore}
-                </span>
-              </div>
-              <div>
-                <span className="text-lg font-normal">Skill Gap Rate : </span>
-                <span className="text-lg font-semibold">{skillGapRate}</span>
-              </div>
-            </div>
           </div>
         </div>
         <div className="flex flex-wrap pt-5">
@@ -133,14 +138,14 @@ const AdminDashboard = () => {
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={_mockChartData}>
+                  <BarChart data={barPlot}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="pv" fill="#8884d8" />
-                    <Bar dataKey="uv" fill="#82ca9d" />
+                    <Bar dataKey="Participated" fill="#82ca9d" />
+                    <Bar dataKey="Not yet Participated" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -156,14 +161,16 @@ const AdminDashboard = () => {
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={_mockChartData}>
+                  <LineChart data={plot}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="basic" dataKey="pv" stroke="#8884d8" />
-                    <Line type="basic" dataKey="uv" stroke="red" />
+                    <Line type="basic" dataKey="Marketing" stroke="green" />
+                    <Line type="basic" dataKey="Finance" stroke="blue" />
+                    <Line type="basic" dataKey="Operations" stroke="purple" />
+                    <Line type="basic" dataKey="Hr" stroke="red" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -187,23 +194,19 @@ const AdminDashboard = () => {
                     />
                     <Pie
                       dataKey="value"
-                      data={[
-                        { name: "Group A", value: 400 },
-                        { name: "Group B", value: 300 },
-                        { name: "Group C", value: 300 },
-                        { name: "Group D", value: 200 },
-                      ]}
+                      data={pie}
                       cx="50%"
-                      cy="40%"
-                      innerRadius={60}
+                      cy="50%"
                       outerRadius={80}
                       fill="#8884d8"
+                      label
                     >
-                      {_mockChartData.map((entry, index) => (
+                      {pie.map((entry, index) => (<>
                         <Cell
                           key={`cell-${index}`}
                           fill={COLORS[index % COLORS.length]}
                         />
+                      </>
                       ))}
                     </Pie>
                   </PieChart>
