@@ -11,7 +11,7 @@ export const user_login = (data, callback) => {
         "Content-type": "application/json",
       };
       axios
-        .post(`${GLOBAL_CONSTANTS.backend_url}auth/login`, JSON.stringify(data), {
+        .post(`${GLOBAL_CONSTANTS.backend_url}user/login`, JSON.stringify(data), {
           headers,
         })
         .then((resp) => {
@@ -45,6 +45,48 @@ export const user_login = (data, callback) => {
         });
     };
   };
+
+  
+export const institution_login = (data, callback) => {
+  return function (dispatch) {
+    var headers = {
+      "Content-type": "application/json",
+    };
+    axios
+      .post(`${GLOBAL_CONSTANTS.backend_url}institution/login`, JSON.stringify(data), {
+        headers,
+      })
+      .then((resp) => {
+       
+        if(! resp?.data?.status)
+        {
+          toast.error(resp?.data?.message);  
+        }
+        else
+        {
+          toast.success("Logged in");
+          localStorage.setItem("user_data",JSON.stringify(resp?.data));  
+          dispatch({
+            type: types.LOGIN,
+            payload: resp?.data,
+          });
+
+          sessionStorage.setItem("user_data",JSON.stringify(resp?.data))
+          callback(resp?.data);
+        }
+
+      })
+      .catch((error) => {
+
+        toast.error(
+          error ?? "Something went wrong",
+          {
+            autoClose: 2000,
+          }
+        );
+      });
+  };
+};
 
   export const user_signup = (data, callback) => {
     return function () {
@@ -430,13 +472,13 @@ export const user_login = (data, callback) => {
     payload: data,
   });
 
-export const registerInstitute = () => { 
+export const registerInstitute = (data) => { 
     return function (dispatch) {     
       var headers = {
         "Content-type": "application/json",
       };
   
-      axios.get(`${GLOBAL_CONSTANTS.backend_url}institution/register/`, { headers })
+      axios.post(`${GLOBAL_CONSTANTS.backend_url}institution/register/`, data,{ headers })
         .then((resp) => { 
           dispatch(getInstituteData(resp.data));
         })
@@ -462,3 +504,232 @@ export const getcountries = () => {
         .catch((error) => console.log(error));
     };
   };
+
+
+  // #region admin Stats
+  
+  const getInstitutionStats = (data) => ({
+    type: types.INSTITUTION_STATS,
+    payload: data,
+  });
+  
+  export const loadInstitutionStats = () => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/statistics`, {headers})
+        .then((resp) => {
+          dispatch(getInstitutionStats(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+  
+
+  const getStudentList = (data) => ({
+    type: types.STUDENTS_LIST,
+    payload: data,
+  });
+  
+  export const loadStudentList = (param) => {
+    return function (dispatch) {
+      
+      let params = {}
+
+      for (const key in param) {
+    
+        if (param[key] !== undefined && param[key] !== null && param[key] != "") {
+          params[key] = param[key];
+        }
+      }
+      
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/user/list`, {params,headers})
+        .then((resp) => {
+          dispatch(getStudentList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+
+  const getTeachersList = (data) => ({
+    type: types.TEACHERS_LIST,
+    payload: data,
+  });
+  
+  export const loadTeachersList = (params) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/user/list?mode=Teacher`, {params,headers})
+        .then((resp) => {
+          dispatch(getTeachersList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  export const uploadUser = (data) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "multipart/form-data",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.post(`${GLOBAL_CONSTANTS?.backend_url}/user/upload`, data,{headers})
+        .then((resp) => {
+          console.log(resp)
+          // dispatch(getTeachersList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+
+  const getCourseList = (data) => ({
+    type: types.COURSE_LIST,
+    payload: data,
+  });
+  
+  export const loadCourseList = (params) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/course_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getCourseList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  const getBrachList = (data) => ({
+    type: types.BRANCH_LIST,
+    payload: data,
+  });
+  
+  export const loadBrachList = (params={}) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/branch_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getBrachList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  const getDepartmentList = (data) => ({
+    type: types.DEPARTMENT_LIST,
+    payload: data,
+  });
+  
+  export const loadDepartmentList = (params) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/department_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getDepartmentList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  
+  const getInstitutionList = (data) => ({
+    type: types.INSTITUTION_LIST,
+    payload: data,
+  });
+  
+  export const loadInstitutionList = (params) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/institution_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getInstitutionList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+
+  export const user_create = (data, params,callback) => {
+    return function () {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+      };
+      let toastId = toast("Creating User", { autoClose: false });
+      axios
+        .post(`${GLOBAL_CONSTANTS.backend_url}user/admin_create_user`, JSON.stringify(data), {params,headers,
+        })
+        .then((resp) => {
+          if(resp?.data?.error)
+          {
+            toast.update( toastId ,{render: resp?.data?.error,type:"error", autoClose: true})
+
+          }
+          else
+          {
+            toast.update( toastId ,{render:"User Created Sucessfully",type:"success", autoClose: true })
+            callback
+          }
+        })
+        .catch((error) => {
+          toast.error(
+            error ?? "Something went wrong",
+            {
+              autoClose: 2000,
+            }
+          );
+        });
+    };
+  };
+
+  export const user_delete = (params,callback) => {
+    return function () {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+      };
+      let toastId = toast("Deleting User", {type:"loading", autoClose: false });
+      axios
+        .delete(`${GLOBAL_CONSTANTS.backend_url}user/delete`, {params,headers,
+        })
+        .then((resp) => {
+          if(resp?.data?.error)
+          {
+            toast.update( toastId ,{render: resp?.data?.error,type:"error",autoClose:2000})
+
+          }
+          else
+          {
+            toast.update( toastId ,{render:"User Deleted Sucessfully",type:"success",autoClose:2000 })
+            callback
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+           toast.update( toastId ,{render:"Something bad happend ",type:"error",autoClose:2000 })
+        });
+    };
+  };
+  // #endregion admin Stats

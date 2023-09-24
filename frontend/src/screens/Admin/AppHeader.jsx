@@ -7,10 +7,10 @@ const AppHeader = ({open}) => {
       position="fixed"
       sx={{
         width: `calc(100%)`,
-        // ml: "270px",
         boxShadow: "unset",
         backgroundColor: "#E8E8E8",
         color: "#071437",
+        height:"60px"
       }}
     >
       <Toolbar>

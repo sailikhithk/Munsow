@@ -17,6 +17,8 @@ import Teachers from "./screens/Admin/Teachers/Teachers";
 import AdminDashboard from "./screens/Admin/Dashboard/Dashboard";
 import AddStudents from "./screens/Admin/AddStudents/AddStudents";
 import AddTeachers from "./screens/Admin/AddTeachers/AddTeachers";
+import UserReport from "./screens/UserReport/UserReport";
+import StudentDashboard from "./screens/Student Dashboard/StudentDashboard";
 
 function Url_Routes() {
    
@@ -52,9 +54,10 @@ function Url_Routes() {
           <Route excat path="/adminDashboard" element={<HeaderFooterLayout Component={<AdminDashboard />} /> } />
           <Route excat path="/addStudent" element={<HeaderFooterLayout Component={<AddStudents />} /> } />
           <Route excat path="/addTeacher" element={<HeaderFooterLayout Component={<AddTeachers />} /> } />
-
+          <Route excat path="/studentDashboard" element={<HeaderFooterLayout Component={<StudentDashboard />} /> } />
 
           <Route excat path="/studentRegister"  element={<StudentRegister />} />
+          <Route excat path="/report"  element={<HeaderFooterLayout Component={<UserReport />} /> } />
           <Route exact path="/registration"  element ={<Register/>}/>
           <Route path="*" element={<Navigate to="/" />} />
 

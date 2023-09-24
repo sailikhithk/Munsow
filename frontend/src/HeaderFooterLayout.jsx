@@ -233,6 +233,7 @@ export default function HeaderFooterLayout({ Component }) {
                   } else {
                     navigate(mainItem.route);
                   }
+                  handleDrawerOpen();
                 }}
               >
                 <ListItemButton
@@ -339,7 +340,7 @@ export default function HeaderFooterLayout({ Component }) {
       
       <AppHeader open={open}/>
 
-      <div className="pt-20 overflow-y-hidden " style={{ flexGrow: 1, background: "#f5f5f5" }}>
+      <div className="mt-[60px] bg-red-500 overflow-y-hidden " style={{ flexGrow: 1, background: "#f5f5f5" }}>
         {Component}
       </div>
     </Box>

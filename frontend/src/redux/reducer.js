@@ -14,6 +14,13 @@ const initialState = {
   institutiondata: [],
   institutiondata_meta: {},
   countryList: {},
+  institutionStats:{},
+  studentsList:{},
+  teachersList:{},
+  courseList:[],
+  departmentList:[],
+  branchList:[],
+  institutionList:[],
   loading: false
 };
 
@@ -82,6 +89,41 @@ const DataReducers = (state = initialState, action) => {
       ...state,
       countryList: action.payload.data,
       loading: false
+    }
+    case types.INSTITUTION_STATS: return{
+      ...state,
+      institutionStats:action.payload.data,
+      loading:false
+    }
+    case types.STUDENTS_LIST: return{
+      ...state,
+      studentsList:action.payload,
+      loading:false
+    }
+    case types.TEACHERS_LIST: return{
+      ...state,
+      teachersList:action.payload,
+      loading:false
+    }
+    case types.COURSE_LIST: return{
+      ...state,
+      courseList:action.payload,
+      loading:false
+    }
+    case types.DEPARTMENT_LIST: return{
+      ...state,
+      departmentList:action.payload,
+      loading:false
+    }
+    case types.BRANCH_LIST: return{
+      ...state,
+      branchList:action.payload,
+      loading:false
+    }
+    case types.INSTITUTION_LIST: return{
+      ...state,
+      institutionList:action.payload,
+      loading:false
     }
     default:
       return state;
