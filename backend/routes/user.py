@@ -122,7 +122,7 @@ def update_user():
 def list_users():
     try:
         institution_id = request.args.get('institution_id')
-        mode = request.args.get('mode')
+        mode = request.args.get('mode', 'Student')
         column_name = request.args.get('column_name', "created_date")
         order_by = request.args.get('order_by', 'ASC')
         page_number = request.args.get('page_number', 1)
@@ -204,9 +204,23 @@ def upload_users():
 @requires_role("admin")
 def download_users():
     try:
-        institution_id = request.args.get('institution_id')
-        mode = request.args.get('mode')
-        file_path = user_service_obj.download_users(institution_id, mode)
+        sample_data = request.args.get('sample_data', False)
+        mode = request.args.get('mode', 'student')
+        file_path = user_service_obj.download_create_users_file(mode, sample_data)
         return send_file(file_path, as_attachment=True)
     except FileNotFoundError:
         return "File not found", 404
+    
+
+@user_router.route("/statistics", methods=["GET"])
+@jwt_required()
+@requires_role("student")
+def institution_statistics():
+    try:
+        current_user = get_jwt_identity()
+        user_id = current_user["id"]
+        file_name = user_service_obj.user_statistics(user_id)
+        return send_file(file_name, as_attachment=True)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500

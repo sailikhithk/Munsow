@@ -390,39 +390,64 @@ class UserService:
             traceback.print_exc()
             return {"error": str(e), "status": False}
         
-    def download_users(self, institution_id, mode): 
+    def download_create_users_file(self, mode, sample_data = False): 
         try:
-            role_id = session.query(Role).filter_by(name=mode).first().id
-            institution_name = session.query(InstitutionMaster).filter_by(id=institution_id).first().institution_name
-                
-            users = session.query(UserMaster).filter_by(role_id=role_id).filter_by(institution_id=institution_id).all()
-
-            user_data = []
-            for user in users:
-                branch_name = session.query(Branch).filter_by(id=user.branch_id).first().name
-                department_name = session.query(Department).filter_by(id=user.department_id).first().name
-                
-                user_data.append({
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'phone_number': user.phone_number,
-                    'email': user.email,
-                    'branch': branch_name,
-                    'department': department_name,
-                    'institution': institution_name,
-                    'role': mode,
-                    'preference': user.preference,
-                    'is_ug': user.is_ug
-                })
-
-            output_file = "" # need to look
-            df = pd.DataFrame(user_data)
-            df.to_excel(output_file, index=False)
-
-            
-            return output_file
+            if str(mode).lower() == 'student':
+                if sample_data:
+                    file_name = "students_upload_with_sample_data.xlsx"
+                else:
+                    file_name = "students_upload.xlsx"
+            else:
+                if sample_data:
+                    file_name = "teachers_upload_with_sample_data.xlsx"
+                else:
+                    file_name = "teachers_upload.xlsx"
+        
+            return file_name
+        
+        
         except Exception as e:
             session.rollback()
             traceback.print_exc()
-            return {"error": str(e), "status": False}
+            return ""
     
+
+
+    def user_statistics(self, user_id):
+        try:
+            response = {
+                "cards": [],
+                "graphs": []
+            }
+
+            card_1 = {
+                "name": "Improvement areas identified",
+                "value": 5
+            }
+            card_2 = {
+                "name": "Average Interview score",
+                "value": "74/100"
+            }
+            card_3 = {
+                "name": "Skill gap rate",
+                "value": "23%"
+            }
+
+            graph_1 = {
+                "name": "CRITICAL IMPROVEMENT AREAS",
+                "data": [
+                { "name": 'Team Work', "value": 50 },
+                { "name": 'Excel', "value": 20 },
+                { "name": 'Communication', "value": 30 }
+            ]
+            }
+            response["cards"] = [card_1, card_2, card_3] 
+            response["graphs"] = [graph_1]
+            return {"status": True, "data": response}
+
+        except Exception as e:
+            session.rollback()
+            traceback.print_exc()
+            return {"status": False, "message": "error", "error": str(e)}
+
+            
