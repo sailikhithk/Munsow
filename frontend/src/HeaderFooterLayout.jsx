@@ -114,23 +114,23 @@ export default function HeaderFooterLayout({ Component }) {
           subItems: [
             {
               label: "Behavioral Analysis",
-              route: "/dashboard",
+              route: "/emotionSensing",
             },
             {
               label: "KS Analysis",
-              route: "/dashboard",
+              route: "/emotionSensing",
             },
             {
               label: "Practical thinking A",
-              route: "/dashboard",
+              route: "/emotionSensing",
             },
             {
               label: "Emotion Sensing",
-              route: "/dashboard",
+              route: "/emotionSensing",
             },
             {
               label: "Hard Skill vs Soft skills",
-              route: "/dashboard",
+              route: "/emotionSensing",
             },
           ],
         },{

@@ -52,7 +52,7 @@ const LoginPage = () => {
       password:password
     }
     dispatch(institution_login(payload,()=>{
-      navigate("./adminDashboard");
+      window.location.href="./adminDashboard";
     }))
   };
 

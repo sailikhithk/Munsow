@@ -5,23 +5,22 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import ActionButtonCellRenderer from "./ActionButtonCellRenderer";
 import { useDispatch, useSelector } from "react-redux";
-import { loadStudentList, user_delete } from "../../../redux/action";
+import { loadDepartmentList, loadStudentList, user_delete } from "../../../redux/action";
+import Pagination  from "../../../Components/Pagination";
+import { Autocomplete, TextField } from "@mui/material";
 
 const Students = () => {
 
   const dispatch = useDispatch();
-  const {studentsList} = useSelector(state=>state?.data);
-  const [params,setparams] = useState({
+  const {studentsList,departmentList} = useSelector(state=>state?.data);
+  const [params,setParams] = useState({
   //   order_by:"",
   //   ASC:"",
   //   page_number:"",
   //   created_date:"",
-  // limit:"",
+  // limit:10,
   mode:"Student"
 })
-
-  const containerStyle = useMemo(() => ({ width: "100%", height: "90%" }), []);
-  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
   const deleteHandler = (act) => {
     const { data = {} } = act;
@@ -39,23 +38,20 @@ const Students = () => {
       "headerName": "Name",
       "resizable": true,
       "sortable": true,
-      "editable": true,
       "flex": 1
     },
     {
       "field": "department",
       "headerName": "Department",
       "resizable": true,
-      "sortable": true,
-      "editable": true,
+      // "sortable": true,
       "flex": 1
     },
     {
       "field": "branch",
       "headerName": "Branch",
       "resizable": true,
-      "sortable": true,
-      "editable": true,
+      // "sortable": true,
       "flex": 1
     },
     {
@@ -63,15 +59,13 @@ const Students = () => {
       "headerName": "# of Interviews",
       "resizable": true,
       "sortable": true,
-      "editable": true,
       "flex": 1
     },
     {
       "field": "averageScore",
       "headerName": "Avg Score",
       "resizable": true,
-      "sortable": true,
-      "editable": true,
+      // "sortable": true,
       "flex": 1
     },
     {
@@ -88,18 +82,58 @@ const Students = () => {
   }, []);
 
   useEffect(()=>{
-    dispatch(loadStudentList(params))
+    dispatch(loadDepartmentList())
   },[dispatch])
 
+  useEffect(()=>{
+    dispatch(loadStudentList(params))
+  },[dispatch,params])
+
+
+  const onSortChanged = ({ api: { sortController } }) => {
+    const sortModel = sortController.getSortModel()
+    console.log(sortModel );
+    if(sortModel?.length)
+    setParams(prev=>(
+      {
+        ...prev,
+        column_name : sortModel[0]?.colId === "name" ?  "first_name" : sortModel[0].colId  ,
+        order_by : sortModel[0].sort?.toUpperCase()
+      }
+    )
+    );
+  };
+
+  const [gridApi, setGridApi] = useState();
+  const [gridColsApi, setGridColsApi] = useState();
   return (
-    <div className="flex-grow-1 px-3" style={containerStyle}>
-      <div style={gridStyle} className="ag-theme-alpine">
+    <div className="flex-grow-1 p-3 bg-white h-[100vh] " >
+      <div  className="ag-theme-alpine grid gap-4">
+      <div>
+      <Autocomplete
+        size="small"
+        sx={{width:"300px"}}
+        disablePortal
+        id="combo-box-demo"
+        options={ departmentList?.map(o=>({label:o?.name ?? "" , value:o?.id})) ?? []}
+        renderInput={(params) => <TextField {...params} label="Filter by Depatment" />}
+        onChange={(e,value)=>{setParams((prev)=>({...prev,department_id: value?.value}))}}
+      />
+      </div>
         <AgGridReact // resizable, sortable
           rowData={studentsList?.data?.map(o=>({...o,name:`${o?.first_name} ${o?.last_name}`}))}
           columnDefs={headCells}
-          pagination={true}
+          domLayout='autoHeight'
+          pagination={false}
           getRowHeight={getRowHeight}
+          onGridReady={params => {
+          setGridApi(params.api);
+          setGridColsApi(params.columnApi);
+        }}
+          onSortChanged ={onSortChanged}
         />
+        <Pagination setParams={setParams} meta_data={studentsList?.metadata} />
+
       </div>
     </div>
   );

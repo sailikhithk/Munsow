@@ -18,3 +18,4 @@ export const COURSE_LIST = "COURSE_LIST";
 export const BRANCH_LIST = "BRANCH_LIST";
 export const DEPARTMENT_LIST = "DEPARTMENT_LIST";
 export const INSTITUTION_LIST = "INSTITUTION_LIST";
+export const COUNTRY_LIST = "COUNTRY_LIST";

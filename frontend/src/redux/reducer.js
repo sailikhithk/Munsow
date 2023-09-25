@@ -21,6 +21,7 @@ const initialState = {
   departmentList:[],
   branchList:[],
   institutionList:[],
+  countryList:[],
   loading: false
 };
 
@@ -123,6 +124,11 @@ const DataReducers = (state = initialState, action) => {
     case types.INSTITUTION_LIST: return{
       ...state,
       institutionList:action.payload,
+      loading:false
+    }
+    case types.COUNTRY_LIST: return{
+      ...state,
+      countryList:action.payload,
       loading:false
     }
     default:

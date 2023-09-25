@@ -104,7 +104,7 @@ const AddTeachers = () => {
     dispatch(loadInstitutionList());
     dispatch(loadDepartmentList())
 
-  },[])
+  },[dispatch])
 
 
   useEffect(()=>{

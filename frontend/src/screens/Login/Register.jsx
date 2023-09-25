@@ -1,404 +1,239 @@
-import React, { useState, useEffect } from "react";
+import{ useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import { Link } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { Autocomplete, Button, TextField} from "@mui/material";
+import { loadCountryList, registerInstitute } from "../../redux/action";
+import { TimePicker } from "antd";
+import "./Register.css"
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar } from "@mui/material";
-import "./Register.css";
-import { getcountries, registerInstitute } from "../../redux/action";
-
-const Register = (props) => {
-  let dispatch = useDispatch();
+const Register = () => {
+  const dispatch = useDispatch();
+  const {countryList} = useSelector(state=>state?.data)
   const navigate = useNavigate();
-
+  
   useEffect(() => {
-    dispatch(getcountries());
+    dispatch(loadCountryList());
   }, []);
 
-  const [formData, setFormData] = useState({
-    institution_name: "",
-    contact_name: "",
-    email: "",
-    phone_number: "",
-    number_of_students: "",
-    institution_poc: "",
-    designation: "",
-    number_of_departments: "",
-    country: "",
-    city: "",
-    registrationNumber: "",
-    password: "",
-    // re_password: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const [mainData, setMainData] = useState({});
 
   const handleSubmit = () => {
+    console.info( mainData?.time?.map(o=>dayjs(o)?.format("hh A")).join(" to ")  )
     const payload = {
-      institution_name: formData.institution_name,
-      contact_name: formData.contact_name,
-      email: formData.email,
-      phone_number: formData.phone_number,
-      country_id: Number(formData.country_id),
-      city: formData.city,
-      designation: formData.designation,
-      number_of_students: Number(formData.number_of_students),
-      number_of_departments: Number(formData.number_of_departments),
-      domains: formData.domains,
-      preference_days: "Mon, Tue",
+      institution_name: mainData?.institution_name,
+      contact_name: mainData?.contact_name,
+      email: mainData?.email,
+      phone_number: mainData?.mobile_number,
+      country_id: Number(mainData?.country?.value),
+      city: mainData?.city,
+      desiganation: mainData?.desiganation,
+      number_of_students: Number(mainData?.number_of_students),
+      number_of_departments: Number(mainData?.number_of_departments),
+      domains: mainData?.domains,
+      preference_days: days?.filter(o=>o?.checked)?.map(o=>o?.value)?.join(", ") ,
       preference_time: "10 AM to 6 PM",
-      password: formData.password,
+      password: mainData.password,
     };
 
     dispatch(registerInstitute(payload));
-    // navigate("/dashboard");
+    navigate("/")
   };
 
+  const userFeilds =
+  [
+    {
+      label:"Institution Name",
+      key:"institution_name",
+      value:mainData?.institution_name ?? "" ,
+      type:"text"
+    },
+    {
+      label:"Contact Name",
+      key:"contact_name",
+      value:mainData?.contact_name ?? "" ,
+      type:"text"
+    },
+    {
+      label:"Email",
+      key:"email",
+      value:mainData?.email ?? "" ,
+      type:"email"
+    },
+    {
+      key:"mobile_number",
+      label:"Mobile Number",
+      value:mainData?.mobile_number ?? "",
+      type:"tel"
+    },
+    {
+      label:"Domains",
+      key:"domains",
+      value:mainData?.domains ?? "",
+      type:"text"
+    },
+    {
+      label:"Desiganation",
+      key:"desiganation",
+      value:mainData?.desiganation ?? "",
+      type:"text"
+    },
+    {
+      label:"Number of Students",
+      key:"number_of_students",
+      value:mainData?.number_of_students ?? "",
+      type:"number"
+    },
+    {
+      label:"Number of Departments",
+      key:"number_of_departments",
+      value:mainData?.number_of_departments ?? "",
+      type:"number"
+    },
+    {
+      label:"Password",
+      key:"password",
+      value:mainData?.password ?? "",
+      type:"text"
+    },
+    {
+      label:"City",
+      key:"city",
+      value:mainData?.city ?? "" ,
+      type:"text"
+    },
+    {
+      label:"Country",
+      key:"country",
+      value:mainData?.country ?? null ,
+      type:"select",
+      options: countryList?.map((o)=>({label:o?.name ?? "--",value:o?.id})) ?? [],
+    },
+
+  ]
+
+  const [days,setDays ] = useState([
+    {label:"Monday",value:"Mon",checked:false},
+    {label:"Tuesday",value:"Tue",checked:false},
+    {label:"Wednesday",value:"Wed",checked:false},
+    {label:"Thursday",value:"Thur",checked:false},
+    {label:"Friday",value:"Fri",checked:false},
+    {label:"Saturday",value:"Sat",checked:false},
+    {label:"Sunday",value:"Sun",checked:false},
+  ]);
+
+  const onDaySelect = ( index,value ) => {
+     let temp = [...days]
+     temp[index].checked = value;
+    setDays(temp)
+  }
+
+
+  const handleInputChange = (key,value) => {
+    let temp = {...mainData}
+    temp[key] = value;
+    setMainData(()=>({...temp}))
+  }
+
+  useEffect(()=>{
+    console.info(mainData)
+  },[mainData])
+
   return (
-    <div>
-      <AppBar
-        position="fixed"
-        sx={{
-          ml: "270px",
-          boxShadow: "unset",
-          backgroundColor: "#f8f9fa",
-          color: "#071437",
-        }}
-      >
-        <Toolbar>
-          <div className="heading-top p-2">
-            <div className="card-body">
-              <div>
-                <h2 className="registration-header">Join Us Form</h2>
+    <div className="bg-gray-300 p-4 min-h-[100vh] " >
+    <div className="rounded-lg overflow-hidden bg-white " >
+
+          <div className="p-2 px-4 border-b-2">
+                <h2 className="text-xl font-medium">Join Us Form</h2>
                 <p className="registration-sub-header">
                   Kick start your journey to get access to our expert insights
                   about your students across departments, branches, and cities
                   today!
                 </p>
-              </div>
-            </div>
           </div>
-        </Toolbar>
-      </AppBar>
-      <div className="register-page">
-        <div className="registration-form-container">
-          <div className="input_main_wrapper">
-            <div className="row-wrapper mt-3">
-              <div className="labelWrapLeft">
-                <label
-                  htmlFor="institution_name"
-                  className="form-label registration-form-label"
-                >
-                  Institution Name
-                </label>
-              </div>
-              <div className="labelWrapRight">
-                <input
-                  type="text"
-                  className="form-control registration-input-control"
-                  id="institution_name"
-                  name="institution_name"
-                  placeholder="Enter your University's name as per any Govt Records"
-                  value={formData.institution_name}
-                  onChange={handleChange}
-                />
-              </div>
+
+      <div className="grid grid-cols-2 gap-4 p-4" >
+            {
+              userFeilds?.map((o)=>(
+                <>
+                  {
+                    o?.type === "select" ?
+                    <>
+                    <Autocomplete
+                      size="small"
+                      fullWidth
+                      multiple={o?.multiple ?? false}
+                      options={o?.options ?? []}
+                      getOptionLabel={(option) => option?.label}
+                      defaultValue={o?.value}
+                      filterSelectedOptions = {true}
+                      value={o?.value}
+                      renderInput={(params) => <TextField {...params} label={o?.label} />}
+                      onChange={(e,value)=>{handleInputChange(o?.key,value)}}
+                    />
+
+                    </>
+                     :
+                <TextField 
+                key={o?.key}
+                type={o?.type}
+                label={o?.label}
+                value={o?.value}
+                size="small"
+                onChange={(e)=>{handleInputChange(o?.key,e.target.value)}}
+                required
+                 />
+                  }
+                </>
+                 )
+              )
+            }
             </div>
-            <div className="row-wrapper mt-4">
-              <div className="labelWrapLeft">
-                <label
-                  htmlFor="contact_name"
-                  className="form-label registration-form-label"
-                >
-                  Contact Name
-                </label>
-              </div>
-              <div className="labelWrapRight">
-                <input
-                  type="text"
-                  className="form-control registration-input-control"
-                  id="contact_name"
-                  name="contact_name"
-                  placeholder="Enter the name of who needs to be contacted"
-                  value={formData.contact_name}
-                  onChange={handleChange}
-                />
-              </div>
+
+<div className="p-4 grid gap-2 " >
+
+            <div className="font-medium" > Prefered Days For Contact </div>
+            <div className="flex gap-2 flex-wrap" >
+              {
+                days?.map((o,i)=>(
+                <div key={o?.value} className={`flex-1 p-2 px-4 border rounded-full text-center cursor-pointer ${o?.checked ? "bg-blue-500 text-white" : "bg-white text-black border border-gray-500"}`} 
+                onClick={()=>{ onDaySelect(i, (! o?.checked)) } } > {o?.label} </div> ))
+              }
+
             </div>
-            <div className="input-below">
-              <div className="row-wrapper mt-4">
-                <div className="labelWrapLeft">
-                  <label
-                    htmlFor="email"
-                    className="form-label registration-form-label"
-                  >
-                    Contact Email Address
-                  </label>
-                </div>
-                <div className="labelWrapRight">
-                  <input
-                    type="text"
-                    className="form-control registration-input-control"
-                    id="email"
-                    name="email"
-                    placeholder="Enter the Email of the person who needs to be contacted"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-                <ErrorOutlineIcon />
-                <p className="notification">
-                  The email address needs to match the university's domain (This
-                  is a hover on linking the "i")
-                </p>
-              </div>
+</div>
+
+
+<div className="p-4 grid gap-2 w-full " >
+
+            <div className="font-medium" > Prefered Time For Contact </div>
+            <div className="grid grid-cols-2" >
+            <TimePicker.RangePicker
+            size="large"
+      use12Hours
+      showTime={{ format: "hh A", hourStep: 1, minuteStep: 5 }}
+      format="hh A"
+      value={mainData?.time }
+      onChange={(value) => {
+        handleInputChange("time",value)
+      }}
+      popupClassName="timepicker-background"
+      className="col-span-1"
+    />
             </div>
-            <div className="input-below">
-              <div className="row-wrapper mt-4">
-                <div className="labelWrapLeft">
-                  <label
-                    htmlFor="phone_number"
-                    className="form-label registration-form-label"
-                  >
-                    Contact Phone Number
-                  </label>
-                </div>
-                <div className="labelWrapRight">
-                  <input
-                    type="text"
-                    className="form-control registration-input-control"
-                    id="phone_number"
-                    name="phone_number"
-                    placeholder="Enter the Phone Number"
-                    value={formData.phone_number}
-                    onChange={handleChange}
-                  />
-                </div>
-                <ErrorOutlineIcon />
-                <p className="notification">
-                  Enter the country code along with the number (This is a hover
-                  on linking the "i")
-                </p>
-              </div>
+</div>
+
+<div className="flex justify-end p-2 pb-4  "  >
+<Button variant="contained" onClick={()=>{
+  handleSubmit()
+}} >
+
+Register Institute
+
+</Button>
+</div>
             </div>
-            <div className="input-below">
-              <div className="row-wrapper mt-4">
-                <div className="labelWrapLeft">
-                  <label
-                    htmlFor="country"
-                    className="form-label registration-form-label"
-                  >
-                    Country
-                  </label>
-                </div>
-                <div className="labelBelowRight">
-                  <input
-                    type="text"
-                    className="form-control registration-input-control"
-                    id="country"
-                    name="country"
-                    placeholder="Enter Country"
-                    value={formData.country}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="labelBelowLeft">
-                  <label
-                    htmlFor="city"
-                    className="form-label registration-form-label"
-                  >
-                    City
-                  </label>
-                </div>
-                <div className="labelBelowRight">
-                  <input
-                    type="text"
-                    className="form-control registration-input-control"
-                    id="city"
-                    name="city"
-                    placeholder="Enter City"
-                    value={formData.city}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row-wrapper mt-4">
-              <div className="labelWrapLeft">
-                <label
-                  htmlFor="institution_poc"
-                  className="form-label registration-form-label"
-                >
-                  Institution POC (point of contract)
-                </label>
-              </div>
-              <div className="labelWrapRight">
-                <input
-                  type="text"
-                  className="form-control registration-input-control"
-                  id="institution_poc"
-                  name="institution_poc"
-                  placeholder="Enter the Email of person who needs to be contacted"
-                  value={formData.institution_poc}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="row-wrapper mt-4">
-              <div className="labelWrapLeft">
-                <label
-                  htmlFor="designation"
-                  className="form-label registration-form-label"
-                >
-                  Contact's Designation
-                </label>
-              </div>
-              <div className="labelWrapRight">
-                <input
-                  type="text"
-                  className="form-control registration-input-control"
-                  id="designation"
-                  name="designation"
-                  placeholder="Enter Designation"
-                  value={formData.designation}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="input-below">
-              <div className="row-wrapper mt-4">
-                <div className="labelWrapLeft">
-                  <label
-                    htmlFor="number_of_departments"
-                    className="form-label registration-form-label"
-                  >
-                    Number Of Departments
-                  </label>
-                </div>
-                <div className="labelBelowRight2">
-                  <input
-                    type="text"
-                    className="form-control registration-input-control"
-                    id="number_of_departments"
-                    name="number_of_departments"
-                    placeholder="Number of Departments"
-                    value={formData.number_of_departments}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="labelBelowLeft2">
-                  <label
-                    htmlFor="number_of_students"
-                    className="form-label registration-form-label"
-                  >
-                    Number of Students
-                  </label>
-                </div>
-                <div className="labelBelowRight2">
-                  <input
-                    type="text"
-                    className="form-control registration-input-control"
-                    id="number_of_students"
-                    name="number_of_students"
-                    placeholder="Number of Students"
-                    value={formData.number_of_students}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row-wrapper mt-4">
-              <div className="labelWrapLeft">
-                <label
-                  htmlFor="registrationNumber"
-                  className="form-label registration-form-label"
-                >
-                  Registration Number
-                </label>
-              </div>
-              <div className="labelWrapRight">
-                <input
-                  type="text"
-                  className="form-control registration-input-control"
-                  id="registrationNumber"
-                  name="registrationNumber"
-                  placeholder="Enter Registration Number"
-                  value={formData.registrationNumber}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="row-wrapper mt-4">
-              <div className="labelWrapLeft">
-                <label
-                  htmlFor="password"
-                  className="form-label registration-form-label"
-                >
-                  Password
-                </label>
-              </div>
-              <div className="labelWrapRight">
-                <input
-                  type="password"
-                  className="form-control registration-input-control"
-                  id="password"
-                  name="password"
-                  placeholder="Enter Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="row-wrapper mt-4">
-              <div className="labelWrapLeft">
-                <label
-                  htmlFor="re_password"
-                  className="form-label registration-form-label"
-                >
-                  Re-Enter Password
-                </label>
-              </div>
-              <div className="labelWrapRight">
-                <input
-                  type="password"
-                  className="form-control registration-input-control"
-                  id="re_password"
-                  name="re_password"
-                  placeholder="Re-Enter Password"
-                  value={formData.re_password}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="gap-2 col-6 mt-4 btn-below">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </div>
-            <div className="mt-1 text-center footer">
-              <span className="registration-footer-container">
-                Already have an account?
-              </span>
-              <span className="registration-footer-container login-redirect">
-                <Link className="text-decoration-none" to={"/"}>
-                  Login
-                </Link>
-              </span>
-            </div>
-          </div>
-          <div></div>
-        </div>
-      </div>
+
     </div>
   );
 };

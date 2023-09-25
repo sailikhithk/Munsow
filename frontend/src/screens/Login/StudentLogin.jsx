@@ -54,7 +54,7 @@ const StudentLogin = () => {
       password:password
     }
     dispatch(user_login(payload,()=>{
-      navigate("./dashboard");
+      window.location.href="./dashboard";
     }))
   };
 

@@ -94,7 +94,7 @@ export const institution_login = (data, callback) => {
         "Content-type": "application/json",
       };
       axios
-        .post(`${GLOBAL_CONSTANTS.backend_url}auth/register`, JSON.stringify(data), {
+        .post(`${GLOBAL_CONSTANTS.backend_url}user/register`, JSON.stringify(data), {
           headers,
         })
         .then((resp) => {
@@ -104,10 +104,10 @@ export const institution_login = (data, callback) => {
           }
           else
           {
+            
             toast.success("User Created Sucessfully");  
-
+            callback(resp?.data);
           }
-          callback(resp?.data);
         })
         .catch((error) => {
           toast.error(
@@ -478,7 +478,7 @@ export const registerInstitute = (data) => {
         "Content-type": "application/json",
       };
   
-      axios.post(`${GLOBAL_CONSTANTS.backend_url}institution/register/`, data,{ headers })
+      axios.post(`${GLOBAL_CONSTANTS.backend_url}institution/register`, data,{ headers })
         .then((resp) => { 
           dispatch(getInstituteData(resp.data));
         })
@@ -569,7 +569,7 @@ export const getcountries = () => {
         "Content-type": "application/json",
         "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
         };
-        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/user/list?mode=Teacher`, {params,headers})
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/user/list`, {params,headers})
         .then((resp) => {
           dispatch(getTeachersList(resp?.data));
         })
@@ -669,7 +669,25 @@ export const getcountries = () => {
         .catch((error) => console.log(error));
     };
   };
-
+  
+  const getCountryList = (data) => ({
+    type: types.COUNTRY_LIST,
+    payload: data,
+  });
+  
+  export const loadCountryList = (params) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/country_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getCountryList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
 
   export const user_create = (data, params,callback) => {
     return function () {
@@ -732,4 +750,22 @@ export const getcountries = () => {
         });
     };
   };
+
+
+  export const userStatUpdate = (id,endpoint) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.delete(`${GLOBAL_CONSTANTS?.backend_url}user/${id}/${endpoint}`, {headers : headers})
+        .then(() => {
+          dispatch(loadStudentList({}));
+          dispatch(loadTeachersList({}));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+
   // #endregion admin Stats

@@ -1,190 +1,183 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Autocomplete, Button, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loadBrachList,
+  loadCourseList,
+  loadDepartmentList,
+  loadInstitutionList,
+  user_signup,
+} from "../../redux/action";
+import { useNavigate } from "react-router-dom";
 
 const StudentRegister = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    institutionEmail: '',
-    branch: '',
-    department: '',
-    programme: '',
-    degreeType: 'ug', // Default value for radio buttons
-    password: '',
-    confirmPassword: '',
-  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { courseList, departmentList, branchList, institutionList } =
+    useSelector((state) => state.data);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const [mainData, setMainData] = useState({});
+  const userFeilds = [
+    {
+      label: "First Name",
+      key: "first_name",
+      value: mainData?.first_name ?? "",
+      type: "text",
+    },
+    {
+      label: "Last Name",
+      key: "last_name",
+      value: mainData?.last_name ?? "",
+      type: "text",
+    },
+    {
+      label: "Email",
+      key: "email",
+      value: mainData?.email ?? "",
+      type: "text",
+    },
+    {
+      key: "mobile_number",
+      label: "Mobile Number",
+      value: mainData?.mobile_number ?? "",
+      type: "text",
+    },
+    {
+      label: "Address",
+      key: "address",
+      value: mainData?.address ?? "",
+      type: "text",
+    },
+    {
+      label: "Password",
+      key: "password",
+      value: mainData?.password ?? "",
+      type: "text",
+    },
+    {
+      label: "Institution",
+      key: "institution",
+      value: mainData?.institution ?? null,
+      type: "select",
+      options:
+        institutionList?.map((o) => ({
+          label: o?.institution_name ?? "-",
+          value: o?.id,
+        })) ?? [],
+    },
+    {
+      label: "Course",
+      key: "course",
+      value: mainData?.course ?? null,
+      type: "select",
+      options: courseList?.map((o) => ({ label: o?.name, value: o?.id })) ?? [],
+    },
+    {
+      label: "Department",
+      key: "department",
+      value: mainData?.department ?? null,
+      options:
+        departmentList?.map((o) => ({ label: o?.name, value: o?.id })) ?? [],
+      type: "select",
+    },
+    {
+      label: "Branch",
+      key: "branch",
+      value: mainData?.branch ?? null,
+      options: branchList?.map((o) => ({ label: o?.name, value: o?.id })) ?? [],
+      type: "select",
+    },
+  ];
+
+  const handleInputChange = (key, value) => {
+    let temp = { ...mainData };
+    temp[key] = value;
+    setMainData(() => ({ ...temp }));
   };
+  useEffect(() => {
+    dispatch(loadBrachList());
+    dispatch(loadCourseList());
+    dispatch(loadDepartmentList());
+    dispatch(loadInstitutionList());
+  }, [dispatch]);
 
-  const handleDegreeTypeChange = (e) => {
-    const { value } = e.target;
-    setFormData({
-      ...formData,
-      degreeType: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // You can do something with the user input here, such as sending it to an API or storing it in local state
-    console.log(formData);
+  const onHandleCreate = () => {
+    const payload = {
+      first_name: mainData?.first_name,
+      last_name: mainData?.last_name,
+      email: mainData?.email,
+      phone_number: mainData?.mobile_number,
+      branch_id: mainData?.branch?.value,
+      department_id: mainData?.department?.value,
+      address: mainData?.address,
+      institution_id: mainData?.institution?.value,
+      password: mainData?.password,
+      course: mainData?.course?.label,
+    };
+    dispatch(
+      user_signup(payload, { mode: "teacher" }, () => {
+        setMainData({});
+    navigate("/studentDashboard")
+      })
+    );
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-3xl bg-white p-6 rounded-md shadow-lg">
-        <h1 className="text-2xl font-semibold mb-6">Register</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
-            <div className="mb-4">
-              <label htmlFor="firstName" className="text-gray-600">Student First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.firstName}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4 pl-5">
-              <label htmlFor="lastName" className="text-gray-600">Student Last Name</label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.lastName}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="phoneNumber" className="text-gray-600">Phone Number</label>
-              <input
-                type="text"
-                id="phoneNumber"
-                name="phoneNumber"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4 pl-5">
-              <label htmlFor="institutionEmail" className="text-gray-600">Institution Email</label>
-              <input
-                type="text"
-                id="institutionEmail"
-                name="institutionEmail"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.institutionEmail}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="branch" className="text-gray-600">Branch</label>
-              <input
-                type="text"
-                id="branch"
-                name="branch"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.branch}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4 pl-5">
-              <label htmlFor="department" className="text-gray-600">Department</label>
-              <input
-                type="text"
-                id="department"
-                name="department"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.department}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="programme" className="text-gray-600">Programme</label>
-              <input
-                type="text"
-                id="programme"
-                name="programme"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.programme}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4 pl-5">
-              <label className="text-gray-600">Degree Type</label>
-              <div className="flex items-center">
-                <label htmlFor="ug" className="mr-2">UG</label>
-                <input
-                  type="radio"
-                  id="ug"
-                  name="degreeType"
-                  value="ug"
-                  checked={formData.degreeType === 'ug'}
-                  onChange={handleDegreeTypeChange}
+    <div
+      className="p-4 bg-[#f5f5f5] h-[100vh] flex flex-col justify-center  items-center"
+      style={{ backdropFilter: "" }}
+    >
+      <div className="bg-white  flex flex-col justify-center p-4 rounded-xl shadow-2xl min-w-[70%] max-w-[80%]">
+        <div className="p-4 font-medium text-2xl">
+          {" "}
+          Student Registration Form{" "}
+        </div>
+        <div className="grid grid-cols-2 gap-4 bg-white p-4">
+          {userFeilds?.map((o) => (
+            <>
+              {o?.type === "select" ? (
+                <>
+                  <Autocomplete
+                    size="small"
+                    fullWidth
+                    disablePortal
+                    value={o?.value}
+                    defaultValue={o?.value}
+                    id="combo-box-demo"
+                    options={o?.options ?? []}
+                    renderInput={(params) => (
+                      <TextField {...params} label={o?.label} />
+                    )}
+                    onChange={(e, value) => {
+                      handleInputChange(o?.key, value);
+                    }}
+                  />
+                </>
+              ) : (
+                <TextField
+                  key={o?.key}
+                  type={o?.type}
+                  label={o?.label}
+                  value={o?.value}
+                  size="small"
+                  onChange={(e) => {
+                    handleInputChange(o?.key, e.target.value);
+                  }}
                 />
-                <label htmlFor="pg" className="ml-4 mr-2">PG</label>
-                <input
-                  type="radio"
-                  id="pg"
-                  name="degreeType"
-                  value="pg"
-                  checked={formData.degreeType === 'pg'}
-                  onChange={handleDegreeTypeChange}
-                />
-              </div>
-            </div>
-            <div className="mb-4 ">
-              <label htmlFor="password" className="text-gray-600">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4 pl-5">
-              <label htmlFor="confirmPassword" className="text-gray-600">Re-enter Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-          <div className="mt-6">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-            >
-              Register
-            </button>
-          </div>
-          <div className="mt-1 text-center footer">
-              <span className="text-2xl registration-footer-container">
-                Already have an account? {"  "}
-              </span>
-              <span className="registration-footer-container login-redirect">
-                <Link className="text-decoration-none" to={"/studentLogin"}>
-                  Login
-                </Link>
-              </span>
-            </div>
-        </form>
+              )}
+            </>
+          ))}
+        </div>
+        <div className="flex justify-end gap-3 p-4">
+          <Button
+            variant="contained"
+            onClick={() => {
+              onHandleCreate();
+            }}
+          >
+            Register
+          </Button>
+        </div>
       </div>
     </div>
   );

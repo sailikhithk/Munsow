@@ -19,6 +19,8 @@ import AddStudents from "./screens/Admin/AddStudents/AddStudents";
 import AddTeachers from "./screens/Admin/AddTeachers/AddTeachers";
 import UserReport from "./screens/UserReport/UserReport";
 import StudentDashboard from "./screens/Student Dashboard/StudentDashboard";
+import EmotionSensing from "../src/screens/Admin/Analysis/EmotionSensing/EmotionSensing";
+
 
 function Url_Routes() {
    
@@ -55,6 +57,7 @@ function Url_Routes() {
           <Route excat path="/addStudent" element={<HeaderFooterLayout Component={<AddStudents />} /> } />
           <Route excat path="/addTeacher" element={<HeaderFooterLayout Component={<AddTeachers />} /> } />
           <Route excat path="/studentDashboard" element={<HeaderFooterLayout Component={<StudentDashboard />} /> } />
+          <Route excat path="/emotionSensing" element={<HeaderFooterLayout Component={<EmotionSensing />} /> } />
 
           <Route excat path="/studentRegister"  element={<StudentRegister />} />
           <Route excat path="/report"  element={<HeaderFooterLayout Component={<UserReport />} /> } />
