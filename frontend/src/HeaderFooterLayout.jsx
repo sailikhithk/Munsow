@@ -29,18 +29,18 @@ import AppHeader from "./screens/Admin/AppHeader";
 
 const drawerWidth = 270;
 
-const openedMixin = (theme) => ({
+const openedMixin = (theme,role1) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
-  background: "linear-gradient(1deg,#1c85ce 30%, #5271ff)",
+  background:role1==1? "linear-gradient(1deg,#1c85ce 30%, #5271ff)":"#824bef",
   color: "#FFFFFF",
 });
 
-const closedMixin = (theme) => ({
+const closedMixin = (theme,role1) => ({
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -50,7 +50,7 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-  background: "linear-gradient(1deg,#1c85ce 30%, #5271ff)",
+  background:role1==1? "linear-gradient(1deg,#1c85ce 30%, #5271ff)":"#824bef",
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -74,18 +74,18 @@ const DrawerFooter = styled("div")(({ theme }) => ({
 
 const CustomDrawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({ theme, open,role1 }) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
+    ...openedMixin(theme,role1),
+    "& .MuiDrawer-paper": openedMixin(theme,role1),
   }),
   ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
+    ...closedMixin(theme,role1),
+    "& .MuiDrawer-paper": closedMixin(theme,role1),
   }),
 }));
 
@@ -99,7 +99,7 @@ export default function HeaderFooterLayout({ Component }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);
 
   useEffect(() => {
-    // if (GLOBAL_CONSTANTS?.user_cred?.role_id === 1) {
+    if (GLOBAL_CONSTANTS?.user_cred?.role_id === 1) {
       setMenuData([
         {
           label: "Home",
@@ -165,28 +165,34 @@ export default function HeaderFooterLayout({ Component }) {
         //   subItems: [],
         // },
       ]);
-    // } else {
-    //   setMenuData([
-    //     {
-    //       label: "Dashboard",
-    //       icon: <DashboardOutlinedIcon style={{ color: "white" }} />,
-    //       route: "/dashboard",
-    //       subItems: [],
-    //     },
-    //     {
-    //       label: "Lessons",
-    //       icon: <RuleOutlinedIcon style={{ color: "white" }} />,
-    //       route: "/lessons",
-    //       subItems: [],
-    //     },
-    //     {
-    //       label: "Profile",
-    //       icon: <AccountCircleOutlinedIcon style={{ color: "white" }} />,
-    //       route: "/profile",
-    //       subItems: [],
-    //     },
-    //   ]);
-    // }
+    } else {
+      setMenuData([
+        {
+          label: "Dashboard",
+          icon: <DashboardOutlinedIcon style={{ color: "white" }} />,
+          route: "/studentDashboard",
+          subItems: [],
+        },
+        {
+          label: "Practice Now",
+          icon: <RuleOutlinedIcon style={{ color: "white" }} />,
+          route: "/studentDashboard",
+          subItems: [],
+        },
+        {
+          label: "My Reports",
+          icon: <AccountCircleOutlinedIcon style={{ color: "white" }} />,
+          route: "/report",
+          subItems: [],
+        },
+        {
+          label: "Notifications",
+          icon: <AccountCircleOutlinedIcon style={{ color: "white" }} />,
+          route: "/studentDashboard",
+          subItems: [],
+        },
+      ]);
+    }
   }, []);
 
   const handleDrawerOpen = () => {
@@ -201,7 +207,7 @@ export default function HeaderFooterLayout({ Component }) {
     <Box sx={{ display: "flex", width: "100vw", height: "100vh", overflow: "hidden" }}>
       <CssBaseline />
 
-      <CustomDrawer variant="permanent" open={open}>
+      <CustomDrawer variant="permanent" open={open} role1={GLOBAL_CONSTANTS?.user_cred?.role_id?GLOBAL_CONSTANTS?.user_cred?.role_id:1}>
         <DrawerHeader>
           {!open ? (
             <IconButton onClick={handleDrawerOpen}>

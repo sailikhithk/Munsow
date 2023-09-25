@@ -54,7 +54,7 @@ const StudentLogin = () => {
       password:password
     }
     dispatch(user_login(payload,()=>{
-      window.location.href="./dashboard";
+      window.location.href="./studentDashboard";
     }))
   };
 
@@ -148,6 +148,15 @@ const StudentLogin = () => {
               </span>
               <span className="text-blue-600 hover:underline">
                 <Link to={"/studentRegister"}>Sign Up!</Link>
+              </span>
+            </div>
+            <div className="mt-5 text-center">
+              <span className="text-gray-600">
+                 Institution login here!
+              </span>
+              <span className="text-blue-600 font-semibold cursor-pointer">
+                {" "}
+                <Link to={"/"}>Login here!</Link>
               </span>
             </div>
             <div className="mt-10 text-center">
