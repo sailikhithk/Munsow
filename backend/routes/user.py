@@ -34,7 +34,8 @@ def register():
 @requires_role("admin")
 def create_user():
     try:
-        institution_id = request.args.get('institution_id')
+        current_user = get_jwt_identity()
+        institution_id = current_user.get("id")      
         mode = request.args.get('mode')
         validate(mode, UPLOAD_USER_ROLE_SCHEMA)
         data = request.get_json()
