@@ -1,7 +1,8 @@
 import React from 'react';
 import { Avatar, Divider, Typography } from '@mui/material'; // Import Material-UI components
 import InsightsIcon from '@mui/icons-material/Insights';
-
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 const SecondRow = () => {
     return (
         <div className="col-span-1 bg-white p-8 rounded-lg">
@@ -15,11 +16,12 @@ const SecondRow = () => {
                         />
                     </div>
                     <div>
-                        <Typography variant="h6">Description Text 1</Typography>
+                        <Typography variant="h6">Hard Skills</Typography>
+                        <p className='text-gray-600 text-opacity-50 text-sm font-semibold'>Increased by 6.5%</p>
                     </div>
                 </div>
                 <div>
-                    <InsightsIcon />
+                    <TrendingUpIcon fontSize="large" style={{color:"green"}}/>
                 </div>
             </div>
             <Divider className='pt-4' />
@@ -33,11 +35,13 @@ const SecondRow = () => {
                         />
                     </div>
                     <div>
-                        <Typography variant="h6">Description Text 1</Typography>
+                        <Typography variant="h6">Soft skills</Typography>
+                        <p className='text-gray-600 text-opacity-50 text-sm font-semibold'>Decreased by 6.5%</p>
+
                     </div>
                 </div>
                 <div>
-                    <InsightsIcon />
+                    <TrendingDownIcon fontSize="large" style={{color:"red"}}/>
                 </div>
             </div>
 

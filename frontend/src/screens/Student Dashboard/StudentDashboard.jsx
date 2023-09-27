@@ -38,7 +38,7 @@ export default function StudentDashboard() {
             </div>
             <div className="col-span-1" >
                 <div>
-                    <p className="text-gray-500 text-md pb-2">Hard Skill vs Soft Skill Trend</p>
+                    <p className="text-gray-600 text-lg font-semibold text-opacity-80 pb-2">Hard Skill vs Soft Skill Trend</p>
                     <SecondRow />
                 </div>
             </div>

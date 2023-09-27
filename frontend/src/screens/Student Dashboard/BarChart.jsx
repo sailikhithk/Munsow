@@ -59,28 +59,40 @@ const LineChartComponent = () => {
 
   return (
     <div>
-      <div className="filter-sort">
-        <label>Sort by:</label>
-        <select value={sortBy} onChange={handleSortChange}>
-          <option value="serialNumber">Serial Number</option>
-          <option value="score">Score</option>
-        </select>
-        <label>Filter by Score:</label>
-        <input
-          type="text"
-          placeholder="Filter by score"
-          value={filterBy}
-          onChange={handleFilterChange}
-        />
-        <label>Show last:</label>
-        <input
-          type="number"
-          min="1"
-          max={dataWithSerialNumbers.length}
-          placeholder="Number of data points"
-          value={showLast}
-          onChange={handleShowLastChange}
-        />
+      <div className="flex justify-center filter-sort pb-4">
+
+        <div className='pr-5'>
+          <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Sort by: </label>
+          <select value={sortBy} onChange={handleSortChange}>
+            <option value="serialNumber">S.No</option>
+            <option value="score">Score</option>
+          </select>
+        </div>
+
+        <div className='pr-5'>
+          <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Filter by Score: </label>
+          <input
+            type="text"
+            placeholder="Enter score"
+            value={filterBy}
+            onChange={handleFilterChange}
+            style={{ width: '85px' }}
+          />
+        </div>
+
+        <div>
+          <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Show last: </label>
+          <input
+            type="number"
+            min="1"
+            max={dataWithSerialNumbers.length}
+            placeholder="Number of data points"
+            value={showLast}
+            onChange={handleShowLastChange}
+            style={{ width: '40px' }}
+          />
+        </div>
+
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
