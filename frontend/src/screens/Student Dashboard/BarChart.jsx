@@ -1,3 +1,4 @@
+import { Divider } from '@mui/material';
 import React, { useState } from 'react';
 import {
   LineChart,
@@ -59,42 +60,44 @@ const LineChartComponent = () => {
 
   return (
     <div>
-      <div className="flex justify-center filter-sort pb-4">
+      <div className="flex justify-between filter-sort p-3">
+        <div className='text-lg font-semibold'>Interview Score Trend</div>
+        <div className='flex'>
+          <div className='pr-3'>
+            <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Sort by: </label>
+            <select value={sortBy} onChange={handleSortChange}>
+              <option value="serialNumber">S.No</option>
+              <option value="score">Score</option>
+            </select>
+          </div>
 
-        <div className='pr-5'>
-          <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Sort by: </label>
-          <select value={sortBy} onChange={handleSortChange}>
-            <option value="serialNumber">S.No</option>
-            <option value="score">Score</option>
-          </select>
+          <div className='pr-3'>
+            <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Filter by Score: </label>
+            <input
+              type="text"
+              placeholder="score"
+              value={filterBy}
+              onChange={handleFilterChange}
+              style={{ width: '50px' }}
+            />
+          </div>
+
+          <div>
+            <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Show last: </label>
+            <input
+              type="number"
+              min="1"
+              max={dataWithSerialNumbers.length}
+              placeholder="Number of data points"
+              value={showLast}
+              onChange={handleShowLastChange}
+              style={{ width: '40px' }}
+            />
+          </div>
         </div>
-
-        <div className='pr-5'>
-          <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Filter by Score: </label>
-          <input
-            type="text"
-            placeholder="Enter score"
-            value={filterBy}
-            onChange={handleFilterChange}
-            style={{ width: '85px' }}
-          />
-        </div>
-
-        <div>
-          <label className='text-gray-600 text-lg font-semibold text-opacity-80'>Show last: </label>
-          <input
-            type="number"
-            min="1"
-            max={dataWithSerialNumbers.length}
-            placeholder="Number of data points"
-            value={showLast}
-            onChange={handleShowLastChange}
-            style={{ width: '40px' }}
-          />
-        </div>
-
       </div>
-      <ResponsiveContainer width="100%" height={300}>
+      <Divider style={{opacity:"0.4",marginBottom:"25px"}}/>
+      <ResponsiveContainer width="100%" height={280}>
         <LineChart
           data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}

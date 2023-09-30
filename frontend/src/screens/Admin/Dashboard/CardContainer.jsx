@@ -4,7 +4,7 @@ const CardContainer = ({ cardLists = [], className = "" }) => {
   return cardLists?.map((cardItem, index) => {
     const { cardContent = "", cardValue = "",icon="",subValues={} } = cardItem;
     return (
-        <div className="bg-blue-600 mb-3 p-4 rounded-lg shadow-md grid items-" key={index} >
+        <div style={{background:"linear-gradient(180.43deg, #A191C2 19.43%, #886CC0 87.63%)" }} className=" mb-3 p-4 rounded-lg shadow-md grid items-" key={index} >
           <div className="w-6 h-6 mb-3">
             {icon}
           </div>

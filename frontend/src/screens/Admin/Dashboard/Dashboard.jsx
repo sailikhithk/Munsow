@@ -116,7 +116,7 @@ const AdminDashboard = () => {
 
 
   return (
-    <div className="bg-[#FDFAF5] h-[100vh] p-4 pb-16 overflow-y-scroll ">
+    <div className=" h-[100vh] p-4 pb-16 overflow-y-scroll ">
       <div className="container ">
           {/* Card section */}
           <div className="">

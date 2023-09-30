@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './Carousel.css'; // Import your custom CSS for styling
+import { Divider } from '@mui/material';
 
 const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,19 +32,25 @@ const Carousel = () => {
   };
 
   return (
-    <div className="flex items-center justify-center carousel-container py-2 rounded-lg relative">
-      <IconButton onClick={goToPrevious}>
-        <ArrowBackIosIcon style={{ background: '#824bef',borderRadius:"50%",color:'white',padding:"4px"}} />
-      </IconButton>
-      <div className={`carousel-item p-4 transform transition-transform ${slideDirection === 'left' ? '-translate-x-full' : slideDirection === 'right' ? 'translate-x-full' : ''}`}>
-        <div className="text-center"> {/* Center content */}
-          <h3 className="text-xl font-semibold text-[#824bef]">{objects[currentIndex].title}</h3>
-          <p className="mt-2">{objects[currentIndex].description}</p>
+    <div>
+      <p className="text-[#886cc0] text-lg font-bold p-2">Emotinal Insight</p>
+      <Divider style={{opacity:"0.4"}}/>
+      <div className="flex items-center justify-center carousel-container py-2 rounded-lg relative">
+
+
+        <IconButton onClick={goToPrevious}>
+          <ArrowBackIosIcon style={{ background: '#886cc0', borderRadius: "50%", color: 'white', padding: "4px" }} />
+        </IconButton>
+        <div className={`carousel-item p-2 transform transition-transform ${slideDirection === 'left' ? '-translate-x-full' : slideDirection === 'right' ? 'translate-x-full' : ''}`}>
+          <div className="text-center"> {/* Center content */}
+            <h3 className="text-xl font-semibold text-[#886cc0]">{objects[currentIndex].title}</h3>
+            <p className="mt-2 text-sm">{objects[currentIndex].description}</p>
+          </div>
         </div>
+        <IconButton onClick={goToNext}>
+          <ArrowForwardIosIcon style={{ background: '#886cc0', borderRadius: "50%", color: 'white', padding: "4px" }} />
+        </IconButton>
       </div>
-      <IconButton onClick={goToNext}>
-        <ArrowForwardIosIcon style={{ background: '#824bef',borderRadius:"50%",color:'white',padding:"4px"}} />
-      </IconButton>
     </div>
   );
 };

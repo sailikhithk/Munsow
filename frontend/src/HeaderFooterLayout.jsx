@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -22,25 +22,24 @@ import { useNavigate } from "react-router-dom";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
-
 import GLOBAL_CONSTANTS from "../GlobalConstants";
 import { Collapse } from "@mui/material";
 import AppHeader from "./screens/Admin/AppHeader";
 
 const drawerWidth = 270;
 
-const openedMixin = (theme,role1) => ({
+const openedMixin = (theme, role1) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
-  background:role1==1? "linear-gradient(1deg,#1c85ce 30%, #5271ff)":"#824bef",
+  background: role1 === 1 ? "white" : "white",
   color: "#FFFFFF",
 });
 
-const closedMixin = (theme,role1) => ({
+const closedMixin = (theme, role1) => ({
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -50,7 +49,7 @@ const closedMixin = (theme,role1) => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-  background:role1==1? "linear-gradient(1deg,#1c85ce 30%, #5271ff)":"#824bef",
+  background: role1 === 1 ? "white" : "white",
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -74,42 +73,44 @@ const DrawerFooter = styled("div")(({ theme }) => ({
 
 const CustomDrawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open,role1 }) => ({
+})(({ theme, open, role1 }) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
-    ...openedMixin(theme,role1),
-    "& .MuiDrawer-paper": openedMixin(theme,role1),
+    ...openedMixin(theme, role1),
+    "& .MuiDrawer-paper": openedMixin(theme, role1),
   }),
   ...(!open && {
-    ...closedMixin(theme,role1),
-    "& .MuiDrawer-paper": closedMixin(theme,role1),
+    ...closedMixin(theme, role1),
+    "& .MuiDrawer-paper": closedMixin(theme, role1),
   }),
 }));
 
 export default function HeaderFooterLayout({ Component }) {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const [menuData, setMenuData] = useState([]);
 
   const [openSubMenu, setOpenSubMenu] = useState(null);
+
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     if (GLOBAL_CONSTANTS?.user_cred?.role_id === 1) {
       setMenuData([
         {
           label: "Home",
-          icon: <DashboardOutlinedIcon style={{ color: "white" }} />,
+          icon: <DashboardOutlinedIcon  />,
           route: "/adminDashboard",
           subItems: [],
         },
         {
           label: "Deep Analysis",
-          icon: <RuleOutlinedIcon style={{ color: "white" }} />,
+          icon: <RuleOutlinedIcon  />,
           route: "/dashboard",
           subItems: [
             {
@@ -133,9 +134,10 @@ export default function HeaderFooterLayout({ Component }) {
               route: "/emotionSensing",
             },
           ],
-        },{
+        },
+        {
           label: "User Management",
-          icon: <RuleOutlinedIcon style={{ color: "white" }} />,
+          icon: <RuleOutlinedIcon  />,
           route: "/summary",
           subItems: [
             {
@@ -149,45 +151,33 @@ export default function HeaderFooterLayout({ Component }) {
             {
               label: "Teachers",
               route: "/teachersList",
-            }
+            },
           ],
         },
-        // {
-        //   label: "Users",
-        //   icon: <AccountCircleOutlinedIcon style={{ color: "white" }} />,
-        //   route: "/users",
-        //   subItems: [],
-        // },
-        // {
-        //   label: "Profile",
-        //   icon: <SettingsOutlinedIcon style={{ color: "white" }} />,
-        //   route: "/profile",
-        //   subItems: [],
-        // },
       ]);
     } else {
       setMenuData([
         {
           label: "Dashboard",
-          icon: <DashboardOutlinedIcon style={{ color: "white" }} />,
+          icon: <DashboardOutlinedIcon />,
           route: "/studentDashboard",
           subItems: [],
         },
         {
           label: "Practice Now",
-          icon: <RuleOutlinedIcon style={{ color: "white" }} />,
-          route: "/studentDashboard",
+          icon: <RuleOutlinedIcon />,
+          route: "/practice",
           subItems: [],
         },
         {
           label: "My Reports",
-          icon: <AccountCircleOutlinedIcon style={{ color: "white" }} />,
+          icon: <AccountCircleOutlinedIcon />,
           route: "/report",
           subItems: [],
         },
         {
           label: "Notifications",
-          icon: <AccountCircleOutlinedIcon style={{ color: "white" }} />,
+          icon: <AccountCircleOutlinedIcon />,
           route: "/studentDashboard",
           subItems: [],
         },
@@ -203,31 +193,38 @@ export default function HeaderFooterLayout({ Component }) {
     setOpen(false);
   };
 
+  const handleListItemClick = (index, route) => {
+    setSelectedItem(index);
+    navigate(route);
+    handleDrawerOpen();
+  };
+
   return (
     <Box sx={{ display: "flex", width: "100vw", height: "100vh", overflow: "hidden" }}>
       <CssBaseline />
 
-      <CustomDrawer variant="permanent" open={open} role1={GLOBAL_CONSTANTS?.user_cred?.role_id?GLOBAL_CONSTANTS?.user_cred?.role_id:1}>
-        <DrawerHeader>
+      <CustomDrawer variant="permanent" open={open} role1={GLOBAL_CONSTANTS?.user_cred?.role_id ? GLOBAL_CONSTANTS?.user_cred?.role_id : 1}>
+        <DrawerHeader style={{background:"#f1e8f5"}}>
+          <div className="font-bold  text-[#4e3f6b] text-2xl pr-10">MUNSOW</div>
           {!open ? (
             <IconButton onClick={handleDrawerOpen}>
               {theme.direction === "rtl" ? (
-                <ChevronLeftIcon style={{ color: "white" }} />
+                <ChevronLeftIcon style={{ color: "black" }} />
               ) : (
-                <ChevronRightIcon style={{ color: "white" }} />
+                <ChevronRightIcon style={{ color: "black" }} />
               )}
             </IconButton>
           ) : (
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "rtl" ? (
-                <ChevronRightIcon style={{ color: "white" }} />
+                <ChevronRightIcon style={{ color: "black" }} />
               ) : (
-                <ChevronLeftIcon style={{ color: "white" }} />
+                <ChevronLeftIcon style={{ color: "black" }} />
               )}
             </IconButton>
           )}
         </DrawerHeader>
-        <Divider />
+        <Divider style={{opacity:"0.2"}}/>
         <List>
           {menuData.map((mainItem, mainIndex) => (
             <div key={mainIndex}>
@@ -237,16 +234,20 @@ export default function HeaderFooterLayout({ Component }) {
                   if (mainItem.subItems.length > 0) {
                     setOpenSubMenu(openSubMenu === mainIndex ? null : mainIndex);
                   } else {
-                    navigate(mainItem.route);
+                    handleListItemClick(mainIndex, mainItem.route);
                   }
-                  handleDrawerOpen();
                 }}
+                selected={selectedItem === mainIndex}
               >
+
                 <ListItemButton
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
+                    backgroundColor: selectedItem === mainIndex ? "#f3f0f9" : "transparent",
+                    borderBottomRightRadius:"40px"
+                    // color:selectedItem === mainIndex ? "purple" : "transparent",
                   }}
                 >
                   <ListItemIcon
@@ -254,11 +255,13 @@ export default function HeaderFooterLayout({ Component }) {
                       minWidth: 0,
                       mr: open ? 3 : "auto",
                       justifyContent: "center",
+                      color: selectedItem === mainIndex ? "#a590cf" : "gray",
                     }}
+
                   >
                     {mainItem.icon}
                   </ListItemIcon>
-                  <ListItemText primary={mainItem.label} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText style={{ color: selectedItem === mainIndex ? "#a590cf" : "gray", fontSize: "30px" }} primary={mainItem.label} sx={{ opacity: open ? 1 : 0 }} />
                   {mainItem.subItems.length > 0 && (
                     <ListItemIcon
                       sx={{
@@ -283,14 +286,18 @@ export default function HeaderFooterLayout({ Component }) {
                       disablePadding
                       sx={{ display: "block", pl: 4 }}
                       onClick={() => {
-                        navigate(subItem.route);
+                        handleListItemClick(subIndex, subItem.route);
                       }}
+                      selected={selectedItem === subIndex}
                     >
                       <ListItemButton
                         sx={{
                           minHeight: 48,
                           justifyContent: open ? "initial" : "center",
                           px: 2.5,
+                          // backgroundColor: selectedItem === mainIndex ? "#f3f0f9" : "transparent",
+                          // borderBottomRightRadius:"40px"
+
                         }}
                       >
                         <ListItemIcon
@@ -298,11 +305,12 @@ export default function HeaderFooterLayout({ Component }) {
                             minWidth: 0,
                             mr: open ? 3 : "auto",
                             justifyContent: "center",
+                            // color: selectedItem === mainIndex ? "#a590cf" : "gray",
                           }}
                         >
                           {/* Customize the sub-item icons here */}
                         </ListItemIcon>
-                        <ListItemText primary={subItem.label} sx={{ opacity: open ? 1 : 0 }} />
+                        <ListItemText style={{ color: selectedItem === mainIndex ? "#a590cf" : "gray", fontSize: "30px" }} primary={subItem.label} sx={{ opacity: open ? 1 : 0 }} />
                       </ListItemButton>
                     </ListItem>
                   ))}
@@ -318,7 +326,7 @@ export default function HeaderFooterLayout({ Component }) {
             onClick={() => {
               localStorage.clear();
               sessionStorage.clear();
-              navigate("/")
+              navigate("/");
               window.location.reload();
             }}
           >
@@ -336,17 +344,17 @@ export default function HeaderFooterLayout({ Component }) {
                   justifyContent: "center",
                 }}
               >
-                <LogoutOutlinedIcon style={{ color: "#FFFFFF" }} />
+                <LogoutOutlinedIcon style={{ color: "black" }} />
               </ListItemIcon>
-              <ListItemText primary={"Logout"} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText  style={{color:"black"}} primary={"Logout"} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
         </DrawerFooter>
       </CustomDrawer>
-      
-      <AppHeader open={open}/>
 
-      <div className="mt-[60px] bg-red-500 overflow-y-hidden " style={{ flexGrow: 1, background: "#f5f5f5" }}>
+      <AppHeader open={open} role1={GLOBAL_CONSTANTS?.user_cred?.role_id ? GLOBAL_CONSTANTS?.user_cred?.role_id : 1}/>
+
+      <div className="mt-[60px] bg-red-500 overflow-y-scroll " style={{ flexGrow: 1, background: "#f3f0f9" }}>
         {Component}
       </div>
     </Box>

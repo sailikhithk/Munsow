@@ -13,16 +13,16 @@ import { Autocomplete, TextField } from "@mui/material";
 const Teachers = () => {
 
 
-  
+
   const dispatch = useDispatch();
-  const {teachersList,departmentList} = useSelector(state=>state?.data)
-  const [params,setParams] = useState({
+  const { teachersList, departmentList } = useSelector(state => state?.data)
+  const [params, setParams] = useState({
     //   order_by:"",
     //   ASC:"",
     //   page_number:"",
     //   created_date:"",
     // limit:10,
-    mode:"Teacher"
+    mode: "Teacher"
   })
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "90%" }), []);
@@ -34,7 +34,7 @@ const Teachers = () => {
     console.log("id :", id);
     // NEED TO DO API CALL BASED ON ID AND UPDATE ROWDATA
   };
- 
+
 
 
   const headCells = [
@@ -67,53 +67,53 @@ const Teachers = () => {
       flex: 1,
     },
   ]
-  
+
 
   const getRowHeight = useCallback(() => {
     return 45;
   }, []);
 
-  
+
   const onSortChanged = ({ api: { sortController } }) => {
     const sortModel = sortController.getSortModel()
-    console.log(sortModel );
-    if(sortModel?.length)
-    setParams(prev=>(
-      {
-        ...prev,
-        column_name : sortModel[0]?.colId === "name" ?  "first_name" : sortModel[0].colId  ,
-        order_by : sortModel[0].sort?.toUpperCase()
-      }
-    )
-    );
+    console.log(sortModel);
+    if (sortModel?.length)
+      setParams(prev => (
+        {
+          ...prev,
+          column_name: sortModel[0]?.colId === "name" ? "first_name" : sortModel[0].colId,
+          order_by: sortModel[0].sort?.toUpperCase()
+        }
+      )
+      );
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(loadTeachersList(params));
     dispatch(loadDepartmentList())
 
-  },[dispatch,params])
+  }, [dispatch, params])
   return (
-    <div className="flex-grow-1 p-3 bg-white h-[100vh] " >
-    <div  className="ag-theme-alpine grid gap-4">
-    <div>
-      <Autocomplete
-        size="small"
-        sx={{width:"300px"}}
-        disablePortal
-        id="combo-box-demo"
-        options={ departmentList?.map(o=>({label:o?.name ?? "" , value:o?.id})) ?? []}
-        renderInput={(params) => <TextField {...params} label="Filter by Depatment" />}
-        onChange={(e,value)=>{setParams((prev)=>({...prev,department_id: value?.value}))}}
-      />
-      </div>
-            <AgGridReact 
-          rowData={teachersList?.data?.map(o=>({...o,name:`${o?.first_name} ${o?.last_name}`}))}
+    <div className="flex-grow-1 p-5 h-[100vh] " >
+      <div className="ag-theme-alpine grid gap-4">
+        <div className="py-3">
+          <Autocomplete
+            size="small"
+            sx={{ width: "300px" }}
+            disablePortal
+            id="combo-box-demo"
+            options={departmentList?.map(o => ({ label: o?.name ?? "", value: o?.id })) ?? []}
+            renderInput={(params) => <TextField {...params} label="Filter by Depatment" />}
+            onChange={(e, value) => { setParams((prev) => ({ ...prev, department_id: value?.value })) }}
+          />
+        </div>
+        <AgGridReact
+          rowData={teachersList?.data?.map(o => ({ ...o, name: `${o?.first_name} ${o?.last_name}` }))}
           columnDefs={headCells}
           domLayout='autoHeight'
           pagination={false}
           getRowHeight={getRowHeight}
-          onSortChanged ={onSortChanged}
+          onSortChanged={onSortChanged}
 
         />
         <Pagination setParams={setParams} meta_data={teachersList?.metadata} />

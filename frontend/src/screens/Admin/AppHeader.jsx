@@ -1,21 +1,22 @@
 import React from "react";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Divider, Toolbar, Typography } from "@mui/material";
 
-const AppHeader = ({open}) => {
+const AppHeader = ({ open, role1 }) => {
   return (
     <AppBar
       position="fixed"
       sx={{
         width: `calc(100%)`,
         boxShadow: "unset",
-        backgroundColor: "#E8E8E8",
+        backgroundColor: "#f3f0f9",
         color: "#071437",
-        height:"60px"
+        height: "60px"
       }}
     >
       <Toolbar>
-        <Typography variant="h6" sx={{ paddingLeft: open ? '270px' : '60px' }}>Hello Christ University!</Typography>
+        <Typography variant="h6" sx={{ paddingLeft: open ? '270px' : '60px' }}>{role1 == 1 ? "Hello Christ University!" : ""}</Typography>
       </Toolbar>
+      <Divider style={{ color: "gray", opacity: "0.4" }} />
     </AppBar>
   );
 };

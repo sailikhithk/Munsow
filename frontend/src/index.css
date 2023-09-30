@@ -5,14 +5,14 @@
   
   /* Track */
   *::-webkit-scrollbar-track {
-    background: rgba(110, 37, 161, 0.426)  !important;
+    background: linear-gradient(180.43deg, #A191C2 19.43%, #886CC0 87.63%)  !important;
     margin: 0 !important;
     box-shadow: none !important;
   }
   
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(1deg,#1c85ce 30%, #5271ff) !important;
+    background: linear-gradient(180.43deg, #A191C2 19.43%, #886CC0 87.63%) !important;
     border-radius: 10px !important;
     box-shadow: none !important;
   }
@@ -27,7 +27,7 @@
     width: 10px !important;
   }
   #lessonViewRender::-webkit-scrollbar-thumb {
-    background: linear-gradient(1deg,#1c85ce 30%, #5271ff) !important;
+    background: linear-gradient(180.43deg, #A191C2 19.43%, #886CC0 87.63%) !important;
     border-radius: 10px !important;
     box-shadow: none !important;
   }

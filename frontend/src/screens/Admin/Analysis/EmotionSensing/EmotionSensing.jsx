@@ -19,8 +19,8 @@ const EmotionSensing = () => {
       {/* <div className="row"> */}
       {/** chart section */}
       {/* <div className="col-sm-12 col-lg-12"> */}
-      <div className=" bg-white mb-3 px-20 py-10">
-        <div>
+      <div className=" bg-white p-10 m-10 rounded-xl">
+        <div className="pb-5">
           <span className="text-2xl ">
             Emotion Sensing - </span><span className="text-lg">Time wise emotions</span>
         </div>
@@ -28,14 +28,14 @@ const EmotionSensing = () => {
           <ResponsiveContainer width="100%" height={520}>
             <LineChart
               data={_mockChartData}
-              margin={{
-                top: 20,
-                right: 50,
-                left: 5,
-                bottom: 5,
-              }}
+              // margin={{
+              //   top: 20,
+              //   right: 50,
+              //   left: 5,
+              //   bottom: 5,
+              // }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
+              {/* <CartesianGrid strokeDasharray="3 3" /> */}
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />

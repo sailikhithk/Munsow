@@ -6,7 +6,7 @@ const Summary = () => {
     // navigation
     const navigate = useNavigate();
 
-    const buttonStyle = 'bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
+    const buttonStyle = 'bg-[#886CC0] text-white rounded-md py-2 px-4 hover:bg-[#886CA0] focus:outline-none '
 
     return (
         <div className="body flex-grow-1">
