@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import App from '../layouts/App'
 import MetaData from '../components/MetaData'
 const Practice = () => {
+    const [type, setType] = useState(null);
     const [level, setLevel] = useState(12);
+    console.log(type);
     return (
         <App>
             <MetaData title="Practice" />
@@ -18,55 +20,67 @@ const Practice = () => {
                                     <li><a className="nav-link" href="#skill">
                                         <span>1</span>
                                     </a></li>
-                                    <li><a className="nav-link" href="#role">
+                                    <li><a className="nav-link" href="#level">
                                         <span>2</span>
                                     </a></li>
-                                    <li><a className="nav-link" href="#level">
-                                        <span>3</span>
-                                    </a></li>
                                     <li><a className="nav-link" href="#check">
-                                        <span>4</span>
+                                        <span>3</span>
                                     </a></li>
                                 </ul>
                                 <div className="tab-content">
                                     <div id="skill" className="tab-pane" role="tabpanel">
                                         <div className="row p-5">
-                                            <div className="col-lg-4 offset-4 mb-2">
-                                                <h2 className='text-primary'>Skill Specific</h2>
-                                                <p>Choose your mock interview</p>
-                                                <div className="form-check mb-2">
-                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="check1" value="" checked />
-                                                    <label className="form-check-label pt-2 custom_label" for="check1">Hard Skills</label>
+                                            <div className="col-lg-8 offset-2 mb-2">
+                                                <div className='row'>
+                                                    {/* <p>Choose your mock interview</p> */}
+                                                    <div className='col'>
+                                                        <div className="form-check mb-2">
+                                                            <input type="radio" style={{ width: 40, height: 40 }} className="form-check-input" id="check1" name='type' onChange={(event) => { setType("Skill") }} />
+                                                            <label className="form-check-label pt-2 custom_label" style={{ marginTop: 5, marginLeft: 10 }} for="check1">Skill Specific</label>
+                                                        </div>
+                                                        <br />
+                                                        <div className="form-check mb-2">
+                                                            <input type="radio" style={{ width: 40, height: 40 }} className="form-check-input" id="check2" name='type' onChange={(event) => setType("Role")} />
+                                                            <label className="form-check-label pt-2 custom_label" style={{ marginTop: 5, marginLeft: 10 }} for="check2">Role Specific</label>
+                                                        </div>
+                                                    </div>
+                                                    <div className='col-1'></div>
+                                                    <div className='col'>
+                                                        {
+                                                            type && type === "Skill" &&
+                                                            <>
+                                                                <div className="form-check mb-2">
+                                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="skillCheck1" value=""  />
+                                                                    <label className="form-check-label pt-2 custom_label" for="skillCheck1">Hard Skills</label>
+                                                                </div>
+                                                                <br clear="all" />
+                                                                <div className="form-check mb-2">
+                                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="skillCheck2" value="" />
+                                                                    <label className="form-check-label pt-2 custom_label" for="skillCheck2">Soft Skills</label>
+                                                                </div>
+                                                            </>
+                                                        }
+                                                        {
+                                                            type && type === "Role" && <>
+                                                                <div className="form-check mb-2">
+                                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="roleCheck1" value=""  />
+                                                                    <label className="form-check-label pt-2 custom_label" for="roleCheck1">Choose Role</label>
+                                                                </div>
+                                                                <br clear="all" />
+                                                                <div className="form-check mb-2">
+                                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="roleCheck2" value="" />
+                                                                    <label className="form-check-label pt-2 custom_label" for="roleCheck2">Choose Company</label>
+                                                                </div>
+                                                            </>
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <br clear="all" />
-                                                <div className="form-check mb-2">
-                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="check2" value="" />
-                                                    <label className="form-check-label pt-2 custom_label" for="check2">Soft Skills</label>
-                                                </div>
+
                                             </div>
 
                                         </div>
-                                        <br /><br />
                                     </div>
-                                    <div id="role" className="tab-pane" role="tabpanel">
-                                        <div className="row p-5">
-                                            <div className="col-lg-4 offset-4 mb-2">
-                                                <h2 className='text-primary'>Role Specific</h2>
-                                                <p>Choose your mock interview</p>
-                                                <div className="form-check mb-2">
-                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="check1" value="" checked />
-                                                    <label className="form-check-label pt-2 custom_label" for="check1">Choose Role</label>
-                                                </div>
-                                                <br clear="all" />
-                                                <div className="form-check mb-2">
-                                                    <input type="checkbox" style={{ width: 40, height: 40 }} className="form-check-input" id="check2" value="" />
-                                                    <label className="form-check-label pt-2 custom_label" for="check2">Choose Company</label>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <br /><br />
-                                    </div>
+                                    
                                     <div id="level" className="tab-pane" role="tabpanel">
                                         <div className="row p-5 text-center ">
                                             <div className="col-lg-8 offset-2 mb-2">
@@ -76,7 +90,7 @@ const Practice = () => {
                                                     <input type="radio" name="slider" id="medium" className="slider-radio" />
                                                     <input type="radio" name="slider" id="high" className="slider-radio" />
                                                     <div className="slider">
-                                                        <div className="slider-handle" style={{left:`${level}%`}}></div>
+                                                        <div className="slider-handle" style={{ left: `${level}%` }}></div>
                                                     </div>
 
                                                     <div className='row mt-5'>
@@ -111,7 +125,6 @@ const Practice = () => {
                                             </div>
 
                                         </div>
-                                        <br /><br /><br />
 
                                     </div>
                                     <div id="check" className="tab-pane" role="tabpanel">
@@ -132,7 +145,6 @@ const Practice = () => {
                                             </div>
 
                                         </div>
-                                        <br /><br /><br />
 
                                     </div>
                                 </div>
