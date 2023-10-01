@@ -6,7 +6,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 
 import ActionButtonCellRenderer from "./ActionButtonCellRenderer";
 import { useDispatch, useSelector } from "react-redux";
-import { loadDepartmentList, loadTeachersList } from "../../../redux/action";
+import { loadBrachList, loadDepartmentList, loadTeachersList } from "../../../redux/action";
 import Pagination from "../../../Components/Pagination";
 import { Autocomplete, TextField } from "@mui/material";
 
@@ -15,7 +15,7 @@ const Teachers = () => {
 
 
   const dispatch = useDispatch();
-  const { teachersList, departmentList } = useSelector(state => state?.data)
+  const { teachersList, departmentList, branchList } = useSelector(state => state?.data)
   const [params, setParams] = useState({
     //   order_by:"",
     //   ASC:"",
@@ -89,22 +89,34 @@ const Teachers = () => {
   };
 
   useEffect(() => {
-    dispatch(loadTeachersList(params));
     dispatch(loadDepartmentList())
+    dispatch(loadBrachList())
+  }, [dispatch])
 
+  useEffect(() => {
+    dispatch(loadTeachersList(params));
   }, [dispatch, params])
   return (
     <div className="flex-grow-1 p-5 h-[100vh] " >
       <div className="ag-theme-alpine grid gap-4">
-        <div className="py-3">
+        <div className="flex gap-4 py-3">
           <Autocomplete
             size="small"
             sx={{ width: "300px" }}
             disablePortal
             id="combo-box-demo"
             options={departmentList?.map(o => ({ label: o?.name ?? "", value: o?.id })) ?? []}
-            renderInput={(params) => <TextField {...params} label="Filter by Depatment" />}
+            renderInput={(params) => <TextField {...params} label="Filter by Department" />}
             onChange={(e, value) => { setParams((prev) => ({ ...prev, department_id: value?.value })) }}
+          />
+          <Autocomplete
+            size="small"
+            sx={{ width: "300px" }}
+            disablePortal
+            id="combo-box-demo"
+            options={branchList?.map(o => ({ label: o?.name ?? "", value: o?.id })) ?? []}
+            renderInput={(params) => <TextField {...params} label="Filter by Branch" />}
+            onChange={(e, value) => { setParams((prev) => ({ ...prev, branch_name: value?.label })) }}
           />
         </div>
         <AgGridReact

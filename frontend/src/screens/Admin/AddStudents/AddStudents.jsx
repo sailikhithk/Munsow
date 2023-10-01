@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import UploadImage from "../../../assets/login.jpg";
+import UploadImage from "../../../assets/file-upload.png";
 import "./AddStudents.css";
 import { loadBrachList, loadCourseList, loadDepartmentList, uploadUser, user_create } from "../../../redux/action";
 import { useDispatch, useSelector } from "react-redux";
@@ -203,7 +203,7 @@ const AddStudents = () => {
         </TabPanel>
         <TabPanel value="2" style={{ background: "white", borderRadius: "8px", marginTop: "10px" }}>
 
-          <div className="grid grid-cols-2 gap-4 bg-white p-4" >
+          <div className="grid grid-cols-2 gap-8 bg-white p-4" >
             {
               userFeilds?.map((o) => (
                 <>
@@ -218,7 +218,18 @@ const AddStudents = () => {
                           defaultValue={o?.value}
                           id="combo-box-demo"
                           options={o?.options ?? []}
-                          renderInput={(params) => <TextField {...params} label={o?.label} />}
+                          renderInput={(params) => (
+                            <TextField 
+                            {...params} 
+                            label={o?.label} 
+                            InputProps={{
+                              ...params.InputProps,
+                              style: {
+                                borderRadius: "0.4rem",
+                              },
+                            }}
+                            />
+                          )}
                           onChange={(e, value) => { handleInputChange(o?.key, value) }}
                         />
 
@@ -231,6 +242,11 @@ const AddStudents = () => {
                         value={o?.value}
                         size="small"
                         onChange={(e) => { handleInputChange(o?.key, e.target.value) }}
+                        InputProps={{
+                          style: {
+                            borderRadius: "0.4rem",
+                          },
+                        }}
                       />
                   }
                 </>

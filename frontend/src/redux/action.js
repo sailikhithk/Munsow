@@ -513,13 +513,13 @@ export const getcountries = () => {
     payload: data,
   });
   
-  export const loadInstitutionStats = () => {
+  export const loadInstitutionStats = (params) => {
     return function (dispatch) {
       var headers = {
         "Content-type": "application/json",
         "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
         };
-        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/statistics`, {headers})
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/statistics`, {headers, params})
         .then((resp) => {
           dispatch(getInstitutionStats(resp?.data));
         })
@@ -769,3 +769,101 @@ export const getcountries = () => {
 
 
   // #endregion admin Stats
+
+  // practice lists
+
+  const getHardSkillsList = (data) => ({
+    type: types.HARD_SKILLS_LIST,
+    payload: data,
+  });
+  
+  export const loadHardSkillsList = (params={}) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/hard_skills_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getHardSkillsList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  const getSoftSkillsList = (data) => ({
+    type: types.SOFT_SKILLS_LIST,
+    payload: data,
+  });
+  
+  export const loadSoftSkillsList = (params={}) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/soft_skills_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getSoftSkillsList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  const getInterviewRolesList = (data) => ({
+    type: types.INTERVIEW_ROLES_LIST,
+    payload: data,
+  });
+  
+  export const loadInterviewRolesList = (params={}) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/interview_roles_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getInterviewRolesList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  const getCompaniesList = (data) => ({
+    type: types.COMPANIES_LIST,
+    payload: data,
+  });
+  
+  export const loadCompaniesList = (params={}) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/companies_list`, {params,headers})
+        .then((resp) => {
+          dispatch(getCompaniesList(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+
+  const getEmotionStats = (data) => ({
+    type: types.EMOTION_STATS,
+    payload: data,
+  });
+  
+  export const loadEmotionStats = (params) => {
+    return function (dispatch) {
+      var headers = {
+        "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
+        };
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/institution/deep_analysis/emotion_sensing`, {headers, params})
+        .then((resp) => {
+          dispatch(getEmotionStats(resp?.data));
+        })
+        .catch((error) => console.log(error));
+    };
+  };
+  

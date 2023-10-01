@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import UploadImage from "../../../assets/login.jpg";
+import UploadImage from "../../../assets/file-upload.png";
 
 import { loadBrachList, loadCourseList, loadDepartmentList, loadInstitutionList, uploadUser, user_create } from "../../../redux/action";
 import { useDispatch, useSelector } from "react-redux";

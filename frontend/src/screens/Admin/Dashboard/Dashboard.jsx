@@ -26,9 +26,10 @@ import PersonIcon from "@mui/icons-material/Person";
 import GroupsIcon from '@mui/icons-material/Groups';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import { useDispatch, useSelector } from "react-redux";
-import { loadInstitutionStats } from "../../../redux/action";
+import { loadDepartmentList, loadInstitutionStats } from "../../../redux/action";
 
-
+import PieChartComp from "../../../Components/Charts/PieChartComp"
+import PopUpFilter from "../../../Components/PopUpFilter";
 
 const AdminDashboard = () => {
 
@@ -65,7 +66,7 @@ const AdminDashboard = () => {
   const [pie,setPie] = useState([]);
 
   const dispatch = useDispatch();
-  const {institutionStats} = useSelector((state)=>state?.data)
+  const {institutionStats, departmentList} = useSelector((state)=>state?.data)
 
 
 
@@ -73,6 +74,7 @@ const AdminDashboard = () => {
 
   useEffect(()=>{
     dispatch(loadInstitutionStats());
+    dispatch(loadDepartmentList())
   },[dispatch])
 
   useEffect(()=>{
@@ -120,6 +122,9 @@ const AdminDashboard = () => {
       <div className="container ">
           {/* Card section */}
           <div className="">
+            <div className="flex justify-end mb-4">
+              <PopUpFilter departmentList={departmentList}/>
+            </div>
         <div className=" grid grid-cols-3 gap-2 ">
             {cardLists.length ? (
               <CardContainer cardLists={cardLists} />
@@ -137,7 +142,7 @@ const AdminDashboard = () => {
                 </span>
               </div>
               <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
+                {/* <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barPlot}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -146,6 +151,39 @@ const AdminDashboard = () => {
                     <Legend />
                     <Bar dataKey="Participated" fill="#82ca9d" />
                     <Bar dataKey="Not yet Participated" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer> */}
+
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={barPlot}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis>
+                      <Label
+                        value="Number of Participant"
+                        angle={-90}
+                        position="insideLeft"
+                        offset={0}
+                        dx={10}
+                        dy={80}
+                      />
+                    </YAxis>
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="Participated" stackId="a" fill="#82ca9d" />
+                    <Bar dataKey="Not yet Participated" stackId="a" fill="#8884d8" 
+                    // radius={[20,20 ,0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -167,17 +205,16 @@ const AdminDashboard = () => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="basic" dataKey="Marketing" stroke="green" />
-                    <Line type="basic" dataKey="Finance" stroke="blue" />
-                    <Line type="basic" dataKey="Operations" stroke="purple" />
-                    <Line type="basic" dataKey="Hr" stroke="red" />
+                    <Line type="monotone" dataKey="Marketing" stroke="green" />
+                    <Line type="monotone" dataKey="Finance" stroke="blue" />
+                    <Line type="monotone" dataKey="Operations" stroke="purple" />
+                    <Line type="monotone" dataKey="Hr" stroke="red" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
           </div>
           <div className="lg:w-4/12">
-            {/* Critical Improvement Areas */}
             <div className="bg-white shadow-md p-4 mb-4">
               <div className="mb-4">
                 <span className="text-lg font-normal">
@@ -186,30 +223,19 @@ const AdminDashboard = () => {
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Legend
-                      layout="horizontal"
-                      verticalAlign="bottom"
-                      align="center"
-                    />
-                    <Pie
-                      dataKey="value"
-                      data={pie}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      fill="#8884d8"
-                      label
-                    >
-                      {pie.map((entry, index) => (<>
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      </>
-                      ))}
-                    </Pie>
-                  </PieChart>
+                  <PieChartComp
+                    data={pie?.map((entry, index) => {
+                      return {
+                        name: entry?.name,
+                        color: COLORS[index % COLORS.length],
+                        percentage: entry?.value,
+                      }
+                    })}
+                    outerRadius={30}
+                    innerRadius={50}
+                    onChange={() => {}}
+                    // showLabel={true}
+                  />
                 </ResponsiveContainer>
               </div>
             </div>

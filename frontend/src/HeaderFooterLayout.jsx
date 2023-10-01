@@ -26,6 +26,12 @@ import GLOBAL_CONSTANTS from "../GlobalConstants";
 import { Collapse } from "@mui/material";
 import AppHeader from "./screens/Admin/AppHeader";
 
+import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
+import FilterNoneRoundedIcon from '@mui/icons-material/FilterNoneRounded';
+import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
+
 const drawerWidth = 270;
 
 const openedMixin = (theme, role1) => ({
@@ -104,7 +110,7 @@ export default function HeaderFooterLayout({ Component }) {
       setMenuData([
         {
           label: "Home",
-          icon: <DashboardOutlinedIcon  />,
+          icon: <GridViewRoundedIcon  />,
           route: "/adminDashboard",
           subItems: [],
         },
@@ -137,7 +143,7 @@ export default function HeaderFooterLayout({ Component }) {
         },
         {
           label: "User Management",
-          icon: <RuleOutlinedIcon  />,
+          icon: <ManageAccountsRoundedIcon  />,
           route: "/summary",
           subItems: [
             {
@@ -159,7 +165,7 @@ export default function HeaderFooterLayout({ Component }) {
       setMenuData([
         {
           label: "Dashboard",
-          icon: <DashboardOutlinedIcon />,
+          icon: <GridViewRoundedIcon />,
           route: "/studentDashboard",
           subItems: [],
         },
@@ -171,19 +177,29 @@ export default function HeaderFooterLayout({ Component }) {
         },
         {
           label: "My Reports",
-          icon: <AccountCircleOutlinedIcon />,
+          icon: <TrendingUpRoundedIcon />,
           route: "/report",
           subItems: [],
         },
         {
           label: "Notifications",
-          icon: <AccountCircleOutlinedIcon />,
+          icon: <NotificationsRoundedIcon />,
           route: "/studentDashboard",
           subItems: [],
         },
       ]);
     }
   }, []);
+
+  useEffect(() => {
+    if (menuData?.length > 0) {
+      let route = location.pathname;
+
+      let meunItem = menuData?.find((m) => m?.route == route || m?.subItems?.find((s) => s.route == route));
+      let index = menuData?.findIndex((m) => m?.route == meunItem?.route);
+      setSelectedItem(index);
+    }
+  }, [menuData])
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -238,6 +254,11 @@ export default function HeaderFooterLayout({ Component }) {
                   }
                 }}
                 selected={selectedItem === mainIndex}
+                sx={{
+                  "&.Mui-selected": {
+                    backgroundColor: "transparent",
+                  },
+                }}
               >
 
                 <ListItemButton
@@ -246,7 +267,8 @@ export default function HeaderFooterLayout({ Component }) {
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
                     backgroundColor: selectedItem === mainIndex ? "#f3f0f9" : "transparent",
-                    borderBottomRightRadius:"40px"
+                    borderLeft: selectedItem === mainIndex ? "5px solid purple" : "5px solid transparent",
+                    borderBottomRightRadius: open && "40px",
                     // color:selectedItem === mainIndex ? "purple" : "transparent",
                   }}
                 >

@@ -132,7 +132,7 @@ const StudentRegister = () => {
           {" "}
           Student Registration Form{" "}
         </div>
-        <div className="grid grid-cols-2 gap-4 bg-white p-4">
+        <div className="grid grid-cols-2 gap-8 bg-white p-4">
           {userFeilds?.map((o) => (
             <>
               {o?.type === "select" ? (
@@ -146,7 +146,16 @@ const StudentRegister = () => {
                     id="combo-box-demo"
                     options={o?.options ?? []}
                     renderInput={(params) => (
-                      <TextField {...params} label={o?.label} />
+                      <TextField 
+                      {...params} 
+                      label={o?.label} 
+                      InputProps={{
+                        ...params.InputProps,
+                        style: {
+                          borderRadius: "0.4rem",
+                        },
+                      }}
+                      />
                     )}
                     onChange={(e, value) => {
                       handleInputChange(o?.key, value);
@@ -163,12 +172,26 @@ const StudentRegister = () => {
                   onChange={(e) => {
                     handleInputChange(o?.key, e.target.value);
                   }}
+                  InputProps={{
+                    style: {
+                      borderRadius: "0.4rem",
+                    },
+                  }}
+
                 />
               )}
             </>
           ))}
         </div>
-        <div className="flex justify-end gap-3 p-4">
+        <div className="flex justify-end gap-6 p-4">
+          <Button
+            variant="outlined"
+            onClick={() => {
+              navigate(-1)
+            }}
+          >
+            Back
+          </Button>
           <Button
             variant="contained"
             onClick={() => {

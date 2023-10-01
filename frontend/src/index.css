@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* width */
 *::-webkit-scrollbar {
     width: 4px !important; 
@@ -37,3 +41,6 @@
     padding: 0;
     /* font-family: "poppins"; */
   }
+
+  input[type='text']:focus { box-shadow: none; }
+input[type='number']:focus { box-shadow: none; }

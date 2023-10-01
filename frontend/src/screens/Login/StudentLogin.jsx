@@ -17,7 +17,8 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  // border: "2px solid #000",
+  borderRadius: "0.4rem",
   boxShadow: 24,
   p: 4,
 };
@@ -74,7 +75,7 @@ const StudentLogin = () => {
                 </label>
                 <input
                   type="text"
-                  className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
+                  className="mt-2 w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
                   id="universityId"
                   name="universityId"
                   placeholder=""
@@ -88,7 +89,7 @@ const StudentLogin = () => {
                 </label>
                 <input
                   type="password"
-                  className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
+                  className="mt-2 w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
                   id="password"
                   name="password"
                   placeholder=""

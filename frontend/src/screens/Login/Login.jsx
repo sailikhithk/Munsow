@@ -60,10 +60,10 @@ const LoginPage = () => {
     <div className="p-4">
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-3/6 p-5 md:p-20">
-          <div className="bg-white   rounded-lg p-6">
+          <div className="bg-white rounded-lg p-6">
             <h2 className="text-4xl font-semibold mb-4">Institution Login</h2>
             <p className="text-base text-gray-600 mb-7">
-              Get access to our expert insights about your students across departments, branches and cities today!
+              Get access to our expert insights about your students across departments, branches, and cities today!
             </p>
             <div className="space-y-4">
               <div className="mb-2">
@@ -72,7 +72,7 @@ const LoginPage = () => {
                 </label>
                 <input
                   type="text"
-                  className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
+                  className="mt-2 w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
                   id="universityId"
                   name="universityId"
                   placeholder="UNIV01UB"
@@ -86,7 +86,7 @@ const LoginPage = () => {
                 </label>
                 <input
                   type="password"
-                  className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
+                  className="mt-2 w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
                   id="password"
                   name="password"
                   placeholder=""

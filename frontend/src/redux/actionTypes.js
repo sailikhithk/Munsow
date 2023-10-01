@@ -6,6 +6,7 @@ export const QUIZ_DATA = "QUIZ_DATA";
 export const USERS_LIST = "USERS_LIST";
 export const USER_STATS="USER_STATS";
 export const ADMIN_STATS="ADMIN_STATS";
+export const EMOTION_STATS="EMOTION_STATS";
 
 //------------------------
 
@@ -19,3 +20,13 @@ export const BRANCH_LIST = "BRANCH_LIST";
 export const DEPARTMENT_LIST = "DEPARTMENT_LIST";
 export const INSTITUTION_LIST = "INSTITUTION_LIST";
 export const COUNTRY_LIST = "COUNTRY_LIST";
+
+export const HARD_SKILLS_LIST = "HARD_SKILLS_LIST";
+export const SOFT_SKILLS_LIST = "SOFT_SKILLS_LIST";
+export const INTERVIEW_ROLES_LIST = "INTERVIEW_ROLES_LIST";
+export const COMPANIES_LIST = "COMPANIES_LIST";
+
+ 
+ 
+ 
+ 

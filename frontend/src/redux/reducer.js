@@ -22,6 +22,11 @@ const initialState = {
   branchList:[],
   institutionList:[],
   countryList:[],
+  hardSkillsList: [],
+  softSkillsList: [],
+  interviewRolesList: [],
+  companiesList: [],
+  emotionStats: {},
   loading: false
 };
 
@@ -119,6 +124,31 @@ const DataReducers = (state = initialState, action) => {
     case types.BRANCH_LIST: return{
       ...state,
       branchList:action.payload,
+      loading:false
+    }
+    case types.HARD_SKILLS_LIST: return{
+      ...state,
+      hardSkillsList:action.payload,
+      loading:false
+    }
+    case types.SOFT_SKILLS_LIST: return{
+      ...state,
+      softSkillsList:action.payload,
+      loading:false
+    }
+    case types.INTERVIEW_ROLES_LIST: return{
+      ...state,
+      interviewRolesList:action.payload,
+      loading:false
+    }
+    case types.COMPANIES_LIST: return{
+      ...state,
+      companiesList:action.payload,
+      loading:false
+    }
+    case types.EMOTION_STATS: return{
+      ...state,
+      emotionStats:action.payload.data,
       loading:false
     }
     case types.INSTITUTION_LIST: return{
