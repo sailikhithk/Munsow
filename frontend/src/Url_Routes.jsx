@@ -32,6 +32,7 @@ import BehaviourAnalysis from "./screens/Admin/Analysis/BehaviourAnalysis";
 import PracticalThinking from "./screens/Admin/Analysis/PracticalThinking";
 import HelpSupportAdmin from "./screens/Help/AdminHelp";
 import SettingsPageAdmin from "./screens/AdminSettings/Settings";
+import NewGridLayout from "./screens/PracticeNow/NewGridLayout";
 
 
 function Url_Routes() {
@@ -69,6 +70,7 @@ function Url_Routes() {
                 <Route excat path="/lesson/:id" element={<HeaderFooterLayout Component={<LessonView />} />} />
                 <Route excat path="/profile" element={<HeaderFooterLayout Component={<Profile />} />} />
                 <Route excat path="/report" element={<HeaderFooterLayout Component={<UserReport />} />} />
+                <Route excat path="/interview" element={<HeaderFooterLayout Component={<NewGridLayout />} />} />
                 <Route excat path="/practice" element={<HeaderFooterLayout Component={<StepperComponent />} />} />
                 <Route excat path="/notifications" element={<HeaderFooterLayout Component={<NotificationsPage />} />} />
                 <Route excat path="/help" element={<HeaderFooterLayout Component={<HelpAndSupportPage />} />} />
