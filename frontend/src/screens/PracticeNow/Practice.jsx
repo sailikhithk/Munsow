@@ -1,10 +1,38 @@
 import { Autocomplete, Divider, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Stepper from "react-stepper-horizontal";
+// import Stepper from "react-stepper-horizontal";
 import ComputerRoundedIcon from '@mui/icons-material/ComputerRounded';
-import CheckboxesTags from "../../Components/MatSelect";
+import { Step, StepLabel, Stepper } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
+import CheckboxesTags from "../../Components/MatSelect";
 import { loadCompaniesList, loadHardSkillsList, loadInterviewRolesList, loadSoftSkillsList } from "../../redux/action";
+import './Practice.css'; // Make sure to import your stylesheet
+
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import { styled } from '@mui/material/styles';
+
+const QontoConnector = styled(StepConnector)(({ theme }) => ({
+    [`&.${stepConnectorClasses.alternativeLabel}`]: {
+      top: 17,
+      left: 'calc(-50% + 1.5rem)',
+      right: 'calc(50% + 1.5rem)',
+    },
+    [`&.${stepConnectorClasses.active}`]: {
+      [`& .${stepConnectorClasses.line}`]: {
+        borderColor: '#886CC0',
+      },
+    },
+    [`&.${stepConnectorClasses.completed}`]: {
+      [`& .${stepConnectorClasses.line}`]: {
+        borderColor: '#886CC0',
+      },
+    },
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+      borderTopWidth: 3,
+      borderRadius: 1,
+    },
+  }));
 
 const StepperComponent = () => {
     const dispatch = useDispatch();
@@ -44,7 +72,35 @@ const StepperComponent = () => {
             <div className="w-full mx-auto bg-white rounded-xl">
                 <p className="p-5 text-xl font-semibold">Practice</p>
                 <Divider />
-                <Stepper steps={steps} activeStep={currentStep} activeColor={"red"} completeColor={"#886CC0"} completeBorderColor={"#886CC0"} size={40}/>
+                {/* <Stepper 
+                    steps={steps} 
+                    activeStep={currentStep} 
+                    activeColor={"#886CC0"} 
+                    completeColor={"#886CC0"} 
+                    completeBorderColor={"#886CC0"} 
+                    completeTitleColor={"#886CC0"} 
+                    size={40}
+                /> */}
+                <Stepper activeStep={currentStep} alternativeLabel connector={<QontoConnector />} style={{marginTop: "1rem"}}>
+                    {steps.map((label, index) => (
+                    <Step key={label?.title}>
+                        <StepLabel
+                        completed={index < currentStep}
+                        style={{
+                            color: index < currentStep ? '#886CC0' : 'inherit',
+                        }}
+                        StepIconProps={{
+                            style: {
+                                color: index <= currentStep ? '#886CC0' : '',
+                                fontSize: "2.5rem"
+                            }
+                        }}
+                        >
+                        {label?.title}
+                        </StepLabel>
+                    </Step>
+                    ))}
+                </Stepper>
                 <Divider style={{marginTop: "1rem"}}/>
                 <div className="flex mt-4 p-4 items-center justify-center">
                     {currentStep === 0 && (
@@ -144,7 +200,7 @@ const StepperComponent = () => {
                     {currentStep === 2 && (
                         <div>
                             <h2 className="text-center text-xl font-semibold mb-2 text-purple-600">Level</h2>
-                            <div className="m-3 w-96 border-4 rounded-2xl py-6 px-7 border-purple-300">
+                            <div className="m-3 w-[35rem] border-4 rounded-2xl py-8 px-7 border-purple-300">
                                 <input
                                     type="range"
                                     min="0"
@@ -155,7 +211,7 @@ const StepperComponent = () => {
                                     style={{ background: "#f3f0f9" }}
                                 />
 
-                                <div className="flex justify-evenly text-sm">
+                                <div className="flex justify-evenly text-md">
                                     <button
                                         onClick={() => setLevel(25)}
                                         className="bg-green-500 hover:bg-green-700 text-white  py-1 px-3 rounded-md"

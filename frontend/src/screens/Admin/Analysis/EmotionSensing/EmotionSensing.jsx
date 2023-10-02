@@ -1,21 +1,15 @@
-import React, { useEffect } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-
-import _mockChartData from "./_mockChartData.json";
-import { useDispatch } from "react-redux";
+import PositiveEmotionsChart from "./PositiveEmotionsChart";
+import NeutralEmotionsChart from "./NeutralEmotionsChart";
+import NegativeEmotionsChart from "./NegativeEmotionsChart";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { loadEmotionStats } from "../../../../redux/action";
+
 
 const EmotionSensing = () => {
   const dispatch = useDispatch();
+
+  const { emotionStats } = useSelector((state) => state.data);
 
   useEffect(() => {
     dispatch(loadEmotionStats());
@@ -23,80 +17,22 @@ const EmotionSensing = () => {
 
   return (
     <div>
-      {/* <div className=" bg-white p-10 m-10 rounded-xl">
+      <div className="bg-white p-10">
         <div className="pb-5">
-          <span className="text-2xl ">Emotion Sensing - </span><span className="text-lg">Time wise emotions</span>
+          <span className="text-2xl ">Emotion Sensing - </span>
+          <span className="text-lg">Time wise emotions</span>
         </div>
-        <div >
-          <ResponsiveContainer width="100%" height={520}>
-            <LineChart
-              data={_mockChartData}
-            >
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="basic"
-                dataKey="surprise"
-                stroke="#AFDFEF"
-                strokeWidth={2}
-              />
-              <Line
-                type="basic"
-                dataKey="disgust"
-                stroke="#E1885E"
-                strokeWidth={2}
-              />
-              <Line
-                type="basic"
-                dataKey="contempt"
-                stroke="#6B2F6B"
-                strokeWidth={2}
-              />
-              <Line
-                type="basic"
-                dataKey="happiness"
-                stroke="#9F9A8F"
-                strokeWidth={2}
-              />
-              <Line
-                type="basic"
-                dataKey="sadnesss"
-                stroke="#669548"
-                strokeWidth={2}
-              />
-              <Line
-                type="basic"
-                dataKey="anger"
-                stroke="#596EF2"
-                strokeWidth={2}
-              />
-              <Line
-                type="basic"
-                dataKey="fear"
-                stroke="#000000"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="flex">
+          <div className="w-[32rem] mx-6">
+            <PositiveEmotionsChart data={emotionStats?.graph_1?.data} name={emotionStats?.graph_1?.name}/>
+          </div>
+          <div className="w-[32rem] mx-6">
+            <NeutralEmotionsChart data={emotionStats?.graph_2?.data} name={emotionStats?.graph_2?.name}/>
+          </div>
         </div>
-      </div> */}
-
-      <div className="bg-white p-4 rounded-lg">
-        <div className="flex justify-between items-center border-b pb-2">
-          <span className="font-semibold">Positive Emotions</span>
-        </div>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={[]}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="Marketing" stroke="green" />
-          </LineChart>
-        </ResponsiveContainer>
+          <div className="max-w-lg mx-80">
+            <NegativeEmotionsChart data={emotionStats?.graph_3?.data} name={emotionStats?.graph_3?.name}/>
+          </div>
       </div>
     </div>
   );

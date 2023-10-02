@@ -32,6 +32,32 @@ import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import FilterNoneRoundedIcon from '@mui/icons-material/FilterNoneRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 
+import { 
+  FaThLarge, 
+  FaClone, 
+  FaChartLine, 
+  FaBell,
+  FaUser,
+  FaUserCog,
+  FaCog,
+  FaQuestionCircle,
+  FaBrain,
+  FaLightbulb,
+  FaBalanceScale,
+  FaFileAlt,
+  FaUserGraduate,
+  FaChalkboardTeacher,
+ } from 'react-icons/fa';
+
+ import { 
+  FaHeartPulse,
+ } from 'react-icons/fa6';
+
+ import { 
+  BiSolidReport
+ } from 'react-icons/bi';
+import { classNames } from "./utils/generalUtils";
+
 const drawerWidth = 270;
 
 const openedMixin = (theme, role1) => ({
@@ -104,59 +130,68 @@ export default function HeaderFooterLayout({ Component }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);
 
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedSubItem, setSelectedSubItem] = useState(null);
 
   useEffect(() => {
     if (GLOBAL_CONSTANTS?.user_cred?.role_id === 1) {
       setMenuData([
         {
           label: "Home",
-          icon: <GridViewRoundedIcon  />,
+          icon: <FaThLarge size={20} className=""/>,
           route: "/adminDashboard",
           subItems: [],
         },
         {
           label: "Deep Analysis",
-          icon: <RuleOutlinedIcon  />,
+          icon: <BiSolidReport size={20} className=""/>,
           route: "/dashboard",
           subItems: [
             {
               label: "Behavioral Analysis",
-              route: "/emotionSensing",
+          icon: <FaBrain size={20} className=""/>,
+          route: "/emotionSensing",
             },
             {
               label: "KS Analysis",
-              route: "/emotionSensing",
+          icon: <FaChartLine size={20} className=""/>,
+          route: "/emotionSensing",
             },
             {
               label: "Practical thinking A",
-              route: "/emotionSensing",
+          icon: <FaLightbulb size={20} className=""/>,
+          route: "/emotionSensing",
             },
             {
               label: "Emotion Sensing",
-              route: "/emotionSensing",
+          icon: <FaHeartPulse size={20} className=""/>,
+          route: "/emotionSensing",
             },
             {
               label: "Hard Skill vs Soft skills",
-              route: "/emotionSensing",
+          icon: <FaBalanceScale size={20} className=""/>,
+          route: "/emotionSensing",
             },
           ],
         },
         {
           label: "User Management",
-          icon: <ManageAccountsRoundedIcon  />,
+          icon: <FaUserCog size={20} className=""/>,
           route: "/summary",
           subItems: [
             {
               label: "Summary",
-              route: "/summary",
+          icon: <FaFileAlt size={20} className=""/>,
+          route: "/summary",
             },
             {
               label: "Students",
-              route: "/studentList",
+          icon: <FaUserGraduate size={20} className=""/>,
+          route: "/studentList",
             },
             {
               label: "Teachers",
-              route: "/teachersList",
+          icon: <FaChalkboardTeacher size={20} className=""/>,
+          route: "/teachersList",
             },
           ],
         },
@@ -165,26 +200,44 @@ export default function HeaderFooterLayout({ Component }) {
       setMenuData([
         {
           label: "Dashboard",
-          icon: <GridViewRoundedIcon />,
+          icon: <FaThLarge size={20} className=""/>,
           route: "/studentDashboard",
           subItems: [],
         },
         {
           label: "Practice Now",
-          icon: <RuleOutlinedIcon />,
+          icon: <FaClone size={20} className=""/>,
           route: "/practice",
           subItems: [],
         },
         {
           label: "My Reports",
-          icon: <TrendingUpRoundedIcon />,
+          icon: <FaChartLine size={20} className=""/>,
           route: "/report",
           subItems: [],
         },
         {
           label: "Notifications",
-          icon: <NotificationsRoundedIcon />,
+          icon: <FaBell size={20} className=""/>,
           route: "/studentDashboard",
+          subItems: [],
+        },
+        {
+          label: "My Profile",
+          icon: <FaUser size={20} className=""/>,
+          route: "/profile",
+          subItems: [],
+        },
+        {
+          label: "Settings",
+          icon: <FaCog size={20} className=""/>,
+          route: "/profile",
+          subItems: [],
+        },
+        {
+          label: "Help & Support",
+          icon: <FaQuestionCircle size={20} className=""/>,
+          route: "/profile",
           subItems: [],
         },
       ]);
@@ -243,7 +296,13 @@ export default function HeaderFooterLayout({ Component }) {
         <Divider style={{opacity:"0.2"}}/>
         <List>
           {menuData.map((mainItem, mainIndex) => (
-            <div key={mainIndex}>
+            <div 
+            key={mainIndex} 
+            className={classNames(
+              GLOBAL_CONSTANTS?.user_cred?.role_id !== 1 && (mainIndex == 3 || mainIndex == 5) ? "mb-16" : "mb-2",
+              ""
+            )}
+            >
               <ListItem
                 disablePadding
                 onClick={() => {
@@ -275,15 +334,23 @@ export default function HeaderFooterLayout({ Component }) {
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
-                      mr: open ? 3 : "auto",
+                      mr: open ? 2 : "auto",
                       justifyContent: "center",
-                      color: selectedItem === mainIndex ? "#a590cf" : "gray",
+                      color: selectedItem === mainIndex ? "#a590cf" : "rgb(107 114 128)",
                     }}
-
+                    // className={classNames(selectedItem === mainIndex ? "text-[#a590cf]" : "text-gray-400",)}
                   >
                     {mainItem.icon}
                   </ListItemIcon>
-                  <ListItemText style={{ color: selectedItem === mainIndex ? "#a590cf" : "gray", fontSize: "30px" }} primary={mainItem.label} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText 
+                  disableTypography  
+                  // style={{ color: selectedItem === mainIndex ? "#a590cf" : "rgb(107 114 128)", fontSize: "15px" }}
+                  className={classNames(
+                    selectedItem === mainIndex ? "text-[#a590cf] font-bold" : "text-gray-500 font-medium",
+                    "text-base"
+                  )} 
+                  primary={mainItem.label} 
+                  sx={{ opacity: open ? 1 : 0 }} />
                   {mainItem.subItems.length > 0 && (
                     <ListItemIcon
                       sx={{
@@ -306,11 +373,14 @@ export default function HeaderFooterLayout({ Component }) {
                     <ListItem
                       key={subIndex}
                       disablePadding
-                      sx={{ display: "block", pl: 4 }}
+                      sx={{ display: "block", pl: open ? 3 : 0 }}
                       onClick={() => {
-                        handleListItemClick(subIndex, subItem.route);
+                        let meunItem = menuData?.find((m) => m?.subItems?.find((s) => s.route == subItem.route));
+                        let index = menuData?.findIndex((m) => m?.route == meunItem?.route);
+                        handleListItemClick(index, subItem.route);
+                        setSelectedSubItem(subIndex);
                       }}
-                      selected={selectedItem === subIndex}
+                      selected={selectedSubItem === subIndex}
                     >
                       <ListItemButton
                         sx={{
@@ -325,14 +395,22 @@ export default function HeaderFooterLayout({ Component }) {
                         <ListItemIcon
                           sx={{
                             minWidth: 0,
-                            mr: open ? 3 : "auto",
+                            mr: open ? 2 : "auto",
                             justifyContent: "center",
-                            // color: selectedItem === mainIndex ? "#a590cf" : "gray",
+                            color: selectedSubItem === subIndex ? "#a590cf" : "rgb(107 114 128)",
                           }}
+                          // className={classNames(selectedItem === mainIndex ? "text-[#a590cf]" : "text-gray-400",)}
                         >
-                          {/* Customize the sub-item icons here */}
+                          {subItem.icon}
                         </ListItemIcon>
-                        <ListItemText style={{ color: selectedItem === mainIndex ? "#a590cf" : "gray", fontSize: "30px" }} primary={subItem.label} sx={{ opacity: open ? 1 : 0 }} />
+                        <ListItemText 
+                        disableTypography 
+                        // style={{ color: selectedSubItem === subIndex ? "#a590cf" : "rgb(107 114 128)", fontSize: "15px" }} 
+                        className={classNames(
+                          selectedSubItem === subIndex ? "text-[#a590cf] font-semibold" : "text-gray-500 font-medium",
+                          "text-base"
+                        )} 
+                        primary={subItem.label} sx={{ opacity: open ? 1 : 0 }} />
                       </ListItemButton>
                     </ListItem>
                   ))}

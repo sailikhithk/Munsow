@@ -33,7 +33,7 @@ export default function CheckboxesTags(props) {
       renderInput={(params) => (
         <TextField
         {...params} 
-        label={label} 
+        placeholder={label} 
         InputProps={{
         ...params.InputProps,
         style: {

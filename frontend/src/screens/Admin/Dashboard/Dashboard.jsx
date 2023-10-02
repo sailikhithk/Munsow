@@ -17,7 +17,7 @@ import {
   LabelList,
 } from "recharts";
 
-// import "./Dashboard.css";
+import "./Dashboard.css";
 import CardContainer from "./CardContainer";
 // import cardLists from "./Mockcard";
 // import _mockChartData from "./_mockChartData.json";
@@ -27,9 +27,10 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import { useDispatch, useSelector } from "react-redux";
 import { loadDepartmentList, loadInstitutionStats } from "../../../redux/action";
-
-import PieChartComp from "../../../Components/Charts/PieChartComp"
+import { classNames, legendFormatter } from "../../../utils/generalUtils";
 import PopUpFilter from "../../../Components/PopUpFilter";
+
+
 
 const AdminDashboard = () => {
 
@@ -74,7 +75,7 @@ const AdminDashboard = () => {
 
   useEffect(()=>{
     dispatch(loadInstitutionStats());
-    dispatch(loadDepartmentList())
+    dispatch(loadDepartmentList());
   },[dispatch])
 
   useEffect(()=>{
@@ -122,7 +123,7 @@ const AdminDashboard = () => {
       <div className="container ">
           {/* Card section */}
           <div className="">
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mr-10 mb-3 ">
               <PopUpFilter departmentList={departmentList}/>
             </div>
         <div className=" grid grid-cols-3 gap-2 ">
@@ -135,13 +136,16 @@ const AdminDashboard = () => {
           {/* Chart section */}
           <div className="lg:w-4/12 pr-4">
             {/* Department wise Participation */}
-            <div className="bg-white shadow-md p-4 mb-4">
-              <div className="mb-4">
+            <div className={classNames(
+              // "bg-white shadow-md",
+              "p-4 mb-4"
+            )}>
+              <div className="mb-6">
                 <span className="text-lg font-normal">
                   Department wise Participation
                 </span>
               </div>
-              <div className="h-64">
+              <div className="h-80">
                 {/* <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barPlot}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -155,34 +159,59 @@ const AdminDashboard = () => {
                 </ResponsiveContainer> */}
 
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    width={500}
-                    height={300}
-                    data={barPlot}
-                    margin={{
-                      top: 20,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis>
+                  <BarChart data={barPlot} width={"200px"}>
+                    <CartesianGrid vertical={false} strokeDasharray="0 0" />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      className="text axis-data"
+                      interval={0}
+                    >
                       <Label
-                        value="Number of Participant"
-                        angle={-90}
-                        position="insideLeft"
-                        offset={0}
-                        dx={10}
-                        dy={80}
+                        className="text"
+                        value="DEPARTMENT"
+                        position="bottom"
+                        dy={10} // Adjust the distance from the X-axis
+                      />
+                    </XAxis>
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      className="text axis-data"
+                      interval={0}
+                    >
+                      <Label
+                        className="text"
+                        value="PARTICIPATION RATE"
+                        position="middle"
+                        angle={-90} // Rotate the label for vertical orientation
+                        dx={-25} // Adjust the distance from the Y-axis
                       />
                     </YAxis>
                     <Tooltip />
-                    <Legend />
-                    <Bar dataKey="Participated" stackId="a" fill="#82ca9d" />
-                    <Bar dataKey="Not yet Participated" stackId="a" fill="#8884d8" 
-                    // radius={[20,20 ,0, 0]}
+                    <Legend
+                      formatter={(value, entry) =>
+                        legendFormatter(value, entry, "line")
+                      }
+                      layout="horizontal"
+                      iconSize={0}
+                      wrapperStyle={{
+                        paddingTop: "1rem"
+                      }}
+                    />
+                    <Bar
+                      dataKey="Participated"
+                      stackId={"a"}
+                      fill="#6CE5E8"
+                      barSize={60}
+                    />
+                    <Bar
+                      dataKey="Not yet Participated"
+                      stackId={"a"}
+                      fill="#5271FF"
+                      barSize={60}
+                      radius={[15, 15, 0, 0]}
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -191,51 +220,177 @@ const AdminDashboard = () => {
           </div>
           <div className="lg:w-4/12 pr-4">
             {/* Department wise Improvement Rate */}
-            <div className="bg-white shadow-md p-4 mb-4">
-              <div className="mb-4">
+            <div className={classNames(
+              // "bg-white shadow-md",
+              "p-4 mb-4"
+            )}>
+              <div className="mb-6">
                 <span className="text-lg font-normal">
                   Department wise Improvement Rate
                 </span>
               </div>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="h-80">
+                {/* <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={plot}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="Marketing" stroke="green" />
-                    <Line type="monotone" dataKey="Finance" stroke="blue" />
-                    <Line type="monotone" dataKey="Operations" stroke="purple" />
-                    <Line type="monotone" dataKey="Hr" stroke="red" />
+                    <Line type="basic" dataKey="Marketing" stroke="green" />
+                    <Line type="basic" dataKey="Finance" stroke="blue" />
+                    <Line type="basic" dataKey="Operations" stroke="purple" />
+                    <Line type="basic" dataKey="Hr" stroke="red" />
+                  </LineChart>
+                </ResponsiveContainer> */}
+
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={plot}>
+                    <CartesianGrid
+                      vertical={false}
+                      horizontal={false}
+                      strokeDasharray="0 0"
+                    />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      className="text axis-data"
+                      interval={0}
+                      dy={10}
+                      dx={10}
+                    >
+                      <Label
+                        className="text"
+                        value="WEEK"
+                        position="bottom"
+                        dy={10} // Adjust the distance from the X-axis
+                      />
+                    </XAxis>
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      className="text axis-data"
+                      dx={-5}
+                    >
+                      <Label
+                        className="text"
+                        value="INTERVIEW SCORE"
+                        position="middle"
+                        angle={-90} // Rotate the label for vertical orientation
+                        dx={-30} // Adjust the distance from the Y-axis
+                      />
+                    </YAxis>
+                    <Tooltip />
+                    <Legend
+                      formatter={(value, entry) =>
+                        legendFormatter(value, entry, "line")
+                      }
+                      layout="horizontal"
+                      iconSize={0}
+                      wrapperStyle={{
+                        paddingTop: "1rem"
+                      }}
+                    />
+                    <Line
+                      type="basic"
+                      dataKey="Marketing"
+                      stroke="#6CE5E8"
+                      strokeWidth={4}
+                    />
+                    <Line
+                      type="basic"
+                      dataKey="Finance"
+                      stroke="#5271FF"
+                      strokeWidth={4}
+                    />
+                    <Line
+                      type="basic"
+                      dataKey="Operations"
+                      stroke="green"
+                      strokeWidth={4}
+                    />
+                    <Line
+                      type="basic"
+                      dataKey="Hr"
+                      stroke="purple"
+                      strokeWidth={4}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
           </div>
           <div className="lg:w-4/12">
-            <div className="bg-white shadow-md p-4 mb-4">
-              <div className="mb-4">
-                <span className="text-lg font-normal">
+            {/* Critical Improvement Areas */}
+            <div className={classNames(
+              // "bg-white shadow-md",
+              "p-4 mb-4"
+            )}>
+              <div className="mb-6">
+                <span className="text-lg font-normal ">
                   Critical Improvement Areas
                 </span>
               </div>
-              <div className="h-64">
+              <div className="h-80">
+                {/* <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Legend
+                      layout="horizontal"
+                      verticalAlign="bottom"
+                      align="center"
+                    />
+                    <Pie
+                      dataKey="value"
+                      data={pie}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      label
+                    >
+                      {pie.map((entry, index) => (<>
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      </>
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer> */}
+
+
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChartComp
-                    data={pie?.map((entry, index) => {
-                      return {
-                        name: entry?.name,
-                        color: COLORS[index % COLORS.length],
-                        percentage: entry?.value,
+                  <PieChart>
+                    {/* Place the legend horizontally at the bottom */}
+                    <Legend
+                      formatter={(value, entry) =>
+                        legendFormatter(value, entry, "pie")
                       }
-                    })}
-                    outerRadius={30}
-                    innerRadius={50}
-                    onChange={() => {}}
-                    // showLabel={true}
-                  />
+                      layout="horizontal"
+                      iconSize={0}
+                      wrapperStyle={{
+                        paddingTop: "1rem"
+                      }}
+                    />
+                    <Pie
+                      dataKey="value"
+                      data={pie}
+                      cx="50%"
+                      cy="60%"
+                      innerRadius={50}
+                      outerRadius={100}
+                      fill="#8884d8"
+                    >
+                      {pie.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                  </PieChart>
                 </ResponsiveContainer>
               </div>
             </div>
