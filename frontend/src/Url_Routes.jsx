@@ -22,6 +22,9 @@ import StudentDashboard from "./screens/Student Dashboard/StudentDashboard";
 import EmotionSensing from "../src/screens/Admin/Analysis/EmotionSensing/EmotionSensing";
 // import Practice from "./screens/PracticeNow/Practice";
 import StepperComponent from "./screens/PracticeNow/Practice";
+import NotificationsPage from "./screens/Notifications/Notifications";
+import SettingsPage from "./screens/StudentSettings/Settings";
+import HelpAndSupportPage from "./screens/Help/Help";
 
 
 function Url_Routes() {
@@ -54,6 +57,9 @@ function Url_Routes() {
                 <Route excat path="/profile" element={<HeaderFooterLayout Component={<Profile />} />} />
                 <Route excat path="/report" element={<HeaderFooterLayout Component={<UserReport />} />} />
                 <Route excat path="/practice" element={<HeaderFooterLayout Component={<StepperComponent />} />} />
+                <Route excat path="/notifications" element={<HeaderFooterLayout Component={<NotificationsPage />} />} />
+                <Route excat path="/help" element={<HeaderFooterLayout Component={<HelpAndSupportPage />} />} />
+                <Route excat path="/settings" element={<HeaderFooterLayout Component={<SettingsPage />} />} />
                 <Route excat path="/studentDashboard" element={<HeaderFooterLayout Component={<StudentDashboard />} />} />
               </>
             }

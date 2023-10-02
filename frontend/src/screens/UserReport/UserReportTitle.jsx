@@ -1,3 +1,4 @@
+import GLOBAL_CONSTANTS from "../../../GlobalConstants"
 const UserReportTitle = () => {
   return (
     <div className="bg-white" id="page1">
@@ -20,7 +21,7 @@ const UserReportTitle = () => {
                     </span>
                   </div>
                   <div className="mt-2">
-                    <span className="text-2xl font-semibold">MANDA ARPITHA</span>
+                    <span className="text-2xl font-semibold">{GLOBAL_CONSTANTS?.user_cred?.first_name} {GLOBAL_CONSTANTS?.user_cred?.last_name}</span>
                   </div>
                 </div>
                 <div className="md:w-6/12">

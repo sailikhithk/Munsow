@@ -402,8 +402,9 @@ export const institution_login = (data, callback) => {
     return function (dispatch) {
       var headers = {
         "Content-type": "application/json",
+        "Authorization" : `Bearer ${GLOBAL_CONSTANTS?.token}`
         };
-        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/auth/${GLOBAL_CONSTANTS?.user_cred?.user_id}/statistics`, {headers})
+        axios.get(`${GLOBAL_CONSTANTS?.backend_url}/user/statistics`, {headers})
         .then((resp) => {
           dispatch(getUserStats(resp?.data?.data));
         })

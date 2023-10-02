@@ -32,10 +32,10 @@ import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import FilterNoneRoundedIcon from '@mui/icons-material/FilterNoneRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 
-import { 
-  FaThLarge, 
-  FaClone, 
-  FaChartLine, 
+import {
+  FaThLarge,
+  FaClone,
+  FaChartLine,
   FaBell,
   FaUser,
   FaUserCog,
@@ -47,15 +47,15 @@ import {
   FaFileAlt,
   FaUserGraduate,
   FaChalkboardTeacher,
- } from 'react-icons/fa';
+} from 'react-icons/fa';
 
- import { 
+import {
   FaHeartPulse,
- } from 'react-icons/fa6';
+} from 'react-icons/fa6';
 
- import { 
+import {
   BiSolidReport
- } from 'react-icons/bi';
+} from 'react-icons/bi';
 import { classNames } from "./utils/generalUtils";
 
 const drawerWidth = 270;
@@ -137,61 +137,61 @@ export default function HeaderFooterLayout({ Component }) {
       setMenuData([
         {
           label: "Home",
-          icon: <FaThLarge size={20} className=""/>,
+          icon: <FaThLarge size={20} className="" />,
           route: "/adminDashboard",
           subItems: [],
         },
         {
           label: "Deep Analysis",
-          icon: <BiSolidReport size={20} className=""/>,
+          icon: <BiSolidReport size={20} className="" />,
           route: "/dashboard",
           subItems: [
             {
               label: "Behavioral Analysis",
-          icon: <FaBrain size={20} className=""/>,
-          route: "/emotionSensing",
+              icon: <FaBrain size={20} className="" />,
+              route: "/emotionSensing",
             },
             {
               label: "KS Analysis",
-          icon: <FaChartLine size={20} className=""/>,
-          route: "/emotionSensing",
+              icon: <FaChartLine size={20} className="" />,
+              route: "/emotionSensing",
             },
             {
               label: "Practical thinking A",
-          icon: <FaLightbulb size={20} className=""/>,
-          route: "/emotionSensing",
+              icon: <FaLightbulb size={20} className="" />,
+              route: "/emotionSensing",
             },
             {
               label: "Emotion Sensing",
-          icon: <FaHeartPulse size={20} className=""/>,
-          route: "/emotionSensing",
+              icon: <FaHeartPulse size={20} className="" />,
+              route: "/emotionSensing",
             },
             {
               label: "Hard Skill vs Soft skills",
-          icon: <FaBalanceScale size={20} className=""/>,
-          route: "/emotionSensing",
+              icon: <FaBalanceScale size={20} className="" />,
+              route: "/emotionSensing",
             },
           ],
         },
         {
           label: "User Management",
-          icon: <FaUserCog size={20} className=""/>,
+          icon: <FaUserCog size={20} className="" />,
           route: "/summary",
           subItems: [
             {
               label: "Summary",
-          icon: <FaFileAlt size={20} className=""/>,
-          route: "/summary",
+              icon: <FaFileAlt size={20} className="" />,
+              route: "/summary",
             },
             {
               label: "Students",
-          icon: <FaUserGraduate size={20} className=""/>,
-          route: "/studentList",
+              icon: <FaUserGraduate size={20} className="" />,
+              route: "/studentList",
             },
             {
               label: "Teachers",
-          icon: <FaChalkboardTeacher size={20} className=""/>,
-          route: "/teachersList",
+              icon: <FaChalkboardTeacher size={20} className="" />,
+              route: "/teachersList",
             },
           ],
         },
@@ -200,44 +200,44 @@ export default function HeaderFooterLayout({ Component }) {
       setMenuData([
         {
           label: "Dashboard",
-          icon: <FaThLarge size={20} className=""/>,
+          icon: <FaThLarge size={20} className="" />,
           route: "/studentDashboard",
           subItems: [],
         },
         {
           label: "Practice Now",
-          icon: <FaClone size={20} className=""/>,
+          icon: <FaClone size={20} className="" />,
           route: "/practice",
           subItems: [],
         },
         {
           label: "My Reports",
-          icon: <FaChartLine size={20} className=""/>,
+          icon: <FaChartLine size={20} className="" />,
           route: "/report",
           subItems: [],
         },
         {
           label: "Notifications",
-          icon: <FaBell size={20} className=""/>,
-          route: "/studentDashboard",
+          icon: <FaBell size={20} className="" />,
+          route: "/notifications",
           subItems: [],
         },
         {
           label: "My Profile",
-          icon: <FaUser size={20} className=""/>,
+          icon: <FaUser size={20} className="" />,
           route: "/profile",
           subItems: [],
         },
         {
           label: "Settings",
-          icon: <FaCog size={20} className=""/>,
-          route: "/profile",
+          icon: <FaCog size={20} className="" />,
+          route: "/settings",
           subItems: [],
         },
         {
           label: "Help & Support",
-          icon: <FaQuestionCircle size={20} className=""/>,
-          route: "/profile",
+          icon: <FaQuestionCircle size={20} className="" />,
+          route: "/help",
           subItems: [],
         },
       ]);
@@ -273,7 +273,7 @@ export default function HeaderFooterLayout({ Component }) {
       <CssBaseline />
 
       <CustomDrawer variant="permanent" open={open} role1={GLOBAL_CONSTANTS?.user_cred?.role_id ? GLOBAL_CONSTANTS?.user_cred?.role_id : 1}>
-        <DrawerHeader style={{background:"#f1e8f5"}}>
+        <DrawerHeader style={{ background: "#f1e8f5" }}>
           <div className="font-bold  text-[#4e3f6b] text-2xl pr-10">MUNSOW</div>
           {!open ? (
             <IconButton onClick={handleDrawerOpen}>
@@ -293,15 +293,15 @@ export default function HeaderFooterLayout({ Component }) {
             </IconButton>
           )}
         </DrawerHeader>
-        <Divider style={{opacity:"0.2"}}/>
+        <Divider style={{ opacity: "0.2" }} />
         <List>
           {menuData.map((mainItem, mainIndex) => (
-            <div 
-            key={mainIndex} 
-            className={classNames(
-              GLOBAL_CONSTANTS?.user_cred?.role_id !== 1 && (mainIndex == 3 || mainIndex == 5) ? "mb-16" : "mb-2",
-              ""
-            )}
+            <div
+              key={mainIndex}
+              className={classNames(
+                GLOBAL_CONSTANTS?.user_cred?.role_id !== 1 && (mainIndex == 3 || mainIndex == 5) ? "mb-16" : "mb-2",
+                ""
+              )}
             >
               <ListItem
                 disablePadding
@@ -338,19 +338,19 @@ export default function HeaderFooterLayout({ Component }) {
                       justifyContent: "center",
                       color: selectedItem === mainIndex ? "#a590cf" : "rgb(107 114 128)",
                     }}
-                    // className={classNames(selectedItem === mainIndex ? "text-[#a590cf]" : "text-gray-400",)}
+                  // className={classNames(selectedItem === mainIndex ? "text-[#a590cf]" : "text-gray-400",)}
                   >
                     {mainItem.icon}
                   </ListItemIcon>
-                  <ListItemText 
-                  disableTypography  
-                  // style={{ color: selectedItem === mainIndex ? "#a590cf" : "rgb(107 114 128)", fontSize: "15px" }}
-                  className={classNames(
-                    selectedItem === mainIndex ? "text-[#a590cf] font-bold" : "text-gray-500 font-medium",
-                    "text-base"
-                  )} 
-                  primary={mainItem.label} 
-                  sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                    disableTypography
+                    // style={{ color: selectedItem === mainIndex ? "#a590cf" : "rgb(107 114 128)", fontSize: "15px" }}
+                    className={classNames(
+                      selectedItem === mainIndex ? "text-[#a590cf] font-bold" : "text-gray-500 font-medium",
+                      "text-base"
+                    )}
+                    primary={mainItem.label}
+                    sx={{ opacity: open ? 1 : 0 }} />
                   {mainItem.subItems.length > 0 && (
                     <ListItemIcon
                       sx={{
@@ -399,18 +399,18 @@ export default function HeaderFooterLayout({ Component }) {
                             justifyContent: "center",
                             color: selectedSubItem === subIndex ? "#a590cf" : "rgb(107 114 128)",
                           }}
-                          // className={classNames(selectedItem === mainIndex ? "text-[#a590cf]" : "text-gray-400",)}
+                        // className={classNames(selectedItem === mainIndex ? "text-[#a590cf]" : "text-gray-400",)}
                         >
                           {subItem.icon}
                         </ListItemIcon>
-                        <ListItemText 
-                        disableTypography 
-                        // style={{ color: selectedSubItem === subIndex ? "#a590cf" : "rgb(107 114 128)", fontSize: "15px" }} 
-                        className={classNames(
-                          selectedSubItem === subIndex ? "text-[#a590cf] font-semibold" : "text-gray-500 font-medium",
-                          "text-base"
-                        )} 
-                        primary={subItem.label} sx={{ opacity: open ? 1 : 0 }} />
+                        <ListItemText
+                          disableTypography
+                          // style={{ color: selectedSubItem === subIndex ? "#a590cf" : "rgb(107 114 128)", fontSize: "15px" }} 
+                          className={classNames(
+                            selectedSubItem === subIndex ? "text-[#a590cf] font-semibold" : "text-gray-500 font-medium",
+                            "text-base"
+                          )}
+                          primary={subItem.label} sx={{ opacity: open ? 1 : 0 }} />
                       </ListItemButton>
                     </ListItem>
                   ))}
@@ -446,13 +446,13 @@ export default function HeaderFooterLayout({ Component }) {
               >
                 <LogoutOutlinedIcon style={{ color: "black" }} />
               </ListItemIcon>
-              <ListItemText  style={{color:"black"}} primary={"Logout"} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText style={{ color: "black" }} primary={"Logout"} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
         </DrawerFooter>
       </CustomDrawer>
 
-      <AppHeader open={open} role1={GLOBAL_CONSTANTS?.user_cred?.role_id ? GLOBAL_CONSTANTS?.user_cred?.role_id : 1}/>
+      <AppHeader open={open} role1={GLOBAL_CONSTANTS?.user_cred ? GLOBAL_CONSTANTS?.user_cred : {}} />
 
       <div className="mt-[60px] bg-red-500 overflow-y-scroll " style={{ flexGrow: 1, background: "#f3f0f9" }}>
         {Component}

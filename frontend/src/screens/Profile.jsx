@@ -56,7 +56,7 @@ export default function Profile() {
 
   return (
     <div
-      style={{ background: "linear-gradient(1deg,#1c85ce 30%, #5271ff)" }}
+      // style={{ background: "linear-gradient(1deg,#1c85ce 30%, #5271ff)" }}
       className="text-lg flex items-center justify-center gap-10 h-full w-full " >
       <div
         className="rounded-xl overflow-hidden py-6 px-5 shadow-xl grid items-center justify-center"

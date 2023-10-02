@@ -2,6 +2,7 @@ import React from "react";
 import { AppBar, Divider, Toolbar, Typography } from "@mui/material";
 
 const AppHeader = ({ open, role1 }) => {
+  console.log("role1",role1)
   return (
     <AppBar
       position="fixed"
@@ -14,7 +15,7 @@ const AppHeader = ({ open, role1 }) => {
       }}
     >
       <Toolbar>
-        <Typography variant="h6" sx={{ paddingLeft: open ? '270px' : '60px' }}>{role1 == 1 ? "Hello Christ University!" : ""}</Typography>
+        <Typography variant="h6" sx={{ paddingLeft: open ? '270px' : '60px',fontWeight:"bold" }}>{role1?.role_id == 1 ? `${role1?.institution_name}` : ""}</Typography>
       </Toolbar>
       <Divider style={{ color: "gray", opacity: "0.4" }} />
     </AppBar>
